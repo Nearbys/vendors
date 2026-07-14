@@ -1,16 +1,13 @@
 {
-  "name": "mobile-register",
+  "name": "vendors",
   "version": "1.0.0",
-  "description": "Simple Mobile Registration API",
+  "description": "Vendors Backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.21.0"
-  }
-  "dependencies": {
-  "express": "^4.21.0",
-  "pg": "^8.13.1"
+    "express": "^4.21.0",
+    "pg": "^8.13.1"
   }
 }
