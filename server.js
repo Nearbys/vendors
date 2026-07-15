@@ -13,89 +13,167 @@ const pool = new Pool({
     }
 });
 
-// Create table automatically
 async function initializeDatabase() {
 
-    try {
+    await pool.query(`
 
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS registrations (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                mobile TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `);
+    CREATE TABLE IF NOT EXISTS businesses (
 
-        console.log("Database Ready");
+        id SERIAL PRIMARY KEY,
 
-    } catch (err) {
+        business_name VARCHAR(150) NOT NULL,
 
-        console.error(err);
+        latitude DECIMAL(10,7),
 
-    }
+        longitude DECIMAL(10,7),
+
+        category VARCHAR(50),
+
+        delivery_type VARCHAR(20),
+
+        delivery_fee INTEGER DEFAULT 0,
+
+        email VARCHAR(150) UNIQUE,
+
+        whatsapp VARCHAR(30) UNIQUE,
+
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+    );
+
+    `);
+
+    console.log("Database Ready");
 
 }
 
 initializeDatabase();
 
-app.post("/register", async (req, res) => {
+app.post("/register", async (req,res)=>{
 
-    try {
+    try{
 
-        const { name, mobile } = req.body;
+        const{
+
+            businessName,
+            latitude,
+            longitude,
+            category,
+            deliveryType,
+            deliveryFee,
+            email,
+            whatsapp
+
+        }=req.body;
+
+        const emailExists=await pool.query(
+
+            "SELECT id FROM businesses WHERE email=$1",
+
+            [email]
+
+        );
+
+        if(emailExists.rows.length>0){
+
+            return res.status(400).json({
+
+                message:"Email is already registered."
+
+            });
+
+        }
+
+        const phoneExists=await pool.query(
+
+            "SELECT id FROM businesses WHERE whatsapp=$1",
+
+            [whatsapp]
+
+        );
+
+        if(phoneExists.rows.length>0){
+
+            return res.status(400).json({
+
+                message:"WhatsApp number is already registered."
+
+            });
+
+        }
 
         await pool.query(
-            "INSERT INTO registrations(name,mobile) VALUES($1,$2)",
-            [name, mobile]
-        );
 
-        console.log("Saved:", name, mobile);
+        `INSERT INTO businesses
+
+        (
+
+        business_name,
+        latitude,
+        longitude,
+        category,
+        delivery_type,
+        delivery_fee,
+        email,
+        whatsapp
+
+        )
+
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+
+        [
+
+            businessName,
+            latitude,
+            longitude,
+            category,
+            deliveryType,
+            deliveryFee,
+            email,
+            whatsapp
+
+        ]
+
+        );
 
         res.json({
-            success: true,
-            message: "Registration saved successfully."
+
+            message:"Business registered successfully."
+
         });
 
-    } catch (err) {
+    }
 
-        console.error(err);
+    catch(err){
+
+        console.log(err);
 
         res.status(500).json({
-            success: false,
-            message: "Database Error"
+
+            message:"Database Error"
+
         });
 
     }
 
 });
 
-app.get("/vendorsdb", async (req, res) => {
+app.get("/businesses", async(req,res)=>{
 
-    try {
+    const result=await pool.query(
 
-        const result = await pool.query(
-            "SELECT * FROM registrations ORDER BY id DESC"
-        );
+    "SELECT * FROM businesses ORDER BY id DESC"
 
-        res.json(result.rows);
+    );
 
-    } catch (err) {
-
-        console.error(err);
-
-        res.status(500).json({
-            success: false
-        });
-
-    }
+    res.json(result.rows);
 
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT=process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT,()=>{
 
-    console.log("Server running on port", PORT);
+    console.log("Server Started");
 
 });
