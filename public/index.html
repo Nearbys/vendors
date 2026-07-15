@@ -1,63 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Registration</title>
+<title>Nearbys Business Registration</title>
 
 <style>
 
 body{
-font-family:Arial;
-background:#f4f4f4;
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f4f4;
 }
 
 .container{
 
-width:350px;
-margin:70px auto;
-background:white;
-padding:25px;
-border-radius:10px;
-box-shadow:0 0 10px #ddd;
+    max-width:420px;
+    margin:40px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
 
 }
 
-input{
+h2{
 
-width:100%;
-padding:12px;
-margin-bottom:15px;
-font-size:16px;
-box-sizing:border-box;
+    text-align:center;
+    color:#009500;
+    margin-bottom:25px;
+
+}
+
+input,
+select{
+
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    font-size:16px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    box-sizing:border-box;
 
 }
 
 button{
 
-width:100%;
-padding:12px;
-font-size:16px;
-background:#009500;
-color:white;
-border:none;
-cursor:pointer;
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    border:none;
+    border-radius:6px;
+    background:#009500;
+    color:#fff;
+    cursor:pointer;
 
 }
 
 button:hover{
 
-background:#007a00;
+    background:#007c00;
+
+}
+
+.radio-group{
+
+    margin-bottom:15px;
+
+}
+
+.radio-group label{
+
+    margin-right:20px;
 
 }
 
 #result{
 
-margin-top:20px;
-font-weight:bold;
+    margin-top:20px;
+    text-align:center;
+    font-weight:bold;
+    color:#009500;
+
+}
+
+.small{
+
+    font-size:13px;
+    color:#666;
+    margin-top:-10px;
+    margin-bottom:15px;
 
 }
 
@@ -69,21 +105,105 @@ font-weight:bold;
 
 <div class="container">
 
-<h2>User Registration</h2>
+<h2>Business Registration</h2>
 
 <input
 type="text"
-id="name"
-placeholder="Full Name">
+id="businessName"
+placeholder="Business Name">
 
 <input
 type="text"
-id="mobile"
-placeholder="Mobile Number">
+id="location"
+placeholder="Location Coordinates"
+readonly>
 
-<button onclick="submitForm()">
+<input
+type="hidden"
+id="latitude">
 
-Submit
+<input
+type="hidden"
+id="longitude">
+
+<button
+type="button"
+onclick="getLocation()">
+Retrieve Current Location
+</button>
+
+<div class="small">
+Location preview is not required. Coordinates will be stored.
+</div>
+
+<select id="category">
+
+<option value="">Select Category</option>
+
+<option value="Grocery">Grocery</option>
+
+<option value="Cafeteria">Cafeteria</option>
+
+<option value="Restaurant">Restaurant</option>
+
+<option value="Other">Other</option>
+
+</select>
+
+<div class="radio-group">
+
+<strong>Delivery Fee</strong>
+
+<br><br>
+
+<label>
+
+<input
+type="radio"
+name="delivery"
+value="Yes"
+checked
+onclick="toggleDelivery()">
+
+Accepting
+
+</label>
+
+<label>
+
+<input
+type="radio"
+name="delivery"
+value="No"
+onclick="toggleDelivery()">
+
+No
+
+</label>
+
+</div>
+
+<input
+type="number"
+id="deliveryFee"
+value="2"
+min="0"
+placeholder="Delivery Fee (Dhs)">
+
+<input
+type="email"
+id="email"
+placeholder="Email Address">
+
+<input
+type="text"
+id="whatsapp"
+placeholder="WhatsApp Number">
+
+<button
+onclick="submitForm()">
+
+Register Business
 
 </button>
 
@@ -93,45 +213,140 @@ Submit
 
 <script>
 
-async function submitForm(){
+function getLocation(){
 
-const name=document.getElementById("name").value.trim();
+    if(!navigator.geolocation){
 
-const mobile=document.getElementById("mobile").value.trim();
+        alert("Geolocation is not supported.");
 
-if(name=="" || mobile==""){
+        return;
 
-alert("Please enter Name and Mobile");
+    }
 
-return;
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            const lat=position.coords.latitude;
+            const lng=position.coords.longitude;
+
+            document.getElementById("latitude").value=lat;
+            document.getElementById("longitude").value=lng;
+
+            document.getElementById("location").value=lat+", "+lng;
+
+        },
+
+        function(){
+
+            alert("Unable to retrieve your location.");
+
+        }
+
+    );
 
 }
 
-const response=await fetch("/register",{
+function toggleDelivery(){
 
-method:"POST",
+    const delivery=document.querySelector('input[name="delivery"]:checked').value;
 
-headers:{
-"Content-Type":"application/json"
-},
+    const fee=document.getElementById("deliveryFee");
 
-body:JSON.stringify({
+    if(delivery==="No"){
 
-name,
-mobile
+        fee.value="0";
+        fee.disabled=true;
 
-})
+    }else{
 
-});
+        fee.disabled=false;
 
-const data=await response.json();
+        if(fee.value=="0")
+            fee.value="2";
 
-document.getElementById("result").innerHTML=data.message;
+    }
+
+}
+
+async function submitForm(){
+
+    const businessName=document.getElementById("businessName").value.trim();
+    const location=document.getElementById("location").value.trim();
+    const latitude=document.getElementById("latitude").value;
+    const longitude=document.getElementById("longitude").value;
+    const category=document.getElementById("category").value;
+    const delivery=document.querySelector('input[name="delivery"]:checked').value;
+    const deliveryFee=document.getElementById("deliveryFee").value;
+    const email=document.getElementById("email").value.trim();
+    const whatsapp=document.getElementById("whatsapp").value.trim();
+
+    if(businessName==""){
+
+        alert("Please enter Business Name");
+        return;
+
+    }
+
+    if(location==""){
+
+        alert("Please retrieve your location.");
+        return;
+
+    }
+
+    if(category==""){
+
+        alert("Please select a category.");
+        return;
+
+    }
+
+    if(email==""){
+
+        alert("Please enter Email.");
+        return;
+
+    }
+
+    if(whatsapp==""){
+
+        alert("Please enter WhatsApp number.");
+        return;
+
+    }
+
+    const response=await fetch("/register",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            businessName,
+            location,
+            latitude,
+            longitude,
+            category,
+            acceptDelivery:delivery,
+            deliveryFee,
+            email,
+            whatsapp
+
+        })
+
+    });
+
+    const data=await response.json();
+
+    document.getElementById("result").innerHTML=data.message;
 
 }
 
 </script>
 
 </body>
-
 </html>
