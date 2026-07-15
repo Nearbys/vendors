@@ -70,7 +70,7 @@ app.post("/register", async (req, res) => {
 
 });
 
-app.get("/registrations", async (req, res) => {
+app.get("/vendorsdb", async (req, res) => {
 
     try {
 
