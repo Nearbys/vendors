@@ -66,6 +66,34 @@ app.post("/register", async (req,res)=>{
 
         }=req.body;
 
+        // Email validation
+
+const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if(!emailRegex.test(email)){
+
+    return res.status(400).json({
+
+        message:"Invalid email address."
+
+    });
+
+}
+
+// UAE WhatsApp validation
+
+const phoneRegex=/^(?:\+971|971|0)(50|52|54|55|56|58)\d{7}$/;
+
+if(!phoneRegex.test(whatsapp)){
+
+    return res.status(400).json({
+
+        message:"Invalid UAE WhatsApp number."
+
+    });
+
+}
+
         const emailExists=await pool.query(
 
             "SELECT id FROM businesses WHERE email=$1",
