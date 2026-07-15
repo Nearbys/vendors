@@ -13,47 +13,56 @@ const pool = new Pool({
     }
 });
 
-async function initializeDatabase() {
+async function initializeDatabase(){
 
-    await pool.query(`
+    try{
 
-    CREATE TABLE IF NOT EXISTS businesses (
+        await pool.query(`
 
-        id SERIAL PRIMARY KEY,
+        CREATE TABLE IF NOT EXISTS businesses(
 
-        business_name VARCHAR(150) NOT NULL,
+            id SERIAL PRIMARY KEY,
 
-        latitude DECIMAL(10,7),
+            business_name VARCHAR(150) NOT NULL,
 
-        longitude DECIMAL(10,7),
+            latitude DECIMAL(10,7) NOT NULL,
 
-        category VARCHAR(50),
+            longitude DECIMAL(10,7) NOT NULL,
 
-        delivery_type VARCHAR(20),
+            category VARCHAR(50) NOT NULL,
 
-        delivery_fee INTEGER DEFAULT 0,
+            delivery_type VARCHAR(20) NOT NULL,
 
-        email VARCHAR(150) UNIQUE,
+            delivery_fee INTEGER DEFAULT 0,
 
-        whatsapp VARCHAR(30) UNIQUE,
+            email VARCHAR(150) UNIQUE NOT NULL,
 
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            whatsapp VARCHAR(30) UNIQUE NOT NULL,
 
-    );
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-    `);
+        );
 
-    console.log("Database Ready");
+        `);
+
+        console.log("Database Ready");
+
+    }
+    catch(err){
+
+        console.log(err);
+
+    }
 
 }
 
 initializeDatabase();
 
-app.post("/register", async (req,res)=>{
+app.post("/register", async(req,res)=>{
 
     try{
 
-        const{
+        let{
 
             businessName,
             latitude,
@@ -66,33 +75,55 @@ app.post("/register", async (req,res)=>{
 
         }=req.body;
 
-        // Email validation
+        businessName=(businessName || "").trim();
 
-const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        email=(email || "").trim().toLowerCase();
 
-if(!emailRegex.test(email)){
+        whatsapp=(whatsapp || "").trim();
 
-    return res.status(400).json({
+        // Remove spaces, brackets and hyphens
 
-        message:"Invalid email address."
+        whatsapp=whatsapp.replace(/[\s\-()]/g,"");
 
-    });
+        // Email Validation
 
-}
+        const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// UAE WhatsApp validation
+        if(!emailRegex.test(email)){
 
-const phoneRegex=/^(?:\+971|971|0)(50|52|54|55|56|58)\d{7}$/;
+            return res.status(400).json({
 
-if(!phoneRegex.test(whatsapp)){
+                message:"Invalid email address."
 
-    return res.status(400).json({
+            });
 
-        message:"Invalid UAE WhatsApp number."
+        }
 
-    });
+        // International WhatsApp Validation
 
-}
+        if(!whatsapp.startsWith("+")){
+
+            return res.status(400).json({
+
+                message:"WhatsApp number must include the country code."
+
+            });
+
+        }
+
+        const phoneRegex=/^\+[1-9]\d{6,14}$/;
+
+        if(!phoneRegex.test(whatsapp)){
+
+            return res.status(400).json({
+
+                message:"Invalid WhatsApp number."
+
+            });
+
+        }
+
+        // Duplicate Email
 
         const emailExists=await pool.query(
 
@@ -112,6 +143,8 @@ if(!phoneRegex.test(whatsapp)){
 
         }
 
+        // Duplicate WhatsApp
+
         const phoneExists=await pool.query(
 
             "SELECT id FROM businesses WHERE whatsapp=$1",
@@ -130,34 +163,56 @@ if(!phoneRegex.test(whatsapp)){
 
         }
 
+        if(deliveryType==="Free"){
+
+            deliveryFee=0;
+
+        }
+
         await pool.query(
 
-        `INSERT INTO businesses
+        `
 
-        (
+        INSERT INTO businesses(
 
-        business_name,
-        latitude,
-        longitude,
-        category,
-        delivery_type,
-        delivery_fee,
-        email,
-        whatsapp
+            business_name,
+
+            latitude,
+
+            longitude,
+
+            category,
+
+            delivery_type,
+
+            delivery_fee,
+
+            email,
+
+            whatsapp
 
         )
 
-        VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8)
+
+        `,
 
         [
 
             businessName,
+
             latitude,
+
             longitude,
+
             category,
+
             deliveryType,
+
             deliveryFee,
+
             email,
+
             whatsapp
 
         ]
@@ -166,17 +221,20 @@ if(!phoneRegex.test(whatsapp)){
 
         res.json({
 
+            success:true,
+
             message:"Business registered successfully."
 
         });
 
     }
-
     catch(err){
 
         console.log(err);
 
         res.status(500).json({
+
+            success:false,
 
             message:"Database Error"
 
@@ -188,13 +246,38 @@ if(!phoneRegex.test(whatsapp)){
 
 app.get("/businesses", async(req,res)=>{
 
-    const result=await pool.query(
+    try{
 
-    "SELECT * FROM businesses ORDER BY id DESC"
+        const result=await pool.query(
 
-    );
+            "SELECT * FROM businesses ORDER BY id DESC"
 
-    res.json(result.rows);
+        );
+
+        res.json(result.rows);
+
+    }
+    catch(err){
+
+        res.status(500).json({
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+// Optional Home Page Test
+
+app.get("/health",(req,res)=>{
+
+    res.json({
+
+        status:"Running"
+
+    });
 
 });
 
@@ -202,6 +285,9 @@ const PORT=process.env.PORT || 3000;
 
 app.listen(PORT,()=>{
 
-    console.log("Server Started");
+    console.log("================================");
+    console.log("Nearbys Server Started");
+    console.log("Listening on Port",PORT);
+    console.log("================================");
 
 });
