@@ -326,7 +326,6 @@ async function submitForm(){
     const businessName=document.getElementById("businessName").value.trim();
 
     const latitude=document.getElementById("latitude").value;
-
     const longitude=document.getElementById("longitude").value;
 
     const category=document.getElementById("category").value;
@@ -335,48 +334,43 @@ async function submitForm(){
 
     const deliveryFee=document.getElementById("deliveryFee").value;
 
-    const email=document.getElementById("email").value.trim();
+    const email=document.getElementById("email").value.trim().toLowerCase();
 
     const whatsapp=document.getElementById("whatsapp").value.trim();
 
     if(businessName==""){
-
         alert("Enter Business Name");
-
         return;
-
     }
 
     if(latitude==""){
-
         alert("Please retrieve your location.");
-
         return;
-
     }
 
     if(category==""){
-
         alert("Select a category.");
-
         return;
-
     }
 
-    if(email==""){
+    // Email Validation
 
-        alert("Enter Email");
+    const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    if(!emailRegex.test(email)){
+        result.className="error";
+        result.innerHTML="Please enter a valid email address.";
         return;
-
     }
 
-    if(whatsapp==""){
+    // UAE WhatsApp Validation
 
-        alert("Enter WhatsApp Number");
+    const phoneRegex=/^(?:\+971|971|0)(50|52|54|55|56|58)\d{7}$/;
 
+    if(!phoneRegex.test(whatsapp)){
+        result.className="error";
+        result.innerHTML="Please enter a valid UAE WhatsApp number.";
         return;
-
     }
 
     try{
@@ -392,19 +386,12 @@ async function submitForm(){
             body:JSON.stringify({
 
                 businessName,
-
                 latitude,
-
                 longitude,
-
                 category,
-
                 deliveryType,
-
                 deliveryFee,
-
                 email,
-
                 whatsapp
 
             })
@@ -416,24 +403,20 @@ async function submitForm(){
         if(response.ok){
 
             result.className="success";
-
             result.innerHTML=data.message;
 
-        }
-        else{
+        }else{
 
             result.className="error";
-
             result.innerHTML=data.message;
 
         }
 
     }
-    catch(error){
+    catch{
 
         result.className="error";
-
-        result.innerHTML="Database Error";
+        result.innerHTML="Unable to connect to the server.";
 
     }
 
