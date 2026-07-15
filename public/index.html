@@ -146,6 +146,17 @@ button:disabled{
 
 }
 
+.preview{
+    width:120px;
+    height:120px;
+    border:2px dashed #ccc;
+    border-radius:8px;
+    object-fit:cover;
+    display:block;
+    margin:10px auto 20px;
+    background:#f5f5f5;
+}    
+
 </style>
 
 </head>
@@ -163,14 +174,29 @@ button:disabled{
 <input
 type="file"
 id="profileImage"
-accept="image/*">
+accept="image/*"
+onchange="previewImage(this,'profilePreview')">
+
+<img
+id="profilePreview"
+class="preview"
+src="https://via.placeholder.com/120?text=Profile"
+alt="Profile Preview">
+
 
 <label>Cover Picture</label>
 
 <input
 type="file"
 id="coverImage"
-accept="image/*">    
+accept="image/*"
+onchange="previewImage(this,'coverPreview')">
+
+<img
+id="coverPreview"
+class="preview"
+src="https://via.placeholder.com/120?text=Cover"
+alt="Cover Preview">   
 
 <input
 type="text"
@@ -269,6 +295,26 @@ Register Business
 
 <script>
 
+function previewImage(input, previewId){
+
+    const preview=document.getElementById(previewId);
+
+    if(input.files && input.files[0]){
+
+        const reader=new FileReader();
+
+        reader.onload=function(e){
+
+            preview.src=e.target.result;
+
+        };
+
+        reader.readAsDataURL(input.files[0]);
+
+    }
+
+}
+    
 function getLocation(){
 
     if(!navigator.geolocation){
@@ -509,6 +555,8 @@ async function submitForm(){
             document.getElementById("longitude").value="";
             document.getElementById("profileImage").value="";
             document.getElementById("coverImage").value="";
+            document.getElementById("profilePreview").src="https://via.placeholder.com/120?text=Profile";
+            document.getElementById("coverPreview").src="https://via.placeholder.com/120?text=Cover";
 
             document.getElementById("locationButton").disabled=false;
             document.getElementById("locationButton").innerHTML="Retrieve Current Location";
