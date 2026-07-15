@@ -39,10 +39,25 @@ async function initializeDatabase(){
 
             whatsapp VARCHAR(30) UNIQUE NOT NULL,
 
+            profile_image TEXT,
+
+            cover_image TEXT,
+
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
         );
 
+        `);
+
+        // Add new columns if the table already existed
+        await pool.query(`
+            ALTER TABLE businesses
+            ADD COLUMN IF NOT EXISTS profile_image TEXT;
+        `);
+
+        await pool.query(`
+            ALTER TABLE businesses
+            ADD COLUMN IF NOT EXISTS cover_image TEXT;
         `);
 
         console.log("Database Ready");
@@ -71,7 +86,9 @@ app.post("/register", async(req,res)=>{
             deliveryType,
             deliveryFee,
             email,
-            whatsapp
+            whatsapp,
+            profileImage,
+            coverImage
 
         }=req.body;
 
@@ -81,12 +98,14 @@ app.post("/register", async(req,res)=>{
 
         whatsapp=(whatsapp || "").trim();
 
-        // Remove spaces, brackets and hyphens
+        profileImage=profileImage || "";
 
+        coverImage=coverImage || "";
+
+        // Remove spaces, brackets and hyphens
         whatsapp=whatsapp.replace(/[\s\-()]/g,"");
 
         // Email Validation
-
         const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if(!emailRegex.test(email)){
@@ -100,7 +119,6 @@ app.post("/register", async(req,res)=>{
         }
 
         // International WhatsApp Validation
-
         if(!whatsapp.startsWith("+")){
 
             return res.status(400).json({
@@ -124,7 +142,6 @@ app.post("/register", async(req,res)=>{
         }
 
         // Duplicate Email
-
         const emailExists=await pool.query(
 
             "SELECT id FROM businesses WHERE email=$1",
@@ -144,7 +161,6 @@ app.post("/register", async(req,res)=>{
         }
 
         // Duplicate WhatsApp
-
         const phoneExists=await pool.query(
 
             "SELECT id FROM businesses WHERE whatsapp=$1",
@@ -189,11 +205,15 @@ app.post("/register", async(req,res)=>{
 
             email,
 
-            whatsapp
+            whatsapp,
+
+            profile_image,
+
+            cover_image
 
         )
 
-        VALUES($1,$2,$3,$4,$5,$6,$7,$8)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
 
         `,
 
@@ -213,7 +233,11 @@ app.post("/register", async(req,res)=>{
 
             email,
 
-            whatsapp
+            whatsapp,
+
+            profileImage,
+
+            coverImage
 
         ]
 
@@ -250,7 +274,21 @@ app.get("/businesses", async(req,res)=>{
 
         const result=await pool.query(
 
-            "SELECT * FROM businesses ORDER BY id DESC"
+            `SELECT
+                id,
+                business_name,
+                latitude,
+                longitude,
+                category,
+                delivery_type,
+                delivery_fee,
+                email,
+                whatsapp,
+                profile_image,
+                cover_image,
+                created_at
+             FROM businesses
+             ORDER BY id DESC`
 
         );
 
@@ -258,6 +296,8 @@ app.get("/businesses", async(req,res)=>{
 
     }
     catch(err){
+
+        console.log(err);
 
         res.status(500).json({
 
@@ -269,8 +309,7 @@ app.get("/businesses", async(req,res)=>{
 
 });
 
-// Optional Home Page Test
-
+// Health Check
 app.get("/health",(req,res)=>{
 
     res.json({
