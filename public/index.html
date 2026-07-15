@@ -259,24 +259,21 @@ function getLocation(){
 
     if(!navigator.geolocation){
 
-        alert("Geolocation is not supported.");
-
+        alert("Geolocation is not supported by your device.");
         return;
 
     }
 
     const btn=document.getElementById("locationButton");
 
-    btn.innerHTML="Retrieving...";
-
     btn.disabled=true;
+    btn.innerHTML="Retrieving Location...";
 
     navigator.geolocation.getCurrentPosition(
 
         function(position){
 
             document.getElementById("latitude").value=position.coords.latitude;
-
             document.getElementById("longitude").value=position.coords.longitude;
 
             btn.innerHTML="✓ Location Received";
@@ -286,7 +283,6 @@ function getLocation(){
         function(){
 
             btn.disabled=false;
-
             btn.innerHTML="Retrieve Current Location";
 
             alert("Unable to retrieve your location.");
@@ -299,17 +295,23 @@ function getLocation(){
 
 function toggleDeliveryFee(){
 
-    const value=document.getElementById("deliveryType").value;
+    const deliveryType=document.getElementById("deliveryType").value;
+    const feeRow=document.getElementById("deliveryFeeRow");
 
-    if(value=="Chargeable"){
+    if(deliveryType==="Chargeable"){
 
-        document.getElementById("deliveryFeeRow").style.display="block";
+        feeRow.style.display="block";
+
+        if(document.getElementById("deliveryFee").value=="0"){
+
+            document.getElementById("deliveryFee").value="2";
+
+        }
 
     }
     else{
 
-        document.getElementById("deliveryFeeRow").style.display="none";
-
+        feeRow.style.display="none";
         document.getElementById("deliveryFee").value="0";
 
     }
@@ -320,8 +322,8 @@ async function submitForm(){
 
     const result=document.getElementById("result");
 
-    result.innerHTML="";
     result.className="";
+    result.innerHTML="";
 
     const businessName=document.getElementById("businessName").value.trim();
 
@@ -336,41 +338,78 @@ async function submitForm(){
 
     const email=document.getElementById("email").value.trim().toLowerCase();
 
-    const whatsapp=document.getElementById("whatsapp").value.trim();
+    let whatsapp=document.getElementById("whatsapp").value.trim();
 
-    if(businessName==""){
-        alert("Enter Business Name");
+    // Remove spaces, dashes and brackets
+
+    whatsapp=whatsapp.replace(/[\s\-()]/g,"");
+
+    if(businessName===""){
+
+        result.className="error";
+        result.innerHTML="Please enter Business Name.";
         return;
+
     }
 
-    if(latitude==""){
-        alert("Please retrieve your location.");
+    if(latitude===""){
+
+        result.className="error";
+        result.innerHTML="Please retrieve your location.";
         return;
+
     }
 
-    if(category==""){
-        alert("Select a category.");
+    if(category===""){
+
+        result.className="error";
+        result.innerHTML="Please select a category.";
         return;
+
     }
 
-    // Email Validation
+    if(deliveryType==="Chargeable"){
+
+        const fee=parseInt(deliveryFee);
+
+        if(isNaN(fee) || fee<0 || fee>20){
+
+            result.className="error";
+            result.innerHTML="Delivery fee must be between 0 and 20 Dhs.";
+            return;
+
+        }
+
+    }
 
     const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if(!emailRegex.test(email)){
+
         result.className="error";
         result.innerHTML="Please enter a valid email address.";
         return;
+
     }
 
-    // UAE WhatsApp Validation
+    // International WhatsApp validation
 
-    const phoneRegex=/^(?:\+971|971|0)(50|52|54|55|56|58)\d{7}$/;
+    if(!whatsapp.startsWith("+")){
+
+        result.className="error";
+        result.innerHTML="WhatsApp number must include the country code (Example: +971501234567).";
+        return;
+
+    }
+
+    const phoneRegex=/^\+[1-9]\d{6,14}$/;
 
     if(!phoneRegex.test(whatsapp)){
+
         result.className="error";
-        result.innerHTML="Please enter a valid UAE WhatsApp number.";
+        result.innerHTML="Please enter a valid WhatsApp number.";
         return;
+
     }
 
     try{
@@ -405,7 +444,24 @@ async function submitForm(){
             result.className="success";
             result.innerHTML=data.message;
 
-        }else{
+            // Optional: clear form after successful registration
+
+            document.getElementById("businessName").value="";
+            document.getElementById("category").selectedIndex=0;
+            document.getElementById("deliveryType").selectedIndex=0;
+            document.getElementById("deliveryFee").value="2";
+            document.getElementById("email").value="";
+            document.getElementById("whatsapp").value="";
+            document.getElementById("latitude").value="";
+            document.getElementById("longitude").value="";
+
+            document.getElementById("locationButton").disabled=false;
+            document.getElementById("locationButton").innerHTML="Retrieve Current Location";
+
+            toggleDeliveryFee();
+
+        }
+        else{
 
             result.className="error";
             result.innerHTML=data.message;
@@ -413,10 +469,10 @@ async function submitForm(){
         }
 
     }
-    catch{
+    catch(err){
 
         result.className="error";
-        result.innerHTML="Unable to connect to the server.";
+        result.innerHTML="Database Error.";
 
     }
 
