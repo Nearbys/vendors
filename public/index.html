@@ -339,7 +339,7 @@ async function uploadToCloudinary(file){
 
     formData.append("file",file);
 
-    formData.append("upload_preset","vendors");
+    formData.append("upload_preset","business_images");
 
     const response=await fetch(
         "https://api.cloudinary.com/v1_1/gb2xbn6d/image/upload",
