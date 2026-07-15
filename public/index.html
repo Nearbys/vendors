@@ -158,6 +158,20 @@ button:disabled{
 
 <label>Business Name</label>
 
+<label>Profile Picture</label>
+
+<input
+type="file"
+id="profileImage"
+accept="image/*">
+
+<label>Cover Picture</label>
+
+<input
+type="file"
+id="coverImage"
+accept="image/*">    
+
 <input
 type="text"
 id="businessName"
@@ -308,13 +322,42 @@ function toggleDeliveryFee(){
 
         }
 
-    }
-    else{
+    }else{
 
         feeRow.style.display="none";
         document.getElementById("deliveryFee").value="0";
 
     }
+
+}
+
+async function uploadToCloudinary(file){
+
+    if(!file) return "";
+
+    const formData=new FormData();
+
+    formData.append("file",file);
+
+    formData.append("upload_preset","vendors");
+
+    const response=await fetch(
+        "https://api.cloudinary.com/v1_1/gb2xbn6d/image/upload",
+        {
+            method:"POST",
+            body:formData
+        }
+    );
+
+    const data=await response.json();
+
+    if(!response.ok){
+
+        throw new Error("Cloudinary Upload Failed");
+
+    }
+
+    return data.secure_url;
 
 }
 
@@ -328,6 +371,7 @@ async function submitForm(){
     const businessName=document.getElementById("businessName").value.trim();
 
     const latitude=document.getElementById("latitude").value;
+
     const longitude=document.getElementById("longitude").value;
 
     const category=document.getElementById("category").value;
@@ -340,7 +384,9 @@ async function submitForm(){
 
     let whatsapp=document.getElementById("whatsapp").value.trim();
 
-    // Remove spaces, dashes and brackets
+    const profileFile=document.getElementById("profileImage").files[0];
+
+    const coverFile=document.getElementById("coverImage").files[0];
 
     whatsapp=whatsapp.replace(/[\s\-()]/g,"");
 
@@ -392,8 +438,6 @@ async function submitForm(){
 
     }
 
-    // International WhatsApp validation
-
     if(!whatsapp.startsWith("+")){
 
         result.className="error";
@@ -414,6 +458,15 @@ async function submitForm(){
 
     try{
 
+        result.className="";
+        result.innerHTML="Uploading images...";
+
+        const profileImage=await uploadToCloudinary(profileFile);
+
+        const coverImage=await uploadToCloudinary(coverFile);
+
+        result.innerHTML="Registering Business...";
+
         const response=await fetch("/register",{
 
             method:"POST",
@@ -431,7 +484,9 @@ async function submitForm(){
                 deliveryType,
                 deliveryFee,
                 email,
-                whatsapp
+                whatsapp,
+                profileImage,
+                coverImage
 
             })
 
@@ -444,8 +499,6 @@ async function submitForm(){
             result.className="success";
             result.innerHTML=data.message;
 
-            // Optional: clear form after successful registration
-
             document.getElementById("businessName").value="";
             document.getElementById("category").selectedIndex=0;
             document.getElementById("deliveryType").selectedIndex=0;
@@ -454,25 +507,27 @@ async function submitForm(){
             document.getElementById("whatsapp").value="";
             document.getElementById("latitude").value="";
             document.getElementById("longitude").value="";
+            document.getElementById("profileImage").value="";
+            document.getElementById("coverImage").value="";
 
             document.getElementById("locationButton").disabled=false;
             document.getElementById("locationButton").innerHTML="Retrieve Current Location";
 
             toggleDeliveryFee();
 
-        }
-        else{
+        }else{
 
             result.className="error";
             result.innerHTML=data.message;
 
         }
 
-    }
-    catch(err){
+    }catch(err){
+
+        console.error(err);
 
         result.className="error";
-        result.innerHTML="Database Error.";
+        result.innerHTML="Upload or Database Error.";
 
     }
 
@@ -481,6 +536,5 @@ async function submitForm(){
 toggleDeliveryFee();
 
 </script>
-
 </body>
 </html>
