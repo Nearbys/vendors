@@ -330,6 +330,8 @@ app.get("/businesses", async(req,res)=>{
 
     }
 
+    }); 
+
     app.post("/vendor-login", async (req, res) => {
 
     try{
