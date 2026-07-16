@@ -416,6 +416,217 @@ app.get("/businesses", async(req,res)=>{
     
 });
 
+
+
+
+
+app.post("/update-cover", async (req, res) => {
+
+    try{
+
+        const { email, coverImage } = req.body;
+
+        if(!email || !coverImage){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Missing data."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE businesses
+             SET cover_image=$1
+             WHERE email=$2`,
+
+            [
+
+                coverImage,
+
+                email
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Cover updated."
+
+        });
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+
+
+
+app.post("/update-profile", async (req, res) => {
+
+    try{
+
+        const { email, profileImage } = req.body;
+
+        if(!email || !profileImage){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Missing data."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE businesses
+             SET profile_image=$1
+             WHERE email=$2`,
+
+            [
+
+                profileImage,
+
+                email
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Profile updated."
+
+        });
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+
+
+
+
+app.post("/update-business-name", async (req, res) => {
+
+    try{
+
+        let{
+
+            email,
+
+            businessName
+
+        }=req.body;
+
+        email=(email || "").trim().toLowerCase();
+
+        businessName=(businessName || "").trim();
+
+        if(businessName===""){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Business name required."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE businesses
+             SET business_name=$1
+             WHERE email=$2`,
+
+            [
+
+                businessName,
+
+                email
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Business name updated."
+
+        });
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+
+
+
+
 // Health Check
 app.get("/health",(req,res)=>{
 
