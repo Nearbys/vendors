@@ -104,6 +104,16 @@ app.post("/register", async(req,res)=>{
 
         email=(email || "").trim().toLowerCase();
 
+        password=(password || "").trim();
+
+        if(password===""){
+
+        return res.status(400).json({
+        message:"Password is required."
+        });
+
+        }
+
         whatsapp=(whatsapp || "").trim();
 
         profileImage=profileImage || "";
@@ -295,6 +305,7 @@ app.get("/businesses", async(req,res)=>{
                 delivery_type,
                 delivery_fee,
                 email,
+                password,
                 whatsapp,
                 profile_image,
                 cover_image,
