@@ -330,31 +330,7 @@ app.get("/businesses", async(req,res)=>{
 
     }
 
-});
-
-// Health Check
-app.get("/health",(req,res)=>{
-
-    res.json({
-
-        status:"Running"
-
-    });
-
-});
-
-const PORT=process.env.PORT || 3000;
-
-app.listen(PORT,()=>{
-
-    console.log("================================");
-    console.log("Nearbys Server Started");
-    console.log("Listening on Port",PORT);
-    console.log("================================");
-
-});
-
-app.post("/vendor-login", async (req, res) => {
+    app.post("/vendor-login", async (req, res) => {
 
     try{
 
@@ -435,6 +411,28 @@ app.post("/vendor-login", async (req, res) => {
         });
 
     }
+    
+});
+
+// Health Check
+app.get("/health",(req,res)=>{
+
+    res.json({
+
+        status:"Running"
+
+    });
+
+});
+
+const PORT=process.env.PORT || 3000;
+
+app.listen(PORT,()=>{
+
+    console.log("================================");
+    console.log("Nearbys Server Started");
+    console.log("Listening on Port",PORT);
+    console.log("================================");
 
 });
 
