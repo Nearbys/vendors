@@ -68,12 +68,12 @@ async function login(){
  });
  const d=await r.json();
  if(!r.ok){msg.innerHTML=d.message;return;}
- vendor=d;
+ vendor = d.vendor;
  login.style.display='none';
  dashboard.style.display='block';
- cover.src=d.cover_image||'';
- profile.src=d.profile_image||'';
- businessName.textContent=d.business_name;
+ cover.src = vendor.cover_image || "";
+profile.src = vendor.profile_image || "";
+businessName.textContent = vendor.business_name;
 }
 
 function editName(){
