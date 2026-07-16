@@ -55,56 +55,162 @@ button{padding:12px 18px;background:#009500;color:#fff;border:none;border-radius
 </div>
 
 <script>
-let vendor=null;
+
+let vendor = null;
 
 async function login(){
- const r=await fetch('/vendor-login',{
- method:'POST',
- headers:{'Content-Type':'application/json'},
- body:JSON.stringify({
- email:email.value.trim().toLowerCase(),
- password:password.value
- })
- });
- const d=await r.json();
- if(!r.ok){msg.innerHTML=d.message;return;}
- vendor = d.vendor;
- login.style.display='none';
- dashboard.style.display='block';
- cover.src = vendor.cover_image || "";
-profile.src = vendor.profile_image || "";
-businessName.textContent = vendor.business_name;
+
+    const msg = document.getElementById("msg");
+
+    msg.innerHTML = "";
+
+    try{
+
+        const email = document.getElementById("email").value.trim().toLowerCase();
+
+        const password = document.getElementById("password").value;
+
+        const r = await fetch("/vendor-login",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                email,
+                password
+
+            })
+
+        });
+
+        const data = await r.json();
+
+        if(!r.ok){
+
+            msg.style.color="red";
+            msg.innerHTML=data.message;
+            return;
+
+        }
+
+        vendor=data.vendor;
+
+        document.getElementById("login").style.display="none";
+
+        document.getElementById("dashboard").style.display="block";
+
+        document.getElementById("cover").src=vendor.cover_image || "";
+
+        document.getElementById("profile").src=vendor.profile_image || "";
+
+        document.getElementById("businessName").innerHTML=vendor.business_name;
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        msg.style.color="red";
+
+        msg.innerHTML="Unable to connect to server.";
+
+    }
+
 }
 
-function editName(){
- businessName.style.display='none';
- editName.style.display='none';
- nameInput.style.display='inline';
- saveName.style.display='inline';
- nameInput.value=businessName.textContent;
+
+
+function startEditName(){
+
+    document.getElementById("businessName").style.display="none";
+
+    document.getElementById("editNameBtn").style.display="none";
+
+    document.getElementById("nameInput").style.display="inline-block";
+
+    document.getElementById("saveName").style.display="inline-block";
+
+    document.getElementById("nameInput").value=
+
+    document.getElementById("businessName").innerHTML;
+
 }
 
-saveName.onclick=async()=>{
- const r=await fetch('/update-business-name',{
- method:'POST',
- headers:{'Content-Type':'application/json'},
- body:JSON.stringify({
- email:vendor.email,
- businessName:nameInput.value.trim()
- })
- });
- const d=await r.json();
- if(r.ok){
- businessName.textContent=nameInput.value.trim();
- businessName.style.display='inline';
- editName.style.display='inline';
- nameInput.style.display='none';
- saveName.style.display='none';
- }else alert(d.message);
+
+
+document.getElementById("saveName").onclick=async function(){
+
+    const newName=document.getElementById("nameInput").value.trim();
+
+    if(newName===""){
+
+        alert("Business name cannot be empty.");
+
+        return;
+
+    }
+
+    try{
+
+        const r=await fetch("/update-business-name",{
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                email:vendor.email,
+
+                businessName:newName
+
+            })
+
+        });
+
+        const data=await r.json();
+
+        if(!r.ok){
+
+            alert(data.message);
+
+            return;
+
+        }
+
+        document.getElementById("businessName").innerHTML=newName;
+
+        vendor.business_name=newName;
+
+        document.getElementById("businessName").style.display="inline";
+
+        document.getElementById("editNameBtn").style.display="inline-block";
+
+        document.getElementById("nameInput").style.display="none";
+
+        document.getElementById("saveName").style.display="none";
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        alert("Unable to update business name.");
+
+    }
+
 };
 
-// TODO: upload cover/profile to Cloudinary then POST to
-// /update-cover and /update-profile
-</script>
-</body>
+
+// Cover and Profile upload will be added next.
+
+</script></body>
 </html>
