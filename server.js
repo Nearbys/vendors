@@ -37,6 +37,8 @@ async function initializeDatabase(){
 
             email VARCHAR(150) UNIQUE NOT NULL,
 
+            password VARCHAR(100) NOT NULL,
+
             whatsapp VARCHAR(30) UNIQUE NOT NULL,
 
             profile_image TEXT,
@@ -58,6 +60,11 @@ async function initializeDatabase(){
         await pool.query(`
             ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS cover_image TEXT;
+        `);
+
+        await pool.query(`
+            ALTER TABLE businesses
+            ADD COLUMN IF NOT EXISTS password VARCHAR(100);
         `);
 
         console.log("Database Ready");
@@ -86,6 +93,7 @@ app.post("/register", async(req,res)=>{
             deliveryType,
             deliveryFee,
             email,
+            password,
             whatsapp,
             profileImage,
             coverImage
@@ -205,6 +213,8 @@ app.post("/register", async(req,res)=>{
 
             email,
 
+            password,
+
             whatsapp,
 
             profile_image,
@@ -213,7 +223,7 @@ app.post("/register", async(req,res)=>{
 
         )
 
-        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
 
         `,
 
@@ -232,6 +242,8 @@ app.post("/register", async(req,res)=>{
             deliveryFee,
 
             email,
+
+            password,
 
             whatsapp,
 
