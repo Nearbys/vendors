@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Dashboard</title>
+<style>
+body{margin:0;font-family:Arial;background:#f4f4f4}
+#login{max-width:360px;margin:40px auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 8px #0002}
+input{width:100%;padding:12px;margin:10px 0;box-sizing:border-box}
+button{padding:12px 18px;background:#009500;color:#fff;border:none;border-radius:6px;cursor:pointer}
+#dashboard{display:none}
+.coverWrap{position:relative}
+#cover{width:100%;height:220px;object-fit:cover;background:#cfe}
+.coverEdit{position:absolute;right:15px;bottom:15px}
+.profileWrap{position:relative;width:150px;margin-left:20%;margin-top:-75px}
+#profile{width:150px;height:150px;border-radius:50%;border:5px solid #fff;object-fit:cover;background:#ddd}
+.profileEdit{position:absolute;right:0;bottom:0}
+.header{display:flex;align-items:center;padding:0 20px 20px}
+.nameArea{margin-left:30px;display:flex;align-items:center;gap:10px;font-size:34px;font-weight:bold;color:#0a8f0a;font-style:italic}
+#nameInput{display:none;font-size:26px;padding:6px}
+#saveName{display:none}
+</style>
+</head>
+<body>
+<div id="login">
+<h2>Vendor Login</h2>
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<div id="msg"></div>
+</div>
+
+<div id="dashboard">
+<div class="coverWrap">
+<img id="cover">
+<button class="coverEdit" onclick="document.getElementById('coverFile').click()">✏️</button>
+<input type="file" id="coverFile" hidden accept="image/*">
+</div>
+
+<div class="header">
+<div class="profileWrap">
+<img id="profile">
+<button class="profileEdit" onclick="document.getElementById('profileFile').click()">✏️</button>
+<input type="file" id="profileFile" hidden accept="image/*">
+</div>
+
+<div class="nameArea">
+<span id="businessName"></span>
+<button id="editName" onclick="editName()">✏️</button>
+<input id="nameInput">
+<button id="saveName">✔</button>
+</div>
+</div>
+</div>
+
+<script>
+let vendor=null;
+
+async function login(){
+ const r=await fetch('/vendor-login',{
+ method:'POST',
+ headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({
+ email:email.value.trim().toLowerCase(),
+ password:password.value
+ })
+ });
+ const d=await r.json();
+ if(!r.ok){msg.innerHTML=d.message;return;}
+ vendor=d;
+ login.style.display='none';
+ dashboard.style.display='block';
+ cover.src=d.cover_image||'';
+ profile.src=d.profile_image||'';
+ businessName.textContent=d.business_name;
+}
+
+function editName(){
+ businessName.style.display='none';
+ editName.style.display='none';
+ nameInput.style.display='inline';
+ saveName.style.display='inline';
+ nameInput.value=businessName.textContent;
+}
+
+saveName.onclick=async()=>{
+ const r=await fetch('/update-business-name',{
+ method:'POST',
+ headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({
+ email:vendor.email,
+ businessName:nameInput.value.trim()
+ })
+ });
+ const d=await r.json();
+ if(r.ok){
+ businessName.textContent=nameInput.value.trim();
+ businessName.style.display='inline';
+ editName.style.display='inline';
+ nameInput.style.display='none';
+ saveName.style.display='none';
+ }else alert(d.message);
+};
+
+// TODO: upload cover/profile to Cloudinary then POST to
+// /update-cover and /update-profile
+</script>
+</body>
+</html>
