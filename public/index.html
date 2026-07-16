@@ -276,6 +276,20 @@ type="email"
 id="email"
 placeholder="Email Address">
 
+<label>Password</label>
+
+<input
+type="password"
+id="password"
+placeholder="Enter Password">
+
+<label>Confirm Password</label>
+
+<input
+type="password"
+id="confirmPassword"
+placeholder="Confirm Password">
+    
 <label>WhatsApp</label>
 
 <input
@@ -291,6 +305,18 @@ Register Business
 
 <div id="result"></div>
 
+<div style="text-align:center;margin-top:15px;">
+
+Already Registered?
+
+<a href="vendors.html" style="color:#009500;font-weight:bold;text-decoration:none;">
+
+Login
+
+</a>
+
+</div>
+    
 </div>
 
 <script>
@@ -428,6 +454,10 @@ async function submitForm(){
 
     const email=document.getElementById("email").value.trim().toLowerCase();
 
+    const password=document.getElementById("password").value;
+
+    const confirmPassword=document.getElementById("confirmPassword").value;
+
     let whatsapp=document.getElementById("whatsapp").value.trim();
 
     const profileFile=document.getElementById("profileImage").files[0];
@@ -502,6 +532,26 @@ async function submitForm(){
 
     }
 
+    if(password.length<6){
+
+    result.className="error";
+
+    result.innerHTML="Password must contain at least 6 characters.";
+
+    return;
+
+}
+
+if(password!==confirmPassword){
+
+    result.className="error";
+
+    result.innerHTML="Passwords do not match.";
+
+    return;
+
+}
+    
     try{
 
         result.className="";
@@ -530,6 +580,7 @@ async function submitForm(){
                 deliveryType,
                 deliveryFee,
                 email,
+                password,
                 whatsapp,
                 profileImage,
                 coverImage
@@ -550,6 +601,8 @@ async function submitForm(){
             document.getElementById("deliveryType").selectedIndex=0;
             document.getElementById("deliveryFee").value="2";
             document.getElementById("email").value="";
+            document.getElementById("password").value="";
+            document.getElementById("confirmPassword").value="";
             document.getElementById("whatsapp").value="";
             document.getElementById("latitude").value="";
             document.getElementById("longitude").value="";
@@ -557,7 +610,6 @@ async function submitForm(){
             document.getElementById("coverImage").value="";
             document.getElementById("profilePreview").src="https://via.placeholder.com/120?text=Profile";
             document.getElementById("coverPreview").src="https://via.placeholder.com/120?text=Cover";
-
             document.getElementById("locationButton").disabled=false;
             document.getElementById("locationButton").innerHTML="Retrieve Current Location";
 
