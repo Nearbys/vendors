@@ -1,92 +1,3 @@
-app.post("/vendor-login", async (req, res) => {
-
-    try{
-
-        let { email, password } = req.body;
-
-        email = (email || "").trim().toLowerCase();
-        password = (password || "").trim();
-
-        if(email === "" || password === ""){
-
-            return res.status(400).json({
-                success:false,
-                message:"Please enter email and password."
-            });
-
-        }
-
-        const result = await pool.query(
-
-            `SELECT
-                id,
-                business_name,
-                category,
-                delivery_type,
-                delivery_fee,
-                email,
-                whatsapp,
-                profile_image,
-                cover_image,
-                password
-             FROM businesses
-             WHERE email=$1`,
-
-            [email]
-
-        );
-
-        if(result.rows.length === 0){
-
-            return res.status(401).json({
-                success:false,
-                message:"Email not registered."
-            });
-
-        }
-
-        const vendor = result.rows[0];
-
-        if(vendor.password !== password){
-
-            return res.status(401).json({
-                success:false,
-                message:"Incorrect password."
-            });
-
-        }
-
-        delete vendor.password;
-
-        res.json({
-
-            success:true,
-
-            vendor
-
-        });
-
-    }
-    catch(err){
-
-        console.log(err);
-
-        res.status(500).json({
-
-            success:false,
-            message:"Server Error"
-
-        });
-
-    }
-
-});
-
-
-
-
-
-
 const express = require("express");
 const { Pool } = require("pg");
 
@@ -442,3 +353,88 @@ app.listen(PORT,()=>{
     console.log("================================");
 
 });
+
+app.post("/vendor-login", async (req, res) => {
+
+    try{
+
+        let { email, password } = req.body;
+
+        email = (email || "").trim().toLowerCase();
+        password = (password || "").trim();
+
+        if(email === "" || password === ""){
+
+            return res.status(400).json({
+                success:false,
+                message:"Please enter email and password."
+            });
+
+        }
+
+        const result = await pool.query(
+
+            `SELECT
+                id,
+                business_name,
+                category,
+                delivery_type,
+                delivery_fee,
+                email,
+                whatsapp,
+                profile_image,
+                cover_image,
+                password
+             FROM businesses
+             WHERE email=$1`,
+
+            [email]
+
+        );
+
+        if(result.rows.length === 0){
+
+            return res.status(401).json({
+                success:false,
+                message:"Email not registered."
+            });
+
+        }
+
+        const vendor = result.rows[0];
+
+        if(vendor.password !== password){
+
+            return res.status(401).json({
+                success:false,
+                message:"Incorrect password."
+            });
+
+        }
+
+        delete vendor.password;
+
+        res.json({
+
+            success:true,
+
+            vendor
+
+        });
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+            message:"Server Error"
+
+        });
+
+    }
+
+});
+
