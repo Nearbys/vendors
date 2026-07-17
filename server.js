@@ -13,15 +13,10 @@ const pool = new Pool({
     }
 });
 
-
-
-
-
 async function initializeDatabase(){
 
     try{
 
-        // Create businesses table
         await pool.query(`
 
         CREATE TABLE IF NOT EXISTS businesses(
@@ -42,7 +37,13 @@ async function initializeDatabase(){
 
             email VARCHAR(150) UNIQUE NOT NULL,
 
+            password VARCHAR(100) NOT NULL,
+
             whatsapp VARCHAR(30) UNIQUE NOT NULL,
+
+            profile_image TEXT,
+
+            cover_image TEXT,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
@@ -50,12 +51,7 @@ async function initializeDatabase(){
 
         `);
 
-        // Existing columns
-        await pool.query(`
-            ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS cover_image TEXT;
-        `);
-
+        // Add new columns if the table already existed
         await pool.query(`
             ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS profile_image TEXT;
@@ -63,50 +59,19 @@ async function initializeDatabase(){
 
         await pool.query(`
             ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS password VARCHAR(255);
-        `);
-
-        // ===== Vendor Dashboard =====
-
-        await pool.query(`
-            ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS description TEXT;
+            ADD COLUMN IF NOT EXISTS cover_image TEXT;
         `);
 
         await pool.query(`
             ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS address TEXT;
+            ADD COLUMN IF NOT EXISTS password VARCHAR(100);
         `);
 
-        await pool.query(`
-            ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS delivery_area VARCHAR(50) DEFAULT 'N/A';
-        `);
-
-        await pool.query(`
-            ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS chargeable BOOLEAN DEFAULT FALSE;
-        `);
-
-        await pool.query(`
-            ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS currency VARCHAR(10) DEFAULT 'AED';
-        `);
-
-        await pool.query(`
-            ALTER TABLE businesses
-            ADD COLUMN IF NOT EXISTS fee NUMERIC(10,2) DEFAULT 0.00;
-        `);
-
-        console.log("================================");
         console.log("Database Ready");
-        console.log("Businesses table initialized");
-        console.log("================================");
 
     }
     catch(err){
 
-        console.log("Database Initialization Error:");
         console.log(err);
 
     }
@@ -114,11 +79,6 @@ async function initializeDatabase(){
 }
 
 initializeDatabase();
-
-
-
-
-
 
 app.post("/register", async(req,res)=>{
 
@@ -688,4 +648,3 @@ app.listen(PORT,()=>{
     console.log("================================");
 
 });
-
