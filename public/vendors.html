@@ -939,6 +939,11 @@ async function(){
 
         vendor.cover_image=imageUrl;
 
+        localStorage.setItem(
+    "vendor",
+    JSON.stringify(vendor)
+);
+
     }
     catch(err){
 
@@ -1005,6 +1010,11 @@ async function(){
         }
 
         vendor.profile_image=imageUrl;
+
+        localStorage.setItem(
+    "vendor",
+    JSON.stringify(vendor)
+);
 
     }
     catch(err){
