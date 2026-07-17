@@ -752,6 +752,8 @@ async function login(){
 
         vendor=data.vendor;
 
+        localStorage.setItem("vendor", JSON.stringify(vendor));
+
         document.getElementById("loginPage").style.display="none";
 
         document.getElementById("dashboard").style.display="block";
@@ -806,6 +808,8 @@ function loadVendor(){
 //================ LOGOUT ================//
 
 document.getElementById("logoutBtn").onclick=function(){
+
+    localStorage.removeItem("vendor");
 
     vendor=null;
 
@@ -1108,6 +1112,11 @@ document.getElementById("saveName").onclick=async function(){
 
         vendor.business_name=newName;
 
+        localStorage.setItem(
+    "vendor",
+    JSON.stringify(vendor)
+);
+
         document.getElementById("businessName").innerHTML=newName;
 
         cancelEditName();
@@ -1164,6 +1173,26 @@ function(e){
 }
 
 );
+
+window.onload=function(){
+
+    const savedVendor=
+
+    localStorage.getItem("vendor");
+
+    if(savedVendor){
+
+        vendor=JSON.parse(savedVendor);
+
+        document.getElementById("loginPage").style.display="none";
+
+        document.getElementById("dashboard").style.display="block";
+
+        loadVendor();
+
+    }
+
+};    
 
 </script>    
     
