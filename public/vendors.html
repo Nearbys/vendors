@@ -612,6 +612,10 @@ body{
 
             </div>
 
+            <div id="businessCategory"
+     style="margin-top:8px;color:#666;font-size:17px;font-weight:bold;">
+            </div>
+
             <div id="businessEditor">
 
                 <input
@@ -796,6 +800,10 @@ function loadVendor(){
     document.getElementById("nameInput").value=
 
         vendor.business_name;
+    
+    document.getElementById("businessCategory").textContent =
+    
+        vendor.category;
 
     document.getElementById("cover").src=
 
