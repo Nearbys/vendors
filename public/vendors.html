@@ -1063,6 +1063,14 @@ function loadVendor(){
     
         vendor.description || "";
 
+   document.getElementById("addressText").textContent =
+    
+       vendor.address || "No address added yet.";
+
+   document.getElementById("addressInput").value =
+    
+       vendor.address || "";     
+
     document.getElementById("emailText").textContent =
     
         vendor.email || "";
@@ -1521,7 +1529,107 @@ document.getElementById("saveDescription").onclick=async function(){
     btn.innerHTML="✔";
 
     };
-    
+
+
+
+
+
+
+
+
+
+    function startEditAddress(){
+
+    document.getElementById("addressDisplay").style.display="none";
+
+    document.getElementById("addressEditor").style.display="block";
+
+    document.getElementById("addressInput").focus();
+
+}
+
+function cancelEditAddress(){
+
+    document.getElementById("addressEditor").style.display="none";
+
+    document.getElementById("addressDisplay").style.display="block";
+
+    document.getElementById("addressInput").value =
+        vendor.address || "";
+
+}
+document.getElementById("saveAddress").onclick = async function(){
+
+    const address =
+        document.getElementById("addressInput").value.trim();
+
+    const btn = this;
+
+    btn.disabled = true;
+
+    btn.innerHTML = "Saving...";
+
+    try{
+
+        const response = await fetch("/update-address",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                email:vendor.email,
+
+                address
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            alert(data.message);
+
+            btn.disabled = false;
+
+            btn.innerHTML = "✔";
+
+            return;
+
+        }
+
+        vendor.address = address;
+
+        localStorage.setItem(
+            "vendor",
+            JSON.stringify(vendor)
+        );
+
+        document.getElementById("addressText").textContent =
+            address || "No address added yet.";
+
+        cancelEditAddress();
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        alert("Unable to update address.");
+
+    }
+
+    btn.disabled = false;
+
+    btn.innerHTML = "✔";
+
+};
+
 //============== ENTER KEY SUPPORT ==============//
 
 document.getElementById("password").addEventListener(
