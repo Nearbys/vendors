@@ -339,6 +339,7 @@ app.get("/businesses", async(req,res)=>{
                 id,
                 business_name,
                 category,
+                description,
                 email,
                 whatsapp,
                 profile_image,
@@ -601,7 +602,35 @@ app.post("/update-business-name", async (req, res) => {
 
 });
 
+app.post("/update-description", async (req, res) => {
 
+    const { email, description } = req.body;
+
+    try {
+
+        await pool.query(
+            `UPDATE businesses
+             SET description=$1
+             WHERE email=$2`,
+            [description, email]
+        );
+
+        res.json({
+            success: true,
+            message: "Description updated."
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+            message: "Unable to update description."
+        });
+
+    }
+
+});
 
 
 
