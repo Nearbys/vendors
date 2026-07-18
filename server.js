@@ -90,8 +90,6 @@ app.post("/register", async(req,res)=>{
             latitude,
             longitude,
             category,
-            deliveryType,
-            deliveryFee,
             email,
             password,
             whatsapp,
@@ -197,12 +195,6 @@ app.post("/register", async(req,res)=>{
 
         }
 
-        if(deliveryType==="Free"){
-
-            deliveryFee=0;
-
-        }
-
         await pool.query(
 
         `
@@ -217,10 +209,6 @@ app.post("/register", async(req,res)=>{
 
             category,
 
-            delivery_type,
-
-            delivery_fee,
-
             email,
 
             password,
@@ -233,7 +221,7 @@ app.post("/register", async(req,res)=>{
 
         )
 
-        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)
 
         `,
 
@@ -246,10 +234,6 @@ app.post("/register", async(req,res)=>{
             longitude,
 
             category,
-
-            deliveryType,
-
-            deliveryFee,
 
             email,
 
@@ -302,8 +286,6 @@ app.get("/businesses", async(req,res)=>{
                 latitude,
                 longitude,
                 category,
-                delivery_type,
-                delivery_fee,
                 email,
                 password,
                 whatsapp,
@@ -356,8 +338,6 @@ app.get("/businesses", async(req,res)=>{
                 id,
                 business_name,
                 category,
-                delivery_type,
-                delivery_fee,
                 email,
                 whatsapp,
                 profile_image,
