@@ -1059,9 +1059,17 @@ function loadVendor(){
     
        vendor.description || "Add description about your Business..";
 
-document.getElementById("descriptionInput").value =
+    document.getElementById("descriptionInput").value =
     
         vendor.description || "";
+
+    document.getElementById("emailText").textContent =
+    
+        vendor.email || "";
+
+    document.getElementById("contactText").textContent =
+    
+        vendor.contact || "";
 
     document.getElementById("cover").src=
 
