@@ -393,10 +393,6 @@ async function submitForm(){
 
     const category=document.getElementById("category").value;
 
-    const deliveryType=document.getElementById("deliveryType").value;
-
-    const deliveryFee=document.getElementById("deliveryFee").value;
-
     const email=document.getElementById("email").value.trim().toLowerCase();
 
     const password=document.getElementById("password").value;
@@ -432,20 +428,6 @@ async function submitForm(){
         result.className="error";
         result.innerHTML="Please select a category.";
         return;
-
-    }
-
-    if(deliveryType==="Chargeable"){
-
-        const fee=parseInt(deliveryFee);
-
-        if(isNaN(fee) || fee<0 || fee>20){
-
-            result.className="error";
-            result.innerHTML="Delivery fee must be between 0 and 20 Dhs.";
-            return;
-
-        }
 
     }
 
@@ -522,8 +504,6 @@ if(password!==confirmPassword){
                 latitude,
                 longitude,
                 category,
-                deliveryType,
-                deliveryFee,
                 email,
                 password,
                 whatsapp,
@@ -543,8 +523,6 @@ if(password!==confirmPassword){
 
             document.getElementById("businessName").value="";
             document.getElementById("category").selectedIndex=0;
-            document.getElementById("deliveryType").selectedIndex=0;
-            document.getElementById("deliveryFee").value="2";
             document.getElementById("email").value="";
             document.getElementById("password").value="";
             document.getElementById("confirmPassword").value="";
@@ -577,8 +555,6 @@ if(password!==confirmPassword){
     }
 
 }
-
-toggleDeliveryFee();
 
 </script>
 </body>
