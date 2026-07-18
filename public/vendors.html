@@ -322,7 +322,7 @@ body{
 
 }
 
-#saveName, #saveDescription, #cancelDescription,
+#saveName, #saveDescription, #cancelDescription, #saveAddress, #cancelAddress,
 
 #cancelName{
 
@@ -338,7 +338,7 @@ body{
 
 }
 
-#saveName,
+#saveName, #saveAddress,
 #saveDescription{
 
     background:#009500;
@@ -347,7 +347,7 @@ body{
 
 }
 
-#cancelName,
+#cancelName, #cancelAddress,
 #cancelDescription{
 
     background:#999;
@@ -697,6 +697,75 @@ body{
             </button>
 
         </div>
+
+    </div>
+
+</div>
+
+    <!-- ================= BUSINESS INFO ================= -->
+
+<div class="business-info">
+
+    <!-- Address -->
+
+    <div class="info-address">
+
+        <h3>Address</h3>
+
+        <div id="addressDisplay">
+
+            <p id="addressText"></p>
+
+            <button
+                id="editAddressBtn"
+                onclick="startEditAddress()">
+
+                ✏️
+
+            </button>
+
+        </div>
+
+        <div id="addressEditor" style="display:none;">
+
+            <textarea
+                id="addressInput"
+                rows="3"
+                maxlength="250"
+                placeholder="Enter your business address...">
+            </textarea>
+
+            <div class="address-buttons">
+
+                <button id="saveAddress">✔</button>
+
+                <button
+                    id="cancelAddress"
+                    onclick="cancelEditAddress()">
+
+                    ✖
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Contact Details -->
+
+    <div class="info-contact">
+
+        <p>
+            <strong>Email :</strong>
+            <span id="emailText"></span>
+        </p>
+
+        <p>
+            <strong>Contact :</strong>
+            <span id="contactText"></span>
+        </p>
 
     </div>
 
