@@ -643,16 +643,52 @@ body{
 
     </div>
 
-    <textarea
-    id="descriptionInput"
-    rows="3"
-    maxlength="300"
-    placeholder="Describe your business..."></textarea>
+  <div style="padding:0 20px 20px;">
 
-    <div>
-    <button id="saveDescription">✔ Save</button>
-    <button id="cancelDescription">✖ Cancel</button>
+    <!-- Display -->
+    <div id="descriptionDisplay">
+
+        <p id="descriptionText"
+           style="white-space:pre-wrap;line-height:1.6;color:#555;">
+        </p>
+
+        <button
+            id="editDescriptionBtn"
+            onclick="startEditDescription()"
+            style="margin-top:10px;width:40px;height:40px;border:none;border-radius:50%;background:#f0f0f0;cursor:pointer;">
+
+            ✏️
+
+        </button>
+
     </div>
+
+    <!-- Editor -->
+    <div id="descriptionEditor" style="display:none;">
+
+        <textarea
+            id="descriptionInput"
+            rows="3"
+            maxlength="300"
+            style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+
+        <div style="margin-top:10px;">
+
+            <button id="saveDescription">✔</button>
+
+            <button
+                id="cancelDescription"
+                onclick="cancelEditDescription()">
+
+                ✖
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
     <!-- Divider -->
 
@@ -814,9 +850,13 @@ function loadVendor(){
     
         vendor.category;
 
-   document.getElementById("descriptionInput").value =
+   document.getElementById("descriptionText").textContent =
     
-       vendor.description || "";
+       vendor.description || "No business description added yet.";
+
+document.getElementById("descriptionInput").value =
+    
+        vendor.description || "";
 
     document.getElementById("cover").src=
 
@@ -1177,19 +1217,40 @@ document.getElementById("saveName").onclick=async function(){
 
 //============== UPDATE DESCRIPTION ==============//
 
-document.getElementById("saveDescription").onclick = async function(){
+function startEditDescription(){
 
-    const description =
+    document.getElementById("descriptionDisplay").style.display="none";
+
+    document.getElementById("descriptionEditor").style.display="block";
+
+    document.getElementById("descriptionInput").focus();
+
+}
+
+function cancelEditDescription(){
+
+    document.getElementById("descriptionEditor").style.display="none";
+
+    document.getElementById("descriptionDisplay").style.display="block";
+
+    document.getElementById("descriptionInput").value=
+        vendor.description || "";
+
+}
+    
+document.getElementById("saveDescription").onclick=async function(){
+
+    const description=
         document.getElementById("descriptionInput").value.trim();
 
-    const btn = this;
+    const btn=this;
 
-    btn.disabled = true;
-    btn.innerHTML = "Saving...";
+    btn.disabled=true;
+    btn.innerHTML="Saving...";
 
     try{
 
-        const response = await fetch("/update-description",{
+        const response=await fetch("/update-description",{
 
             method:"POST",
 
@@ -1198,33 +1259,40 @@ document.getElementById("saveDescription").onclick = async function(){
             },
 
             body:JSON.stringify({
+
                 email:vendor.email,
+
                 description
+
             })
 
         });
 
-        const data = await response.json();
+        const data=await response.json();
 
         if(!response.ok){
 
             alert(data.message);
 
-            btn.disabled = false;
-            btn.innerHTML = "✔ Save";
+            btn.disabled=false;
+
+            btn.innerHTML="✔";
 
             return;
 
         }
 
-        vendor.description = description;
+        vendor.description=description;
 
         localStorage.setItem(
             "vendor",
             JSON.stringify(vendor)
         );
 
-        alert("Description updated successfully.");
+        document.getElementById("descriptionText").textContent=
+            description || "No business description added yet.";
+
+        cancelEditDescription();
 
     }
     catch(err){
@@ -1235,18 +1303,11 @@ document.getElementById("saveDescription").onclick = async function(){
 
     }
 
-    btn.disabled = false;
+    btn.disabled=false;
 
-    btn.innerHTML = "✔ Save";
+    btn.innerHTML="✔";
 
-};
-
-    document.getElementById("cancelDescription").onclick = function(){
-
-    document.getElementById("descriptionInput").value =
-        vendor.description || "";
-
-};
+    };
     
 //============== ENTER KEY SUPPORT ==============//
 
