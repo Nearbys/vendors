@@ -238,37 +238,6 @@ Retrieve Current Location
 
 </select>
 
-<label>Delivery Fee</label>
-
-<select
-id="deliveryType"
-onchange="toggleDeliveryFee()">
-
-<option value="Free">Free</option>
-
-<option value="Chargeable">Chargeable</option>
-
-</select>
-
-<div id="deliveryFeeRow">
-
-<label>Delivery Fee</label>
-
-<div class="input-row">
-
-<input
-type="number"
-id="deliveryFee"
-value="2"
-min="0"
-max="20">
-
-<span class="unit">Dhs</span>
-
-</div>
-
-</div>
-
 <label>Email</label>
 
 <input
@@ -376,30 +345,6 @@ function getLocation(){
         }
 
     );
-
-}
-
-function toggleDeliveryFee(){
-
-    const deliveryType=document.getElementById("deliveryType").value;
-    const feeRow=document.getElementById("deliveryFeeRow");
-
-    if(deliveryType==="Chargeable"){
-
-        feeRow.style.display="block";
-
-        if(document.getElementById("deliveryFee").value=="0"){
-
-            document.getElementById("deliveryFee").value="2";
-
-        }
-
-    }else{
-
-        feeRow.style.display="none";
-        document.getElementById("deliveryFee").value="0";
-
-    }
 
 }
 
