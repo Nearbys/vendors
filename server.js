@@ -31,10 +31,6 @@ async function initializeDatabase(){
 
             category VARCHAR(50) NOT NULL,
 
-            delivery_type VARCHAR(20) NOT NULL,
-
-            delivery_fee INTEGER DEFAULT 0,
-
             email VARCHAR(150) UNIQUE NOT NULL,
 
             password VARCHAR(100) NOT NULL,
