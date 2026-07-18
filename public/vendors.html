@@ -814,13 +814,9 @@ function loadVendor(){
     
         vendor.category;
 
-    document.getElementById("descriptionText").textContent =
+   document.getElementById("descriptionInput").value =
     
-        vendor.description || "Add description about your Business.";
-
-    document.getElementById("descriptionInput").value =
-    
-        vendor.description;
+       vendor.description || "";
 
     document.getElementById("cover").src=
 
@@ -1181,51 +1177,57 @@ document.getElementById("saveName").onclick=async function(){
 
 //============== UPDATE DESCRIPTION ==============//
 
-    function startEditDescription() {
-    document.getElementById("descriptionDisplay").style.display = "none";
-    document.getElementById("descriptionEditor").style.display = "block";
-    document.getElementById("descriptionInput").focus();
-}
-
-function cancelEditDescription() {
-    document.getElementById("descriptionEditor").style.display = "none";
-    document.getElementById("descriptionDisplay").style.display = "block";
-    document.getElementById("descriptionInput").value =
-        vendor.description || "";
-}
-
-    document.getElementById("saveDescription").onclick = async function () {
+document.getElementById("saveDescription").onclick = async function(){
 
     const description =
         document.getElementById("descriptionInput").value.trim();
 
-    const response = await fetch("/update-description", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            email: vendor.email,
-            description
-        })
-    });
+    const btn = this;
 
-    const data = await response.json();
+    btn.disabled = true;
+    btn.innerHTML = "Saving...";
 
-    if (!response.ok) {
-        alert(data.message);
-        return;
+    try{
+
+        const response = await fetch("/update-description",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+                email:vendor.email,
+                description
+            })
+
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            alert(data.message);
+
+            btn.disabled = false;
+            btn.innerHTML = "✔ Save";
+
+            return;
+
+        }
+
+        vendor.description = description;
+
+        localStorage.setItem(
+            "vendor",
+            JSON.stringify(vendor)
+        );
+
+        alert("Description updated successfully.");
+
     }
-
-    vendor.description = description;
-    localStorage.setItem("vendor", JSON.stringify(vendor));
-
-    document.getElementById("descriptionText").textContent =
-        description || "No description added yet.";
-
-    cancelEditDescription();
-
-         catch(err){
+    catch(err){
 
         console.log(err);
 
@@ -1235,10 +1237,17 @@ function cancelEditDescription() {
 
     btn.disabled = false;
 
-    btn.innerHTML = "✔";
-        
+    btn.innerHTML = "✔ Save";
+
 };
 
+    document.getElementById("cancelDescription").onclick = function(){
+
+    document.getElementById("descriptionInput").value =
+        vendor.description || "";
+
+};
+    
 //============== ENTER KEY SUPPORT ==============//
 
 document.getElementById("password").addEventListener(
