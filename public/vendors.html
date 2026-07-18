@@ -643,7 +643,16 @@ body{
 
     </div>
 
+    <textarea
+    id="descriptionInput"
+    rows="3"
+    maxlength="300"
+    placeholder="Describe your business..."></textarea>
 
+    <div>
+    <button id="saveDescription">✔ Save</button>
+    <button id="cancelDescription">✖ Cancel</button>
+    </div>
 
     <!-- Divider -->
 
@@ -804,6 +813,10 @@ function loadVendor(){
     document.getElementById("businessCategory").textContent =
     
         vendor.category;
+
+    document.getElementById("businessDescription").textContent =
+    
+        vendor.description || "No description added yet.";
 
     document.getElementById("cover").src=
 
