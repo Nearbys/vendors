@@ -60,6 +60,11 @@ async function initializeDatabase(){
 
         await pool.query(`
             ALTER TABLE businesses
+            ADD COLUMN IF NOT EXISTS description TEXT;
+        `);
+
+        await pool.query(`
+            ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS password VARCHAR(100);
         `);
 
