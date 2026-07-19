@@ -75,6 +75,12 @@ async function initializeDatabase(){
 
         await pool.query(`
 
+            ALTER TABLE businesses
+            ADD COLUMN IF NOT EXISTS fee DECIMAL(10,2) DEFAULT 0.00;
+            `);
+
+        await pool.query(`
+
         ALTER TABLE businesses
 
         ADD COLUMN IF NOT EXISTS currency VARCHAR(10) DEFAULT 'AED';
@@ -361,6 +367,7 @@ app.get("/businesses", async(req,res)=>{
                 address,
                 delivery,
                 currency,
+                fee,
                 email,
                 whatsapp,
                 profile_image,
@@ -788,6 +795,57 @@ app.post("/update-currency", async (req, res) => {
 
 });
 
+
+
+
+
+app.post("/update-fee", async (req, res) => {
+
+    const { email, fee } = req.body;
+
+    try{
+
+        await pool.query(
+
+            `UPDATE businesses
+             SET fee=$1
+             WHERE email=$2`,
+
+            [
+
+                fee,
+
+                email
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Fee updated."
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Unable to update fee."
+
+        });
+
+    }
+
+});
 
 
 
