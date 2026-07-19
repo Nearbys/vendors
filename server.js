@@ -70,6 +70,11 @@ async function initializeDatabase(){
 
         await pool.query(`
             ALTER TABLE businesses
+            ADD COLUMN IF NOT EXISTS delivery TEXT;
+        `);
+
+        await pool.query(`
+            ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS password VARCHAR(100);
         `);
 
@@ -346,6 +351,7 @@ app.get("/businesses", async(req,res)=>{
                 category,
                 description,
                 address,
+                delivery,
                 email,
                 whatsapp,
                 profile_image,
