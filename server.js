@@ -74,21 +74,6 @@ async function initializeDatabase(){
         `);
 
         await pool.query(`
-ALTER TABLE businesses
-ADD COLUMN IF NOT EXISTS chargeable BOOLEAN DEFAULT FALSE;
-`);
-
-await pool.query(`
-ALTER TABLE businesses
-ADD COLUMN IF NOT EXISTS currency VARCHAR(5) DEFAULT 'AED';
-`);
-
-await pool.query(`
-ALTER TABLE businesses
-ADD COLUMN IF NOT EXISTS delivery_amount NUMERIC(8,2) DEFAULT 0;
-`);
-
-        await pool.query(`
             ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS password VARCHAR(100);
         `);
@@ -367,9 +352,6 @@ app.get("/businesses", async(req,res)=>{
                 description,
                 address,
                 delivery,
-                chargeable,
-                currency,
-                delivery_amount,
                 email,
                 whatsapp,
                 profile_image,
@@ -746,70 +728,6 @@ app.post("/update-delivery", async (req, res) => {
 });
 
 
-
-
-
-
-app.post("/update-delivery-charge", async (req, res) => {
-
-    const {
-
-        email,
-
-        chargeable,
-
-        currency,
-
-        deliveryAmount
-
-    } = req.body;
-
-    try{
-
-        await pool.query(
-
-            `UPDATE businesses
-             SET chargeable=$1,
-                 currency=$2,
-                 delivery_amount=$3
-             WHERE email=$4`,
-
-            [
-
-                chargeable,
-
-                currency,
-
-                deliveryAmount,
-
-                email
-
-            ]
-
-        );
-
-        res.json({
-
-            success:true,
-
-            message:"Delivery charge updated."
-
-        });
-
-    }
-    catch(err){
-
-        console.log(err);
-
-        res.status(500).json({
-
-            message:"Unable to update delivery charge."
-
-        });
-
-    }
-
-});
 
 
 
