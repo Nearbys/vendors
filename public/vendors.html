@@ -1145,6 +1145,10 @@ function loadVendor(){
     
         vendor.whatsapp || "";
 
+    document.getElementById("deliverySelect").value =
+    
+        vendor.delivery || "N/A";
+
     document.getElementById("cover").src=
 
         vendor.cover_image ||
@@ -1602,7 +1606,7 @@ document.getElementById("saveDescription").onclick=async function(){
 
 
 
-
+//============== UPDATE ADDRESS ==============//
 
     function startEditAddress(){
 
@@ -1695,6 +1699,69 @@ document.getElementById("saveAddress").onclick = async function(){
     btn.innerHTML = "✔";
 
 };
+
+//============== UPDATE DELIVEVRY ==============//
+
+    document.getElementById("deliverySelect").addEventListener(
+
+"change",
+
+async function(){
+
+    const delivery = this.value;
+
+    try{
+
+        const response = await fetch("/update-delivery",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                email:vendor.email,
+
+                delivery
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            alert(data.message);
+
+            this.value = vendor.delivery || "N/A";
+
+            return;
+
+        }
+
+        vendor.delivery = delivery;
+
+        localStorage.setItem(
+            "vendor",
+            JSON.stringify(vendor)
+        );
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        alert("Unable to update delivery.");
+
+        this.value = vendor.delivery || "N/A";
+
+    }
+
+});
+    
 
 //============== ENTER KEY SUPPORT ==============//
 
