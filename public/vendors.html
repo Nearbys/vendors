@@ -686,6 +686,54 @@ body{
 
 }
 
+    /* ================= CURRENCY ================= */
+
+.currency-section{
+
+    padding:0 20px 20px;
+
+}
+
+.currency-section label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+    color:#444;
+
+}
+
+#currencySelect{
+
+    width:100%;
+
+    max-width:350px;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    background:white;
+
+    cursor:pointer;
+
+}
+
+#currencySelect:focus{
+
+    outline:none;
+
+    border-color:#009500;
+
+}
+
 
 
 /* ================= MOBILE ================= */
@@ -1082,6 +1130,26 @@ body{
     <span id="chargeableLabel">
         Free Delivery
     </span>
+
+</div>
+
+    <div class="currency-section">
+
+    <label for="currencySelect">
+        <strong>Currency</strong>
+    </label>
+
+    <select id="currencySelect">
+
+        <option value="AED">AED - UAE Dirham</option>
+
+        <option value="SAR">SAR - Saudi Riyal</option>
+
+        <option value="OMR">OMR - Omani Rial</option>
+
+        <option value="USD">USD - US Dollar</option>
+
+    </select>
 
 </div>
 
