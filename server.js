@@ -306,19 +306,24 @@ app.get("/businesses", async(req,res)=>{
         const result=await pool.query(
 
             `SELECT
-                id,
-                business_name,
-                latitude,
-                longitude,
-                category,
-                email,
-                password,
-                whatsapp,
-                profile_image,
-                cover_image,
-                created_at
-             FROM businesses
-             ORDER BY id DESC`
+    id,
+    business_name,
+    latitude,
+    longitude,
+    category,
+    description,
+    address,
+    delivery,
+    currency,
+    fee,
+    email,
+    password,
+    whatsapp,
+    profile_image,
+    cover_image,
+    created_at
+FROM businesses
+ORDER BY id DESC`
 
         );
 
