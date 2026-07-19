@@ -1204,10 +1204,10 @@ body{
     <input
         type="number"
         id="deliveryFee"
-        placeholder="Enter delivery fee"
-        min="0"
-        step="0.01">
-
+        placeholder="0.00"
+        min="0.00"
+        step="0.01"
+        inputmode="decimal">
 </div>
     
     <!-- Divider -->
@@ -1401,6 +1401,10 @@ function loadVendor(){
     document.getElementById("currencySelect").value =
    
         vendor.currency || "AED";
+
+    document.getElementById("deliveryFee").value =
+    
+        vendor.fee || "0.00";
     
     document.getElementById("cover").src=
 
@@ -2015,8 +2019,6 @@ async function(){
 
 });
 
-//============== ENTER KEY SUPPORT ==============//
-
 //============== UPDATE CURRENCY ==============//
 
 document.getElementById("currencySelect").addEventListener(
@@ -2083,7 +2085,82 @@ async function(){
 
 });    
 
-//============== ENTER KEY SUPPORT ==============//
+//============== UPDATE DELIVERY FEE ==============//    
+
+const feeInput = document.getElementById("deliveryFee");
+
+feeInput.addEventListener("blur", async function(){
+
+    let fee = parseFloat(this.value);
+
+    if(isNaN(fee) || fee < 0){
+
+        fee = 0;
+
+    }
+
+    fee = fee.toFixed(2);
+
+    this.value = fee;
+
+    try{
+
+        const response = await fetch("/update-fee",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                email:vendor.email,
+
+                fee
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            alert(data.message);
+
+            this.value = vendor.fee || "0.00";
+
+            return;
+
+        }
+
+        vendor.fee = fee;
+
+        localStorage.setItem(
+
+            "vendor",
+
+            JSON.stringify(vendor)
+
+        );
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        alert("Unable to update fee.");
+
+        this.value = vendor.fee || "0.00";
+
+    }
+
+});
+    
+    
+//============== ENTER KEY SUPPORT ==============//    
 
 document.getElementById("password").addEventListener(
 
