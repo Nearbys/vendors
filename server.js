@@ -688,6 +688,50 @@ app.post("/update-description", async (req, res) => {
 
 
 
+app.post("/update-delivery", async (req, res) => {
+
+    const { email, delivery } = req.body;
+
+    try{
+
+        await pool.query(
+
+            `UPDATE businesses
+             SET delivery=$1
+             WHERE email=$2`,
+
+            [delivery, email]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Delivery updated."
+
+        });
+
+    }
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            message:"Unable to update delivery."
+
+        });
+
+    }
+
+});
+
+
+
+
+
+
 // Health Check
 app.get("/health",(req,res)=>{
 
