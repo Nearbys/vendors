@@ -74,6 +74,14 @@ async function initializeDatabase(){
         `);
 
         await pool.query(`
+
+        ALTER TABLE businesses
+
+        ADD COLUMN IF NOT EXISTS currency VARCHAR(10) DEFAULT 'AED';
+
+       `);
+
+        await pool.query(`
             ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS password VARCHAR(100);
         `);
@@ -352,6 +360,7 @@ app.get("/businesses", async(req,res)=>{
                 description,
                 address,
                 delivery,
+                currency,
                 email,
                 whatsapp,
                 profile_image,
@@ -727,6 +736,57 @@ app.post("/update-delivery", async (req, res) => {
 
 });
 
+
+
+
+
+app.post("/update-currency", async (req, res) => {
+
+    const { email, currency } = req.body;
+
+    try{
+
+        await pool.query(
+
+            `UPDATE businesses
+             SET currency=$1
+             WHERE email=$2`,
+
+            [
+
+                currency,
+
+                email
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Currency updated."
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Unable to update currency."
+
+        });
+
+    }
+
+});
 
 
 
