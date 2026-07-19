@@ -872,10 +872,253 @@ body{
 
 }
 
-    
-/* ================= MOBILE ================= */
+    /*================ PRODUCTS ================*/
+
+.product-form{
+
+    display:flex;
+
+    gap:20px;
+
+    align-items:flex-start;
+
+    flex-wrap:wrap;
+
+    margin-top:20px;
+
+}
+
+.product-image-box{
+
+    width:180px;
+
+    height:180px;
+
+    border:2px dashed #c8c8c8;
+
+    border-radius:12px;
+
+    background:#fafafa;
+
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+
+    position:relative;
+
+    flex-shrink:0;
+
+}
+
+#productPreview{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:none;
+
+}
+
+#productPlus{
+
+    font-size:60px;
+
+    color:#999;
+
+    user-select:none;
+
+}
+
+.product-fields{
+
+    flex:1;
+
+    min-width:280px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+.product-fields input,
+
+.product-fields select,
+
+#productDescription{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    box-sizing:border-box;
+
+}
+
+.quantity-row{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+#productQuantity{
+
+    flex:2;
+
+}
+
+#productUnit{
+
+    flex:1;
+
+}
+
+.price-row{
+
+    display:flex;
+
+}
+
+#productPrice{
+
+    flex:1;
+
+    border-radius:8px 0 0 8px;
+
+}
+
+#productCurrency{
+
+    width:90px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border:1px solid #ccc;
+
+    border-left:none;
+
+    border-radius:0 8px 8px 0;
+
+    background:#f7f7f7;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    color:#009500;
+
+}
+
+#productDescription{
+
+    margin-top:20px;
+
+    min-height:90px;
+
+    resize:vertical;
+
+}
+
+#createProductBtn{
+
+    margin-top:20px;
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#009500;
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+#createProductBtn:hover{
+
+    background:#007d00;
+
+}
+
+.product-fields input:focus,
+
+.product-fields select:focus,
+
+#productDescription:focus{
+
+    outline:none;
+
+    border-color:#009500;
+
+}
+
+/*================ MOBILE ================*/
 
 @media(max-width:700px){
+
+    .product-form{
+
+        flex-direction:column;
+
+        align-items:center;
+
+    }
+
+    .product-image-box{
+
+        width:220px;
+
+        height:220px;
+
+    }
+
+    .product-fields{
+
+        width:100%;
+
+        min-width:100%;
+
+    }
+
+    #productCurrency{
+
+        width:80px;
+
+    }
 
     #cover{
 
@@ -1354,9 +1597,97 @@ body{
 
     <div id="productsSection" class="page-section">
 
-    <h2>Products</h2>
+    <div class="product-form">
+
+        <label for="productImageInput" class="product-image-box">
+
+            <img id="productPreview" alt="">
+
+            <span id="productPlus">+</span>
+
+        </label>
+
+        <input
+            type="file"
+            id="productImageInput"
+            accept="image/*"
+            capture="environment"
+            hidden>
+
+        <div class="product-fields">
+
+            <input
+                type="text"
+                id="productTitle"
+                placeholder="Product title">
+
+            <select id="productCategory">
+
+                <option value="">
+                    Select category
+                </option>
+
+            </select>
+
+            <div class="quantity-row">
+
+                <input
+                    type="number"
+                    id="productQuantity"
+                    placeholder="Quantity"
+                    min="0"
+                    step="0.01">
+
+                <select id="productUnit">
+
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="ml">ml</option>
+                    <option value="L">L</option>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="pcs">pcs</option>
+                    <option value="pack">pack</option>
+                    <option value="box">box</option>
+
+                </select>
+
+            </div>
+
+            <div class="price-row">
+
+                <input
+                    type="number"
+                    id="productPrice"
+                    placeholder="Price"
+                    min="0"
+                    step="0.01">
+
+                <div id="productCurrency">
+
+                    AED
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <textarea
+        id="productDescription"
+        rows="3"
+        placeholder="Product description"></textarea>
+
+    <button id="createProductBtn">
+
+        Create Product
+
+    </button>
 
     </div>    
+    
      <!-- ================= Footer ================= -->
 
     <footer class="vendor-footer">
