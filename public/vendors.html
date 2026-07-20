@@ -756,38 +756,28 @@ const productCategories = {
 
 function loadProductForm(){
 
+    const vendor = JSON.parse(localStorage.getItem("vendor"));
+
+    if(!vendor) return;
+
     const categorySelect = document.getElementById("productCategory");
 
-    const currency = document.getElementById("productCurrency");
-
-    categorySelect.innerHTML = "";
-
-    const defaultOption = document.createElement("option");
-
-    defaultOption.value = "";
-
-    defaultOption.textContent = "Select category";
-
-    categorySelect.appendChild(defaultOption);
+    categorySelect.innerHTML =
+        '<option value="">Select category</option>';
 
     const categories = productCategories[vendor.category] || [];
 
     categories.forEach(category=>{
 
-        const option = document.createElement("option");
-
-        option.value = category;
-
-        option.textContent = category;
-
-        categorySelect.appendChild(option);
+        categorySelect.innerHTML +=
+            `<option value="${category}">${category}</option>`;
 
     });
 
-    currency.textContent = vendor.currency || "";
+    document.getElementById("productCurrency").textContent =
+        vendor.currency || "";
 
 }
-
     
 
 //================================//
