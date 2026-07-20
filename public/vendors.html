@@ -672,6 +672,124 @@ productModal.addEventListener("click", (e) => {
 
 });
 
+
+//================ PRODUCT CATEGORIES ================//
+
+const productCategories = {
+
+    Grocery : [
+
+        "Fruits",
+        "Vegetables",
+        "Dairy",
+        "Meat",
+        "Seafood",
+        "Bakery",
+        "Frozen",
+        "Snacks",
+        "Beverages",
+        "Rice",
+        "Pasta",
+        "Spices",
+        "Canned Food",
+        "Household",
+        "Personal Care"
+
+    ],
+
+    Cafeteria : [
+
+        "Hot Drinks",
+        "Cold Drinks",
+        "Juices",
+        "Milkshakes",
+        "Sandwiches",
+        "Burgers",
+        "Pizza",
+        "Snacks",
+        "Desserts",
+        "Breakfast"
+
+    ],
+
+    Restaurant : [
+
+        "Starters",
+        "Main Course",
+        "Seafood",
+        "Grill",
+        "Rice",
+        "Pasta",
+        "Pizza",
+        "Desserts",
+        "Beverages"
+
+    ],
+
+    Bakery : [
+
+        "Bread",
+        "Cakes",
+        "Pastries",
+        "Cookies",
+        "Donuts",
+        "Sandwiches",
+        "Beverages"
+
+    ],
+
+    Pharmacy : [
+
+        "Medicines",
+        "Vitamins",
+        "Baby Care",
+        "Personal Care",
+        "Skin Care",
+        "First Aid",
+        "Medical Devices"
+
+    ]
+
+};
+
+//================ LOAD PRODUCT FORM ================//
+
+function loadProductForm(){
+
+    const categorySelect = document.getElementById("productCategory");
+
+    const currency = document.getElementById("productCurrency");
+
+    categorySelect.innerHTML = "";
+
+    const defaultOption = document.createElement("option");
+
+    defaultOption.value = "";
+
+    defaultOption.textContent = "Select category";
+
+    categorySelect.appendChild(defaultOption);
+
+    const categories = productCategories[vendor.category] || [];
+
+    categories.forEach(category=>{
+
+        const option = document.createElement("option");
+
+        option.value = category;
+
+        option.textContent = category;
+
+        categorySelect.appendChild(option);
+
+    });
+
+    currency.textContent = vendor.currency || "";
+
+}
+
+    
+
 //================================//
 
 
