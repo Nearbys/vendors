@@ -4,116 +4,68 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vendor Dashboard</title>
-<link
-    id="productsStyle"
-    rel="stylesheet"
-    href=""
-    disabled>
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+<link id="productsStyle" rel="stylesheet" href="" disabled>
+<link rel="stylesheet" href="/dashboard.css"> 
+    <style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
     font-family:Arial,Helvetica,sans-serif;
     background:#f3f3f3;
 }
 
-/* ================= LOGIN ================= */
-
 .login-page{
-
-    width:100%;
     min-height:100vh;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     padding:20px;
-
 }
 
 .login-card{
-
     width:100%;
     max-width:400px;
-
     background:#fff;
-
     border-radius:12px;
-
     padding:25px;
-
     box-shadow:0 5px 18px rgba(0,0,0,.12);
-
 }
 
 .login-card h2{
-
-    text-align:center;
-
-    color:#009500;
-
     margin-bottom:25px;
-
+    text-align:center;
+    color:#009500;
 }
 
-.login-card input{
-
+.login-card input,
+.login-card button{
     width:100%;
-
     padding:13px;
-
-    margin-bottom:15px;
-
     border:1px solid #ccc;
-
     border-radius:8px;
-
     font-size:16px;
-
+    margin-bottom:15px;
 }
 
 .login-card button{
-
-    width:100%;
-
-    padding:13px;
-
     border:none;
-
-    border-radius:8px;
-
     background:#009500;
-
     color:#fff;
-
-    font-size:16px;
-
     cursor:pointer;
-
 }
 
 .login-card button:hover{
-
     background:#007d00;
-
 }
 
 #msg{
-
     margin-top:15px;
-
     text-align:center;
-
-    color:red;
-
     font-weight:bold;
-
+    color:red;
 }
+
 </style>
 </head>
 <body>
