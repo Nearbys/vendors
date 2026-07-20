@@ -1715,13 +1715,13 @@ async()=>{
 
         }
 
-        const oldFolder = FOLDER;
+        const image = await uploadToCloudinary(
 
-        FOLDER = "Products";
+        productImageFile,
 
-        const image = await uploadToCloudinary(productImageFile);
+        "Products"
 
-        FOLDER = oldFolder;
+        );
 
         const response = await fetch("/products",{
 
