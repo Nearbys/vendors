@@ -1813,6 +1813,8 @@ body{
 
 <script>
 
+//================ PRODUCT MODAL ================//    
+
 const style = document.getElementById("productsStyle");
 
 if(style.disabled){
@@ -1823,9 +1825,37 @@ if(style.disabled){
 
 }
 
+//================ --- ================//
 
+const productModal = document.getElementById("productModal");
 
+const addProductBtn = document.getElementById("addProductBtn");
 
+const closeProductModal = document.getElementById("closeProductModal");
+
+addProductBtn.addEventListener("click", () => {
+
+    productModal.style.display = "flex";
+
+});
+
+closeProductModal.addEventListener("click", () => {
+
+    productModal.style.display = "none";
+
+});
+
+productModal.addEventListener("click", (e) => {
+
+    if(e.target === productModal){
+
+        productModal.style.display = "none";
+
+    }
+
+});
+
+//================================//
 
 
     
