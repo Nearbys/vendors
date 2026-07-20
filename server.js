@@ -74,30 +74,152 @@ async function initializeDatabase(){
         `);
 
         await pool.query(`
-
             ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS fee DECIMAL(10,2) DEFAULT 0.00;
-            `);
+        `);
 
         await pool.query(`
-
-        ALTER TABLE businesses
-
-        ADD COLUMN IF NOT EXISTS currency VARCHAR(10) DEFAULT 'AED';
-
-       `);
+            ALTER TABLE businesses
+            ADD COLUMN IF NOT EXISTS currency VARCHAR(10) DEFAULT 'AED';
+        `);
 
         await pool.query(`
             ALTER TABLE businesses
             ADD COLUMN IF NOT EXISTS password VARCHAR(100);
         `);
 
+
+
+        //================ PRODUCTS TABLE ================//
+
+        await pool.query(`
+
+        CREATE TABLE IF NOT EXISTS products(
+
+            id SERIAL PRIMARY KEY,
+
+            business_id INTEGER NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+
+            title VARCHAR(255) NOT NULL,
+
+            category VARCHAR(100),
+
+            description TEXT,
+
+            quantity NUMERIC(10,2),
+
+            unit VARCHAR(20),
+
+            price NUMERIC(10,2) NOT NULL,
+
+            image TEXT,
+
+            available BOOLEAN DEFAULT TRUE,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+        );
+
+        `);
+
+        await addProductColumn(
+            "category",
+            "VARCHAR(100)"
+        );
+
+        await addProductColumn(
+            "description",
+            "TEXT"
+        );
+
+        await addProductColumn(
+            "quantity",
+            "NUMERIC(10,2)"
+        );
+
+        await addProductColumn(
+            "unit",
+            "VARCHAR(20)"
+        );
+
+        await addProductColumn(
+            "price",
+            "NUMERIC(10,2)"
+        );
+
+        await addProductColumn(
+            "image",
+            "TEXT"
+        );
+
+        await addProductColumn(
+            "available",
+            "BOOLEAN DEFAULT TRUE"
+        );
+
+        await addProductColumn(
+            "updated_at",
+            "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+        );
+
+
+
+        //================ PRODUCTS INDEXES ================//
+
+        await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_products_business
+        ON products(business_id);
+        `);
+
+        await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_products_category
+        ON products(category);
+        `);
+
+        await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_products_available
+        ON products(available);
+        `);
+
+
+
         console.log("Database Ready");
 
     }
+
     catch(err){
 
         console.log(err);
+
+    }
+
+}
+
+async function addProductColumn(column, definition){
+
+    const check = await pool.query(
+
+        `SELECT column_name
+         FROM information_schema.columns
+         WHERE table_name='products'
+         AND column_name=$1`,
+
+        [column]
+
+    );
+
+    if(check.rows.length===0){
+
+        await pool.query(
+
+            `ALTER TABLE products
+             ADD COLUMN ${column} ${definition}`
+
+        );
+
+        console.log(`Added products.${column}`);
 
     }
 
@@ -851,6 +973,237 @@ app.post("/update-fee", async (req, res) => {
     }
 
 });
+
+
+
+
+
+//================ CREATE PRODUCT ================//
+
+app.post("/products", async(req,res)=>{
+
+    try{
+
+        let{
+
+            business_id,
+            title,
+            category,
+            description,
+            quantity,
+            unit,
+            price,
+            image
+
+        } = req.body;
+
+        title = (title || "").trim();
+
+        category = (category || "").trim();
+
+        description = (description || "").trim();
+
+        unit = (unit || "").trim();
+
+        quantity = Number(quantity);
+
+        price = Number(price);
+
+        if(!business_id){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Business ID is required."
+
+            });
+
+        }
+
+        if(title===""){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Product title is required."
+
+            });
+
+        }
+
+        if(category===""){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Category is required."
+
+            });
+
+        }
+
+        if(isNaN(price)){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Invalid price."
+
+            });
+
+        }
+
+        if(isNaN(quantity)){
+
+            quantity = 0;
+
+        }
+
+        const result = await pool.query(
+
+            `
+
+            INSERT INTO products(
+
+                business_id,
+
+                title,
+
+                category,
+
+                description,
+
+                quantity,
+
+                unit,
+
+                price,
+
+                image
+
+            )
+
+            VALUES(
+
+                $1,$2,$3,$4,$5,$6,$7,$8
+
+            )
+
+            RETURNING *
+
+            `,
+
+            [
+
+                business_id,
+
+                title,
+
+                category,
+
+                description,
+
+                quantity,
+
+                unit,
+
+                price,
+
+                image || ""
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            product:result.rows[0]
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Unable to create product."
+
+        });
+
+    }
+
+});
+
+
+
+
+//================ GET PRODUCTS ================//
+
+app.get("/products/:business_id", async(req,res)=>{
+
+    try{
+
+        const { business_id } = req.params;
+
+        const result = await pool.query(
+
+            `
+
+            SELECT *
+
+            FROM products
+
+            WHERE business_id=$1
+
+            ORDER BY category ASC, title ASC
+
+            `,
+
+            [
+
+                business_id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            products:result.rows
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Unable to load products."
+
+        });
+
+    }
+
+});
+
 
 
 
