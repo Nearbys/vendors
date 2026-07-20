@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vendor Dashboard</title>
+<link
+    id="productsStyle"
+    rel="stylesheet"
+    href=""
+    disabled>
 <style>
 *{
     margin:0;
@@ -1631,9 +1636,43 @@ body{
 
     <div id="productsSection" class="page-section">
 
-    <div class="product-card">
+    <div class="products-header">
 
-        <h2>Add Product</h2>
+        <h2>Products</h2>
+
+        <button id="addProductBtn">
+
+            +
+
+        </button>
+
+    </div>
+
+    <div id="productsList">
+
+        <!-- Products will be loaded here -->
+
+    </div>
+
+</div>
+
+<!--================ ADD PRODUCT MODAL ================-->
+
+<div id="productModal">
+
+    <div class="product-modal-content">
+
+        <div class="modal-header">
+
+            <h2>Add Product</h2>
+
+            <button id="closeProductModal">
+
+                ✕
+
+            </button>
+
+        </div>
 
         <div class="product-form">
 
@@ -1680,15 +1719,15 @@ body{
 
                         <select id="productUnit">
 
-                            <option value="g">g</option>
-                            <option value="kg">kg</option>
-                            <option value="ml">ml</option>
-                            <option value="L">L</option>
-                            <option value="cm">cm</option>
-                            <option value="m">m</option>
-                            <option value="pcs">pcs</option>
-                            <option value="pack">pack</option>
-                            <option value="box">box</option>
+                            <option>g</option>
+                            <option>kg</option>
+                            <option>ml</option>
+                            <option>L</option>
+                            <option>cm</option>
+                            <option>m</option>
+                            <option>pcs</option>
+                            <option>pack</option>
+                            <option>box</option>
 
                         </select>
 
@@ -1730,15 +1769,9 @@ body{
 
     </div>
 
-    <div id="productsList">
-
-        <!-- Products will be listed here -->
-
-    </div>
-
 </div>
     
-     <!-- ================= Footer ================= -->
+    <!-- ================= Footer ================= -->
 
     <footer class="vendor-footer">
 
@@ -1779,6 +1812,23 @@ body{
 </div>
 
 <script>
+
+const style = document.getElementById("productsStyle");
+
+if(style.disabled){
+
+    style.href = "/products-style.css";
+
+    style.disabled = false;
+
+}
+
+
+
+
+
+
+    
 
 const CLOUD_NAME="gb2xbn6d";
 const UPLOAD_PRESET="business_images";
