@@ -673,125 +673,6 @@ productModal.addEventListener("click", (e) => {
 });
 
 
-//================ PRODUCT CATEGORIES ================//
-
-const productCategories = {
-
-    Grocery: [
-        "Fruits",
-        "Vegetables",
-        "Dairy",
-        "Meat",
-        "Seafood",
-        "Bakery",
-        "Frozen",
-        "Snacks",
-        "Beverages",
-        "Rice",
-        "Pasta",
-        "Spices",
-        "Canned Food",
-        "Household",
-        "Personal Care"
-    ],
-
-    Restaurant: [
-        "Starters",
-        "Main Course",
-        "Grill",
-        "Rice",
-        "Pasta",
-        "Pizza",
-        "Seafood",
-        "Desserts",
-        "Beverages"
-    ],
-
-    Cafeteria: [
-        "Hot Drinks",
-        "Cold Drinks",
-        "Juices",
-        "Milkshakes",
-        "Sandwiches",
-        "Burgers",
-        "Pizza",
-        "Snacks",
-        "Desserts",
-        "Breakfast"
-    ],
-
-    Bakery: [
-        "Bread",
-        "Cakes",
-        "Pastries",
-        "Cookies",
-        "Donuts",
-        "Sandwiches",
-        "Beverages"
-    ],
-
-    Pharmacy: [
-        "Medicines",
-        "Vitamins",
-        "Baby Care",
-        "Personal Care",
-        "Skin Care",
-        "First Aid",
-        "Medical Devices"
-    ]
-
-};
-
-function loadProductForm(){
-
-    const businessCategoryElement = document.getElementById("businessCategory");
-    const categorySelect = document.getElementById("productCategory");
-    const currencySelect = document.getElementById("currencySelect");
-    const productCurrency = document.getElementById("productCurrency");
-
-    if(!businessCategoryElement || !categorySelect){
-
-        console.error("Product form elements not found.");
-
-        return;
-
-    }
-
-    const businessCategory = businessCategoryElement.textContent.trim();
-
-    categorySelect.innerHTML = "";
-
-    const firstOption = document.createElement("option");
-
-    firstOption.value = "";
-
-    firstOption.textContent = "Select category";
-
-    categorySelect.appendChild(firstOption);
-
-    if(productCategories[businessCategory]){
-
-        productCategories[businessCategory].forEach(category=>{
-
-            const option = document.createElement("option");
-
-            option.value = category;
-
-            option.textContent = category;
-
-            categorySelect.appendChild(option);
-
-        });
-
-    }
-
-    if(currencySelect && productCurrency){
-
-        productCurrency.textContent = currencySelect.value;
-
-    }
-
-}
 //================================//
 
 
@@ -1796,6 +1677,127 @@ window.onload=function(){
 
 };    
 
+//================ PRODUCT CATEGORIES ================//
+
+const productCategories = {
+
+    Grocery: [
+        "Fruits",
+        "Vegetables",
+        "Dairy",
+        "Meat",
+        "Seafood",
+        "Bakery",
+        "Frozen",
+        "Snacks",
+        "Beverages",
+        "Rice",
+        "Pasta",
+        "Spices",
+        "Canned Food",
+        "Household",
+        "Personal Care"
+    ],
+
+    Restaurant: [
+        "Starters",
+        "Main Course",
+        "Grill",
+        "Rice",
+        "Pasta",
+        "Pizza",
+        "Seafood",
+        "Desserts",
+        "Beverages"
+    ],
+
+    Cafeteria: [
+        "Hot Drinks",
+        "Cold Drinks",
+        "Juices",
+        "Milkshakes",
+        "Sandwiches",
+        "Burgers",
+        "Pizza",
+        "Snacks",
+        "Desserts",
+        "Breakfast"
+    ],
+
+    Bakery: [
+        "Bread",
+        "Cakes",
+        "Pastries",
+        "Cookies",
+        "Donuts",
+        "Sandwiches",
+        "Beverages"
+    ],
+
+    Pharmacy: [
+        "Medicines",
+        "Vitamins",
+        "Baby Care",
+        "Personal Care",
+        "Skin Care",
+        "First Aid",
+        "Medical Devices"
+    ]
+
+};
+
+function loadProductForm(){
+
+    const businessCategoryElement = document.getElementById("businessCategory");
+    const categorySelect = document.getElementById("productCategory");
+    const currencySelect = document.getElementById("currencySelect");
+    const productCurrency = document.getElementById("productCurrency");
+
+    if(!businessCategoryElement || !categorySelect){
+
+        console.error("Product form elements not found.");
+
+        return;
+
+    }
+
+    const businessCategory = businessCategoryElement.textContent.trim();
+
+    categorySelect.innerHTML = "";
+
+    const firstOption = document.createElement("option");
+
+    firstOption.value = "";
+
+    firstOption.textContent = "Select category";
+
+    categorySelect.appendChild(firstOption);
+
+    if(productCategories[businessCategory]){
+
+        productCategories[businessCategory].forEach(category=>{
+
+            const option = document.createElement("option");
+
+            option.value = category;
+
+            option.textContent = category;
+
+            categorySelect.appendChild(option);
+
+        });
+
+    }
+
+    if(currencySelect && productCurrency){
+
+        productCurrency.textContent = currencySelect.value;
+
+    }
+
+}
+
+    
 </script>    
     
     
