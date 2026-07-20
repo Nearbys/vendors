@@ -872,35 +872,51 @@ body{
 
 }
 
-    /*================ PRODUCTS ================*/
+  /*================ PRODUCTS ================*/
+
+.product-card{
+
+    background:#fff;
+
+    border:1px solid #e4e4e4;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    margin-top:15px;
+
+}
+
+.product-card h2{
+
+    margin:0 0 15px;
+
+    font-size:20px;
+
+    color:#333;
+
+}
 
 .product-form{
 
     display:flex;
 
-    gap:20px;
+    gap:15px;
 
     align-items:flex-start;
-
-    flex-wrap:wrap;
-
-    margin-top:20px;
 
 }
 
 .product-image-box{
 
-    width:180px;
+    width:150px;
 
-    height:180px;
+    height:150px;
 
-    border:2px dashed #c8c8c8;
+    border:2px dashed #cfcfcf;
 
-    border-radius:12px;
-
-    background:#fafafa;
-
-    cursor:pointer;
+    border-radius:10px;
 
     display:flex;
 
@@ -908,11 +924,15 @@ body{
 
     align-items:center;
 
+    cursor:pointer;
+
     overflow:hidden;
 
-    position:relative;
+    background:#fafafa;
 
     flex-shrink:0;
+
+    position:relative;
 
 }
 
@@ -930,7 +950,7 @@ body{
 
 #productPlus{
 
-    font-size:60px;
+    font-size:52px;
 
     color:#999;
 
@@ -942,13 +962,11 @@ body{
 
     flex:1;
 
-    min-width:280px;
-
     display:flex;
 
     flex-direction:column;
 
-    gap:15px;
+    gap:10px;
 
 }
 
@@ -960,23 +978,35 @@ body{
 
     width:100%;
 
-    padding:12px;
+    height:42px;
+
+    padding:10px 12px;
 
     border:1px solid #ccc;
 
     border-radius:8px;
 
-    font-size:16px;
+    font-size:15px;
 
     box-sizing:border-box;
 
 }
 
-.quantity-row{
+.details-row{
 
     display:flex;
 
     gap:10px;
+
+}
+
+.quantity-row{
+
+    flex:1;
+
+    display:flex;
+
+    gap:8px;
 
 }
 
@@ -994,6 +1024,8 @@ body{
 
 .price-row{
 
+    flex:1;
+
     display:flex;
 
 }
@@ -1008,7 +1040,7 @@ body{
 
 #productCurrency{
 
-    width:90px;
+    width:70px;
 
     display:flex;
 
@@ -1022,55 +1054,59 @@ body{
 
     border-radius:0 8px 8px 0;
 
-    background:#f7f7f7;
-
-    font-size:16px;
-
-    font-weight:bold;
+    background:#f5f5f5;
 
     color:#009500;
+
+    font-weight:bold;
 
 }
 
 #productDescription{
 
-    margin-top:20px;
+    margin-top:12px;
 
-    min-height:90px;
+    height:70px;
 
-    resize:vertical;
+    resize:none;
+
+    line-height:1.4;
 
 }
 
 #createProductBtn{
 
-    margin-top:20px;
-
     width:100%;
 
-    padding:14px;
+    height:44px;
+
+    margin-top:12px;
 
     border:none;
 
-    border-radius:10px;
+    border-radius:8px;
 
     background:#009500;
 
     color:#fff;
 
-    font-size:16px;
+    font-size:15px;
 
     font-weight:bold;
 
     cursor:pointer;
-
-    transition:.2s;
 
 }
 
 #createProductBtn:hover{
 
     background:#007d00;
+
+}
+
+#productsList{
+
+    margin-top:20px;
 
 }
 
@@ -1094,29 +1130,27 @@ body{
 
         flex-direction:column;
 
-        align-items:center;
-
     }
 
     .product-image-box{
 
-        width:220px;
+        width:150px;
 
-        height:220px;
+        height:150px;
+
+        align-self:center;
 
     }
 
-    .product-fields{
+    .details-row{
 
-        width:100%;
-
-        min-width:100%;
+        flex-direction:column;
 
     }
 
     #productCurrency{
 
-        width:80px;
+        width:75px;
 
     }
 
@@ -1597,75 +1631,85 @@ body{
 
     <div id="productsSection" class="page-section">
 
-    <div class="product-form">
+    <div class="product-card">
 
-        <label for="productImageInput" class="product-image-box">
+        <h2>Add Product</h2>
 
-            <img id="productPreview" alt="">
+        <div class="product-form">
 
-            <span id="productPlus">+</span>
+            <label for="productImageInput" class="product-image-box">
 
-        </label>
+                <img id="productPreview" alt="">
 
-        <input
-            type="file"
-            id="productImageInput"
-            accept="image/*"
-            capture="environment"
-            hidden>
+                <span id="productPlus">+</span>
 
-        <div class="product-fields">
+            </label>
 
             <input
-                type="text"
-                id="productTitle"
-                placeholder="Product title">
+                type="file"
+                id="productImageInput"
+                accept="image/*"
+                capture="environment"
+                hidden>
 
-            <select id="productCategory">
-
-                <option value="">
-                    Select category
-                </option>
-
-            </select>
-
-            <div class="quantity-row">
+            <div class="product-fields">
 
                 <input
-                    type="number"
-                    id="productQuantity"
-                    placeholder="Quantity"
-                    min="0"
-                    step="0.01">
+                    type="text"
+                    id="productTitle"
+                    placeholder="Product title">
 
-                <select id="productUnit">
+                <select id="productCategory">
 
-                    <option value="g">g</option>
-                    <option value="kg">kg</option>
-                    <option value="ml">ml</option>
-                    <option value="L">L</option>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="pcs">pcs</option>
-                    <option value="pack">pack</option>
-                    <option value="box">box</option>
+                    <option value="">
+                        Select category
+                    </option>
 
                 </select>
 
-            </div>
+                <div class="details-row">
 
-            <div class="price-row">
+                    <div class="quantity-row">
 
-                <input
-                    type="number"
-                    id="productPrice"
-                    placeholder="Price"
-                    min="0"
-                    step="0.01">
+                        <input
+                            type="number"
+                            id="productQuantity"
+                            placeholder="Qty"
+                            min="0"
+                            step="0.01">
 
-                <div id="productCurrency">
+                        <select id="productUnit">
 
-                    AED
+                            <option value="g">g</option>
+                            <option value="kg">kg</option>
+                            <option value="ml">ml</option>
+                            <option value="L">L</option>
+                            <option value="cm">cm</option>
+                            <option value="m">m</option>
+                            <option value="pcs">pcs</option>
+                            <option value="pack">pack</option>
+                            <option value="box">box</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="price-row">
+
+                        <input
+                            type="number"
+                            id="productPrice"
+                            placeholder="Price"
+                            min="0"
+                            step="0.01">
+
+                        <div id="productCurrency">
+
+                            AED
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -1673,20 +1717,26 @@ body{
 
         </div>
 
+        <textarea
+            id="productDescription"
+            rows="2"
+            placeholder="Product description"></textarea>
+
+        <button id="createProductBtn">
+
+            Create Product
+
+        </button>
+
     </div>
 
-    <textarea
-        id="productDescription"
-        rows="3"
-        placeholder="Product description"></textarea>
+    <div id="productsList">
 
-    <button id="createProductBtn">
+        <!-- Products will be listed here -->
 
-        Create Product
+    </div>
 
-    </button>
-
-    </div>    
+</div>
     
      <!-- ================= Footer ================= -->
 
