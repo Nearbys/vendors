@@ -673,12 +673,11 @@ productModal.addEventListener("click", (e) => {
 });
 
 
-//================ PRODUCT CATEGORIES ================//
+//================ LOAD PRODUCT FORM ================//
 
 const productCategories = {
 
-    Grocery : [
-
+    Grocery:[
         "Fruits",
         "Vegetables",
         "Dairy",
@@ -694,11 +693,21 @@ const productCategories = {
         "Canned Food",
         "Household",
         "Personal Care"
-
     ],
 
-    Cafeteria : [
+    Restaurant:[
+        "Starters",
+        "Main Course",
+        "Seafood",
+        "Grill",
+        "Rice",
+        "Pasta",
+        "Pizza",
+        "Desserts",
+        "Beverages"
+    ],
 
+    Cafeteria:[
         "Hot Drinks",
         "Cold Drinks",
         "Juices",
@@ -709,25 +718,9 @@ const productCategories = {
         "Snacks",
         "Desserts",
         "Breakfast"
-
     ],
 
-    Restaurant : [
-
-        "Starters",
-        "Main Course",
-        "Seafood",
-        "Grill",
-        "Rice",
-        "Pasta",
-        "Pizza",
-        "Desserts",
-        "Beverages"
-
-    ],
-
-    Bakery : [
-
+    Bakery:[
         "Bread",
         "Cakes",
         "Pastries",
@@ -735,11 +728,9 @@ const productCategories = {
         "Donuts",
         "Sandwiches",
         "Beverages"
-
     ],
 
-    Pharmacy : [
-
+    Pharmacy:[
         "Medicines",
         "Vitamins",
         "Baby Care",
@@ -747,38 +738,39 @@ const productCategories = {
         "Skin Care",
         "First Aid",
         "Medical Devices"
-
     ]
 
 };
 
-//================ LOAD PRODUCT FORM ================//
-
 function loadProductForm(){
 
-    const vendor = JSON.parse(localStorage.getItem("vendor"));
+    const businessCategory =
+        document.getElementById("businessCategory").textContent.trim();
 
-    if(!vendor) return;
+    const currency =
+        document.getElementById("currency").textContent.trim();
 
-    const categorySelect = document.getElementById("productCategory");
+    const select =
+        document.getElementById("productCategory");
 
-    categorySelect.innerHTML =
+    select.innerHTML =
         '<option value="">Select category</option>';
 
-    const categories = productCategories[vendor.category] || [];
+    (productCategories[businessCategory] || []).forEach(category=>{
 
-    categories.forEach(category=>{
+        const option = document.createElement("option");
 
-        categorySelect.innerHTML +=
-            `<option value="${category}">${category}</option>`;
+        option.value = category;
+
+        option.textContent = category;
+
+        select.appendChild(option);
 
     });
 
-    document.getElementById("productCurrency").textContent =
-        vendor.currency || "";
+    document.getElementById("productCurrency").textContent = currency;
 
-}
-    
+}    
 
 //================================//
 
