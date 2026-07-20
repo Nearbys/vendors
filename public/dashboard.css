@@ -1,0 +1,1131 @@
+/* ================= DASHBOARD ================= */
+
+#dashboard{
+
+    width:100%;
+
+    max-width:900px;
+
+    margin:auto;
+
+    background:#fff;
+
+    min-height:100vh;
+
+}
+
+
+
+/* ================= COVER ================= */
+
+.cover-section{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+#cover{
+
+    width:100%;
+
+    height:230px;
+
+    object-fit:cover;
+
+    background:#d8d8d8;
+
+    display:block;
+
+}
+
+.cover-edit-btn{
+
+    position:absolute;
+
+    right:15px;
+
+    bottom:15px;
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#ffffffdd;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+}
+
+
+
+/* ================= PROFILE ================= */
+
+.profile-row{
+
+    display:flex;
+
+    align-items:flex-end;
+
+    gap:20px;
+
+    padding:0 20px;
+
+    margin-top:-70px;
+
+}
+
+.profile-box{
+
+    position:relative;
+
+    flex-shrink:0;
+
+}
+
+#profile{
+
+    width:150px;
+
+    height:150px;
+
+    border-radius:50%;
+
+    border:5px solid white;
+
+    background:#ddd;
+
+    object-fit:cover;
+
+}
+
+.profile-edit-btn{
+
+    position:absolute;
+
+    right:5px;
+
+    bottom:5px;
+
+    width:38px;
+
+    height:38px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:white;
+
+    cursor:pointer;
+
+}
+
+
+
+/* ================= BUSINESS ================= */
+
+.business-box{
+
+    flex:1;
+
+    padding-bottom:20px;
+
+}
+
+#businessDisplay{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+}
+
+#businessName{
+
+    color:#009500;
+
+    font-size:34px;
+
+    font-style:italic;
+
+    word-break:break-word;
+
+    margin-top: 80px;
+
+}
+
+#editNameBtn{
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    background:#f0f0f0;
+
+    margin-top: 80px;
+
+}
+
+#businessEditor{
+
+    display:none;
+
+    margin-top:8px;
+
+}
+
+#nameInput{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:18px;
+
+    margin-bottom:10px;
+
+}
+
+#saveName, #saveDescription, #cancelDescription, #saveAddress, #cancelAddress,
+
+#cancelName{
+
+    padding:10px 20px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    margin-right:10px;
+
+}
+
+#saveName, #saveAddress,
+#saveDescription{
+
+    background:#009500;
+
+    color:white;
+
+}
+
+#cancelName, #cancelAddress,
+#cancelDescription{
+
+    background:#999;
+
+    color:white;
+
+}
+
+
+
+/* ================= DIVIDER ================= */
+
+.divider{
+
+    width:100%;
+
+    height:1px;
+
+    background:#ddd;
+
+    margin:20px 0;
+
+}
+
+
+
+/* ================= PREVIEW ================= */
+
+.preview-card{
+
+    margin:20px;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    background:#fafafa;
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.preview-card h3{
+
+    color:#009500;
+
+    margin-bottom:12px;
+
+}
+
+.preview-card ul{
+
+    margin-left:20px;
+
+    margin-top:10px;
+
+}
+
+.preview-card li{
+
+    margin-bottom:8px;
+
+}
+
+
+
+/* ================= LOGOUT ================= */
+
+.logout-area{
+
+    padding:20px;
+
+}
+
+#logoutBtn{
+
+    width:100%;
+
+    padding:13px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#d60000;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+    /* ================= BUSINESS INFO ================= */
+
+.business-info{
+
+    display:flex;
+
+    gap:40px;
+
+    padding:0 20px 20px;
+
+    align-items:flex-start;
+
+}
+
+.info-address{
+
+    flex:1;
+
+}
+
+.info-address h3{
+
+    margin-bottom:10px;
+
+    color:#444;
+
+    font-size:18px;
+
+}
+
+#addressText{
+
+    white-space:pre-wrap;
+
+    line-height:1.6;
+
+    color:#555;
+
+    min-height:75px;
+
+}
+
+#editAddressBtn{
+
+    margin-top:10px;
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#f0f0f0;
+
+    cursor:pointer;
+
+}
+
+#addressInput{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    resize:vertical;
+
+}
+
+.address-buttons{
+
+    margin-top:10px;
+
+}
+
+.info-contact{
+
+    width:280px;
+
+    padding-top:30px;
+
+}
+
+.info-contact p{
+
+    font-size:18px;
+
+    margin-bottom:15px;
+
+    color:#444;
+
+    line-height:1.5;
+
+}
+
+.info-contact strong{
+
+    color:#222;
+
+}
+
+    .delivery-section{
+
+    padding:0 20px 20px;
+
+}
+
+.delivery-section label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+    color:#444;
+
+}
+
+#deliverySelect{
+
+    width:100%;
+
+    max-width:350px;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    background:white;
+
+}
+
+    /* ================= CHARGEABLE ================= */
+
+.chargeable-section{
+
+    padding:0 20px 20px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.switch{
+
+    position:relative;
+
+    display:inline-block;
+
+    width:58px;
+
+    height:32px;
+
+}
+
+.switch input{
+
+    opacity:0;
+
+    width:0;
+
+    height:0;
+
+}
+
+.slider{
+
+    position:absolute;
+
+    cursor:pointer;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    bottom:0;
+
+    background:#ccc;
+
+    transition:.3s;
+
+    border-radius:32px;
+
+}
+
+.slider:before{
+
+    position:absolute;
+
+    content:"";
+
+    height:24px;
+
+    width:24px;
+
+    left:4px;
+
+    bottom:4px;
+
+    background:white;
+
+    transition:.3s;
+
+    border-radius:50%;
+
+}
+
+.switch input:checked + .slider{
+
+    background:#009500;
+
+}
+
+.switch input:checked + .slider:before{
+
+    transform:translateX(26px);
+
+}
+
+#chargeableLabel{
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    color:#444;
+
+}
+
+/* ================= CURRENCY ================= */
+
+.currency-section{
+
+    padding:0 20px 20px;
+
+}
+
+.currency-section label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+    color:#444;
+
+}
+
+#currencySelect{
+
+    width:100%;
+
+    max-width:350px;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    background:white;
+
+    cursor:pointer;
+
+}
+
+#currencySelect:focus{
+
+    outline:none;
+
+    border-color:#009500;
+
+}
+
+/* ================= FEE ================= */
+
+.fee-section{
+
+    padding:0 20px 20px;
+
+}
+
+.fee-section label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+    color:#444;
+
+}
+
+#deliveryFee{
+
+    width:100%;
+
+    max-width:350px;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+}
+
+#deliveryFee:focus{
+
+    outline:none;
+
+    border-color:#009500;
+
+}
+
+/* ================= PAGES ================= */
+
+.page-section{
+
+    display:none;
+
+    min-height:calc(100vh - 60px);
+
+    padding:30px 20px 100px;
+
+    background:#fff;
+
+}
+
+#profileSection{
+
+    display:block;
+
+    padding-bottom:90px;
+
+}
+
+/* ================= FOOTER ================= */
+
+.vendor-footer{
+
+    position:fixed;
+
+    left:0;
+
+    right:0;
+
+    bottom:0;
+
+    height:70px;
+
+    background:#fff;
+
+    border-top:1px solid #ddd;
+
+    display:flex;
+
+    z-index:9999;
+
+    box-shadow:0 -2px 10px rgba(0,0,0,.08);
+
+}
+
+.footer-btn{
+
+    flex:1;
+
+    border:none;
+
+    background:white;
+
+    cursor:pointer;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:4px;
+
+    font-size:24px;
+
+    color:#777;
+
+}
+
+.footer-btn span{
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.footer-btn.active{
+
+    color:#009500;
+
+}
+
+.footer-btn:hover{
+
+    background:#f7f7f7;
+
+}
+
+  /*================ PRODUCTS ================*/
+
+.product-card{
+
+    background:#fff;
+
+    border:1px solid #e4e4e4;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    margin-top:15px;
+
+}
+
+.product-card h2{
+
+    margin:0 0 15px;
+
+    font-size:20px;
+
+    color:#333;
+
+}
+
+.product-form{
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:flex-start;
+
+}
+
+.product-image-box{
+
+    width:150px;
+
+    height:150px;
+
+    border:2px dashed #cfcfcf;
+
+    border-radius:10px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    overflow:hidden;
+
+    background:#fafafa;
+
+    flex-shrink:0;
+
+    position:relative;
+
+}
+
+#productPreview{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:none;
+
+}
+
+#productPlus{
+
+    font-size:52px;
+
+    color:#999;
+
+    user-select:none;
+
+}
+
+.product-fields{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.product-fields input,
+
+.product-fields select,
+
+#productDescription{
+
+    width:100%;
+
+    height:42px;
+
+    padding:10px 12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    box-sizing:border-box;
+
+}
+
+.details-row{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.quantity-row{
+
+    flex:1;
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+#productQuantity{
+
+    flex:2;
+
+}
+
+#productUnit{
+
+    flex:1;
+
+}
+
+.price-row{
+
+    flex:1;
+
+    display:flex;
+
+}
+
+#productPrice{
+
+    flex:1;
+
+    border-radius:8px 0 0 8px;
+
+}
+
+#productCurrency{
+
+    width:70px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border:1px solid #ccc;
+
+    border-left:none;
+
+    border-radius:0 8px 8px 0;
+
+    background:#f5f5f5;
+
+    color:#009500;
+
+    font-weight:bold;
+
+}
+
+#productDescription{
+
+    margin-top:12px;
+
+    height:70px;
+
+    resize:none;
+
+    line-height:1.4;
+
+}
+
+#createProductBtn{
+
+    width:100%;
+
+    height:44px;
+
+    margin-top:12px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#009500;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+#createProductBtn:hover{
+
+    background:#007d00;
+
+}
+
+#productsList{
+
+    margin-top:20px;
+
+}
+
+.product-fields input:focus,
+
+.product-fields select:focus,
+
+#productDescription:focus{
+
+    outline:none;
+
+    border-color:#009500;
+
+}
+
+/*================ MOBILE ================*/
+
+@media(max-width:700px){
+
+    .product-form{
+
+        flex-direction:column;
+
+    }
+
+    .product-image-box{
+
+        width:150px;
+
+        height:150px;
+
+        align-self:center;
+
+    }
+
+    .details-row{
+
+        flex-direction:column;
+
+    }
+
+    #productCurrency{
+
+        width:75px;
+
+    }
+
+    #cover{
+
+        height:180px;
+
+    }
+
+    .profile-row{
+
+        flex-direction:column;
+
+        align-items:center;
+
+        margin-top:-60px;
+
+        gap:15px;
+
+    }
+
+    #profile{
+
+        width:130px;
+
+        height:130px;
+
+    }
+
+    .business-box{
+
+        width:100%;
+
+        text-align:center;
+
+        padding-bottom:10px;
+
+    }
+
+    #businessDisplay{
+
+        justify-content:center;
+
+    }
+
+    #businessName{
+
+        margin-top: -10px;
+        font-size:28px;
+
+    }
+
+    #editNameBtn{
+
+        margin-top: -10px;
+
+    }
+
+    .business-info{
+
+    flex-direction:column;
+
+    gap:20px;
+
+    }
+
+    .info-contact{
+
+    width:100%;
+
+    padding-top:0;
+
+    }
+
+    .vendor-footer{
+
+        height:65px;
+
+    }
+
+    .footer-btn{
+
+        font-size:22px;
+
+    }
+
+    .footer-btn span{
+
+        font-size:12px;
+
+    }
+}
