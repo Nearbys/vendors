@@ -4,9 +4,9 @@ let productImageFile = null;
 
 const productImageInput = document.getElementById("productImageInput");
 
-const productImagePreview = document.getElementById("productImagePreview");
+const previewImage = document.getElementById("previewImage");
 
-productImagePreview.addEventListener("click",()=>{
+previewImage.addEventListener("click",()=>{
 
     productImageInput.click();
 
@@ -20,7 +20,7 @@ productImageInput.addEventListener("change",(e)=>{
 
     productImageFile = file;
 
-    productImagePreview.innerHTML =
+    previewImage.innerHTML =
         `<img src="${URL.createObjectURL(file)}">`;
 
 });
@@ -141,7 +141,7 @@ async()=>{
 
         productImageInput.value = "";
 
-        productImagePreview.innerHTML = "+";
+        previewImage.innerHTML = "+";
 
         document.getElementById("productTitle").value = "";
 
