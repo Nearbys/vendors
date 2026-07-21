@@ -493,44 +493,18 @@ body{
 
         <div class="product-form">
 
-           <label id="productImagePreview" class="product-image-box">
+           <label
+    for="productImageInput"
+    id="productImagePreview"
+    class="product-image-box">
     <span id="productPlus">+</span>
-</label>
+        </label>
 
-<div class="product-image-actions">
-
-    <button
-        type="button"
-        id="chooseGalleryBtn"
-        class="image-btn"
-    >
-        📁 Gallery
-    </button>
-
-    <button
-        type="button"
-        id="openCameraBtn"
-        class="image-btn"
-    >
-        📷 Camera
-    </button>
-
-</div>
-
-<input
+        <input
     type="file"
     id="productImageInput"
     accept="image/*"
     hidden>
-
-<input
-    type="file"
-    id="productCameraInput"
-    accept="image/*"
-    capture="environment"
-    hidden>
-            
-            
             <div class="product-fields">
 
                 <input
@@ -1678,15 +1652,6 @@ feeInput.addEventListener("blur", async function(){
 
 //================ PRODUCT IMAGE ================//
 
-document.getElementById("chooseGalleryBtn").onclick = () =>
-    document.getElementById("productImageInput").click();
-
-document.getElementById("openCameraBtn").onclick = () =>
-    document.getElementById("productCameraInput").click();
-
-
-
-    
 let productImageFile = null;
 
 const productImageInput = document.getElementById("productImageInput");
