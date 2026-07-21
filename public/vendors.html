@@ -907,10 +907,9 @@ async function loadProducts() {
 
         const response = await fetch(`/products/${vendor.id}`);
 
-        const data = await response.json();
+const data = await response.json();
 
-console.log("Products:", data.products);
-console.log("Vendor:", vendor);
+products = data.products || [];
 
 if (!response.ok) {
     throw new Error(data.message);
@@ -1744,7 +1743,8 @@ feeInput.addEventListener("blur", async function(){
 
 let productImageFile = null;
 let editingProductId = null;
-
+let products = [];
+    
 const productImageInput = document.getElementById("productImageInput");
 const productImagePreview = document.getElementById("productImagePreview");
 const createProductBtn = document.getElementById("createProductBtn");
@@ -2049,54 +2049,35 @@ async function toggleProduct(id, available) {
 
 async function editProduct(id) {
 
-    try {
+    const product = products.find(p => p.id === id);
 
-        const response = await fetch(`/products/${id}`);
-
-        const data = await response.json();
-
-        if (!response.ok) {
-
-            showProductMessage(data.message, "error");
-
-            return;
-
-        }
-
-        const product = data.product;
-
-        editingProductId = product.id;
-
-        document.getElementById("productTitle").value = product.title;
-        document.getElementById("productCategory").value = product.category;
-        document.getElementById("productDescription").value = product.description || "";
-        document.getElementById("productQuantity").value = product.quantity;
-        document.getElementById("productUnit").value = product.unit;
-        document.getElementById("productPrice").value = product.price;
-
-        productImageFile = null;
-
-        productImagePreview.innerHTML =
-            `<img src="${product.image}" alt="Product">`;
-
-        document.getElementById("productPlus").style.display = "none";
-
-        createProductBtn.textContent = "Save Changes";
-
-        productModal.style.display = "flex";
-
+    if (!product) {
+        showProductMessage("Product not found.", "error");
+        return;
     }
 
-    catch (err) {
+    editingProductId = product.id;
 
-        console.error(err);
+    document.getElementById("productTitle").value = product.title;
+    document.getElementById("productCategory").value = product.category;
+    document.getElementById("productDescription").value = product.description || "";
+    document.getElementById("productQuantity").value = product.quantity;
+    document.getElementById("productUnit").value = product.unit;
+    document.getElementById("productPrice").value = product.price;
 
-        showProductMessage("Unable to load product.", "error");
+    productImageFile = null;
 
-    }
+    productImagePreview.innerHTML =
+        `<img src="${product.image}" alt="Product">`;
+
+    const plus = document.getElementById("productPlus");
+    if (plus) plus.style.display = "none";
+
+    createProductBtn.textContent = "Save Changes";
+
+    productModal.style.display = "flex";
 
 }
-
     
 
     
