@@ -1809,6 +1809,171 @@ async()=>{
 });
 
 
+
+
+    let productImageFile = null;
+
+document.getElementById("productImageInput").addEventListener(
+
+    "change",
+
+    function(){
+
+        if(!this.files.length) return;
+
+        productImageFile = this.files[0];
+
+        previewImage(this,"productImagePreview");
+
+        document.getElementById("productPlus").style.display="none";
+
+    }
+
+);
+
+
+
+
+    //================ LOAD PRODUCTS ================//
+
+async function loadProducts(){
+
+    try{
+
+        const response = await fetch(
+
+            `/products/${vendor.id}`
+
+        );
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            throw new Error(data.message);
+
+        }
+
+        const list = document.getElementById("productsList");
+
+        list.innerHTML = "";
+
+        if(data.products.length===0){
+
+            list.innerHTML = `
+
+                <div class="no-products">
+
+                    No products added yet.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+        data.products.forEach(product=>{
+
+            list.innerHTML += `
+
+                <div class="product-card">
+
+                    <img
+                        class="product-card-image"
+                        src="${product.image}"
+                        alt="${product.title}"
+                    >
+
+                    <div class="product-info">
+
+                        <div class="product-title">
+
+                            ${product.title}
+
+                        </div>
+
+                        <div class="product-category">
+
+                            ${product.category}
+
+                        </div>
+
+                        <div class="product-quantity">
+
+                            ${Number(product.quantity).toFixed(2)} ${product.unit}
+
+                        </div>
+
+                        <div class="product-price">
+
+                            ${businessCurrency} ${Number(product.price).toFixed(2)}
+
+                        </div>
+
+                    </div>
+
+                    <div class="product-actions">
+
+                        <button onclick="editProduct(${product.id})">
+
+                            ✏️
+
+                        </button>
+
+                        <button onclick="deleteProduct(${product.id})">
+
+                            🗑️
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+    }
+
+}
+
+
+
+
+
+    function previewImage(input,imageId){
+
+    if(!input.files.length) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        const img = document.getElementById(imageId);
+
+        img.src = e.target.result;
+
+        if(imageId==="productImagePreview"){
+
+            document.getElementById("productPlus").style.display="none";
+
+        }
+
+    };
+
+    reader.readAsDataURL(input.files[0]);
+
+}
+
     
     
     
