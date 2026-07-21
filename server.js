@@ -92,37 +92,38 @@ async function initializeDatabase(){
 
         //================ PRODUCTS TABLE ================//
 
-await pool.query(`
+        await pool.query(`
 
-CREATE TABLE IF NOT EXISTS products(
+        CREATE TABLE IF NOT EXISTS products(
 
-    id SERIAL PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
 
-    business_id INTEGER NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+            business_id INTEGER NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
 
-    title VARCHAR(255) NOT NULL,
+            title VARCHAR(255) NOT NULL,
 
-    category VARCHAR(100),
+            category VARCHAR(100),
 
-    description TEXT,
+            description TEXT,
 
-    quantity NUMERIC(10,2),
+            quantity NUMERIC(10,2),
 
-    unit VARCHAR(20),
+            unit VARCHAR(20),
 
-    price NUMERIC(10,2) NOT NULL,
+            price NUMERIC(10,2) NOT NULL,
 
-    image TEXT,
+            image TEXT,
 
-    available BOOLEAN DEFAULT TRUE,
+            available BOOLEAN DEFAULT TRUE,
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-);
+        );
 
-`);
+        `);
+
         await addProductColumn(
             "category",
             "VARCHAR(100)"
@@ -979,11 +980,11 @@ app.post("/update-fee", async (req, res) => {
 
 //================ CREATE PRODUCT ================//
 
-app.post("/products", async (req, res) => {
+app.post("/products", async(req,res)=>{
 
-    try {
+    try{
 
-        let {
+        let{
 
             business_id,
             title,
@@ -997,88 +998,121 @@ app.post("/products", async (req, res) => {
         } = req.body;
 
         title = (title || "").trim();
+
         category = (category || "").trim();
+
         description = (description || "").trim();
+
         unit = (unit || "").trim();
 
         quantity = Number(quantity);
+
         price = Number(price);
 
-        if (!business_id) {
+        if(!business_id){
 
             return res.status(400).json({
-                success: false,
-                message: "Business ID is required."
+
+                success:false,
+
+                message:"Business ID is required."
+
             });
 
         }
 
-        if (title === "") {
+        if(title===""){
 
             return res.status(400).json({
-                success: false,
-                message: "Product title is required."
+
+                success:false,
+
+                message:"Product title is required."
+
             });
 
         }
 
-        if (category === "") {
+        if(category===""){
 
             return res.status(400).json({
-                success: false,
-                message: "Category is required."
+
+                success:false,
+
+                message:"Category is required."
+
             });
 
         }
 
-        if (isNaN(price)) {
+        if(isNaN(price)){
 
             return res.status(400).json({
-                success: false,
-                message: "Invalid price."
+
+                success:false,
+
+                message:"Invalid price."
+
             });
 
         }
 
-        if (isNaN(quantity)) {
+        if(isNaN(quantity)){
+
             quantity = 0;
+
         }
 
         const result = await pool.query(
 
             `
-            INSERT INTO products (
+
+            INSERT INTO products(
 
                 business_id,
+
                 title,
+
                 category,
+
                 description,
+
                 quantity,
+
                 unit,
+
                 price,
-                image,
-                available
+
+                image
 
             )
 
-            VALUES (
+            VALUES(
 
-                $1,$2,$3,$4,$5,$6,$7,$8,TRUE
+                $1,$2,$3,$4,$5,$6,$7,$8
 
             )
 
             RETURNING *
+
             `,
 
             [
 
                 business_id,
+
                 title,
+
                 category,
+
                 description,
+
                 quantity,
+
                 unit,
+
                 price,
+
                 image || ""
 
             ]
@@ -1087,21 +1121,23 @@ app.post("/products", async (req, res) => {
 
         res.json({
 
-            success: true,
-            product: result.rows[0]
+            success:true,
+
+            product:result.rows[0]
 
         });
 
     }
 
-    catch (err) {
+    catch(err){
 
         console.log(err);
 
         res.status(500).json({
 
-            success: false,
-            message: "Unable to create product."
+            success:false,
+
+            message:"Unable to create product."
 
         });
 
@@ -1114,49 +1150,59 @@ app.post("/products", async (req, res) => {
 
 //================ GET PRODUCTS ================//
 
-app.get("/products/:business_id", async (req, res) => {
+app.get("/products/:business_id", async(req,res)=>{
 
-    try {
+    try{
 
         const { business_id } = req.params;
 
         const result = await pool.query(
 
             `
+
             SELECT *
+
             FROM products
-            WHERE business_id = $1
-            ORDER BY id DESC
+
+            WHERE business_id=$1
+
+            ORDER BY category ASC, title ASC
+
             `,
 
-            [business_id]
+            [
+
+                business_id
+
+            ]
 
         );
 
         res.json({
 
-            success: true,
-            products: result.rows
+            success:true,
+
+            products:result.rows
 
         });
 
     }
 
-    catch (err) {
+    catch(err){
 
         console.log(err);
 
         res.status(500).json({
 
-            success: false,
-            message: "Unable to load products."
+            success:false,
+
+            message:"Unable to load products."
 
         });
 
     }
 
 });
-
 
 
 
