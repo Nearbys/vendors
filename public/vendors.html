@@ -465,11 +465,9 @@ body{
 
     </div>
 
-    <div id="productsList"></div>
-        
     <div id="productsList">
 
-        
+        <!-- Products will be loaded here -->
 
     </div>
 
@@ -907,9 +905,12 @@ async function loadProducts() {
 
         const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.message);
-        }
+console.log("Products:", data.products);
+console.log("Vendor:", vendor);
+
+if (!response.ok) {
+    throw new Error(data.message);
+}
 
         const list = document.getElementById("productsList");
 
@@ -938,7 +939,7 @@ data.products.forEach(product => {
         </div>
 
         <div class="product-price">
-            ${businessCurrency} ${Number(product.price).toFixed(2)}
+           ${vendor.currency || "AED"} ${Number(product.price || 0).toFixed(2)}
         </div>
 
     </div>
@@ -981,6 +982,26 @@ data.products.forEach(product => {
     }
 
 }
+
+
+//================ LOGOUT ================//
+
+document.getElementById("logoutBtn").onclick=function(){
+
+    localStorage.removeItem("vendor");
+
+    vendor=null;
+
+    document.getElementById("dashboard").style.display="none";
+
+    document.getElementById("loginPage").style.display="flex";
+
+    document.getElementById("password").value="";
+
+};
+
+
+
 
 
 //================ CLOUDINARY UPLOAD ================//
