@@ -578,11 +578,8 @@ body{
             rows="2"
             placeholder="Product description"></textarea>
 
-        <button id="createProductBtn">
-
-            Create Product
-
-        </button>
+        <div id="productMessage" class="product-message"></div>
+        <button id="createProductBtn">Create Product</button>
 
     </div>
 
@@ -628,9 +625,28 @@ body{
     
 </div>
 
-<script>
+<script> 
 
 //================ PRODUCT MODAL ================//    
+
+const productMessage = document.getElementById("productMessage");
+
+function showProductMessage(message, type) {
+
+    if (!productMessage) return;
+
+    productMessage.textContent = message;
+    productMessage.className = `product-message ${type}`;
+
+    clearTimeout(showProductMessage.timer);
+
+    showProductMessage.timer = setTimeout(() => {
+        productMessage.textContent = "";
+        productMessage.className = "product-message";
+    }, 3000);
+
+}
+    
 
 const style = document.getElementById("productsStyle");
 
@@ -1677,7 +1693,7 @@ if (createProductBtn) {
         try {
 
             if (!productImageFile) {
-                alert("Select a product image.");
+                showProductMessage("Select a product image.", "error");
                 return;
             }
 
@@ -1700,17 +1716,17 @@ if (createProductBtn) {
                 document.getElementById("productPrice").value;
 
             if (title === "") {
-                alert("Enter product title.");
+                showProductMessage("Enter product title.", "error");
                 return;
             }
 
             if (category === "") {
-                alert("Select category.");
+                showProductMessage("Select a category.", "error");
                 return;
             }
 
             if (price === "") {
-                alert("Enter price.");
+                showProductMessage("Enter the product price.", "error");
                 return;
             }
 
@@ -1745,11 +1761,11 @@ if (createProductBtn) {
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.message);
+                showProductMessage(data.message, "error");
                 return;
             }
 
-            alert("Product created.");
+            showProductMessage("Product created successfully!", "success");
 
             productImageFile = null;
 
@@ -1775,7 +1791,7 @@ if (createProductBtn) {
         catch (err) {
 
             console.error(err);
-            alert("Unable to create product.");
+            showProductMessage("Unable to create product.", "error");
 
         }
 
