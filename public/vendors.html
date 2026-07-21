@@ -900,62 +900,73 @@ function loadVendor(){
     //================ LOAD PRODUCTS ================//
 
 async function loadProducts() {
-
-    console.log("loadProducts() called");
-
-    console.log("Vendor:", vendor);
-
-    if (!vendor || !vendor.id) {
-        console.error("Vendor or vendor.id is missing");
-        return;
-    }
-
     try {
-
         const response = await fetch(`/products/${vendor.id}`);
-
-        console.log("Response status:", response.status);
-
         const data = await response.json();
 
-        console.log("Response data:", data);
+        console.log("Products response:", data);
 
-        const list = document.getElementById("productsList");
-
-        console.log("productsList:", list);
-
-        list.innerHTML = "";
-
-        if (!data.products || data.products.length === 0) {
-
-            list.innerHTML = "<p>No products found.</p>";
-
-            return;
-
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to load products");
         }
 
-        data.products.forEach(product => {
+        const list = document.getElementById("productsList");
+        list.innerHTML = "";
 
-            console.log("Rendering:", product);
+        // Get products array - handle both formats
+        let products = [];
+        if (data.products && Array.isArray(data.products)) {
+            products = data.products;
+        } else if (Array.isArray(data)) {
+            products = data;
+        } else {
+            products = [];
+        }
 
-            list.innerHTML += `
-                <div class="product-card">
-                    ${product.title}
+        console.log("Products array:", products);
+
+        if (products.length === 0) {
+            list.innerHTML = `
+                <div style="text-align:center;padding:40px;color:#666;">
+                    <p>No products found.</p>
+                    <p style="font-size:14px;margin-top:10px;">
+                        Click the <strong>+</strong> button to add your first product.
+                    </p>
                 </div>
             `;
+            return;
+        }
 
+        products.forEach(product => {
+            // Your existing product rendering code...
+            list.innerHTML += `
+                <div class="product-card" onclick="editProduct(${product.id})">
+                    <img class="product-card-image" src="${product.image}" alt="${product.title}">
+                    <div class="product-details">
+                        <div class="product-title">${product.title}</div>
+                        <div class="product-size">${Number(product.quantity).toFixed(2)} ${product.unit}</div>
+                        <div class="product-price">${vendor.currency || "AED"} ${Number(product.price || 0).toFixed(2)}</div>
+                    </div>
+                    <div class="product-actions">
+                        <label class="switch" onclick="event.stopPropagation()">
+                            <input type="checkbox" ${product.available ? "checked" : ""} 
+                                   onchange="toggleProduct(${product.id},this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                        <button class="delete-btn" onclick="event.stopPropagation();deleteProduct(${product.id})">🗑️</button>
+                    </div>
+                </div>
+            `;
         });
-
     }
-
     catch (err) {
-
-        console.error(err);
-
+        console.error("Error loading products:", err);
+        document.getElementById("productsList").innerHTML = 
+            `<p style="color:red;text-align:center;padding:20px;">
+                Error loading products: ${err.message}
+            </p>`;
     }
-
 }
-
 
 
 //================ CLOUDINARY UPLOAD ================//
