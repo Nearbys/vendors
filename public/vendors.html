@@ -895,6 +895,93 @@ function loadVendor(){
 
 }
 
+    //================ LOAD PRODUCTS ================//
+
+async function loadProducts() {
+
+    try {
+
+        const response = await fetch(`/products/${vendor.id}`);
+
+        const data = await response.json();
+
+console.log("Products:", data.products);
+console.log("Vendor:", vendor);
+
+if (!response.ok) {
+    throw new Error(data.message);
+}
+
+        const list = document.getElementById("productsList");
+
+list.innerHTML = "";
+
+data.products.forEach(product => {
+
+    list.innerHTML += `
+<div class="product-card"
+     onclick="editProduct(${product.id})">
+
+    <img
+        class="product-card-image"
+        src="${product.image}"
+        alt="${product.title}"
+    >
+
+    <div class="product-details">
+
+        <div class="product-title">
+            ${product.title}
+        </div>
+
+        <div class="product-size">
+            ${Number(product.quantity).toFixed(2)} ${product.unit}
+        </div>
+
+        <div class="product-price">
+           ${vendor.currency || "AED"} ${Number(product.price || 0).toFixed(2)}
+        </div>
+
+    </div>
+
+    <div class="product-actions">
+
+        <label class="switch"
+            onclick="event.stopPropagation()">
+
+            <input
+                type="checkbox"
+                ${product.available ? "checked" : ""}
+                onchange="toggleProduct(${product.id},this.checked)"
+            >
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="delete-btn"
+            onclick="event.stopPropagation();deleteProduct(${product.id})"
+        >
+            🗑️
+        </button>
+
+    </div>
+
+</div>
+`;
+        
+        });
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+    }
+
+}
 
 
 //================ LOGOUT ================//
@@ -1806,95 +1893,6 @@ if (createProductBtn) {
   });
 
 }
-
-//================ LOAD PRODUCTS ================//
-
-async function loadProducts() {
-
-    try {
-
-        const response = await fetch(`/products/${vendor.id}`);
-
-        const data = await response.json();
-
-console.log("Products:", data.products);
-console.log("Vendor:", vendor);
-
-if (!response.ok) {
-    throw new Error(data.message);
-}
-
-        const list = document.getElementById("productsList");
-
-list.innerHTML = "";
-
-data.products.forEach(product => {
-
-    list.innerHTML += `
-<div class="product-card"
-     onclick="editProduct(${product.id})">
-
-    <img
-        class="product-card-image"
-        src="${product.image}"
-        alt="${product.title}"
-    >
-
-    <div class="product-details">
-
-        <div class="product-title">
-            ${product.title}
-        </div>
-
-        <div class="product-size">
-            ${Number(product.quantity).toFixed(2)} ${product.unit}
-        </div>
-
-        <div class="product-price">
-           ${vendor.currency || "AED"} ${Number(product.price || 0).toFixed(2)}
-        </div>
-
-    </div>
-
-    <div class="product-actions">
-
-        <label class="switch"
-            onclick="event.stopPropagation()">
-
-            <input
-                type="checkbox"
-                ${product.available ? "checked" : ""}
-                onchange="toggleProduct(${product.id},this.checked)"
-            >
-
-            <span class="slider"></span>
-
-        </label>
-
-        <button
-            class="delete-btn"
-            onclick="event.stopPropagation();deleteProduct(${product.id})"
-        >
-            🗑️
-        </button>
-
-    </div>
-
-</div>
-`;
-        
-        });
-
-    }
-
-    catch (err) {
-
-        console.error(err);
-
-    }
-
-}
-
 
 //================ IMAGE PREVIEW ================//
 
