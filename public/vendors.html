@@ -647,10 +647,9 @@ function showProductMessage(message, type) {
 
 const style = document.getElementById("productsStyle");
 
-if(style.disabled){
+if (style && style.disabled) {
 
     style.href = "/add-products.css";
-
     style.disabled = false;
 
 }
