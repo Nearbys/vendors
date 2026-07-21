@@ -1817,9 +1817,12 @@ async function loadProducts() {
 
         const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.message);
-        }
+console.log("Products:", data.products);
+console.log("Vendor:", vendor);
+
+if (!response.ok) {
+    throw new Error(data.message);
+}
 
         const list = document.getElementById("productsList");
 
