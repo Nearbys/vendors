@@ -1848,7 +1848,7 @@ data.products.forEach(product => {
         </div>
 
         <div class="product-price">
-            ${businessCurrency} ${Number(product.price).toFixed(2)}
+           ${vendor.currency || "AED"} ${Number(product.price || 0).toFixed(2)}
         </div>
 
     </div>
