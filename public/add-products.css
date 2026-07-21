@@ -155,51 +155,24 @@
 }
 
 .product-image-box{
-
-    width:150px;
-
-    height:150px;
-
-    border:2px dashed #ccc;
-
-    border-radius:10px;
-
-    background:#fafafa;
-
-    cursor:pointer;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    overflow:hidden;
-
-    flex-shrink:0;
-
-    position:relative;
-
+    position: relative;
+    overflow: hidden;
 }
 
-#previewImage img{
-
+.product-image-box img{
     width:100%;
-
     height:100%;
-
     object-fit:cover;
-
-    display:none;
-
+    border-radius:inherit;
 }
 
 #productPlus{
-
-    font-size:52px;
-
-    color:#999;
-
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
 }
 
 .product-fields{
