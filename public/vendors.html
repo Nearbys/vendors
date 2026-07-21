@@ -1965,26 +1965,25 @@ function(e){
 
 );
 
-window.onload=function(){
+window.onload = function () {
 
-    const savedVendor=
+    const savedVendor = localStorage.getItem("vendor");
 
-    localStorage.getItem("vendor");
+    if (savedVendor) {
 
-    if(savedVendor){
+        vendor = JSON.parse(savedVendor);
 
-        vendor=JSON.parse(savedVendor);
+        document.getElementById("loginPage").style.display = "none";
 
-        document.getElementById("loginPage").style.display="none";
-
-        document.getElementById("dashboard").style.display="block";
+        document.getElementById("dashboard").style.display = "block";
 
         loadVendor();
 
+        loadProducts();
+
     }
 
-};    
-
+};
 //================ LOAD PRODUCT FORM ================//
 
 const productCategories = {
