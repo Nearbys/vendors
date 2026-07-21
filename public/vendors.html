@@ -914,63 +914,11 @@ if (!response.ok) {
 
         const list = document.getElementById("productsList");
 
-list.innerHTML = "";
-
-data.products.forEach(product => {
-
-    list.innerHTML += `
-<div class="product-card"
-     onclick="editProduct(${product.id})">
-
-    <img
-        class="product-card-image"
-        src="${product.image}"
-        alt="${product.title}"
-    >
-
-    <div class="product-details">
-
-        <div class="product-title">
-            ${product.title}
-        </div>
-
-        <div class="product-size">
-            ${Number(product.quantity).toFixed(2)} ${product.unit}
-        </div>
-
-        <div class="product-price">
-           ${vendor.currency || "AED"} ${Number(product.price || 0).toFixed(2)}
-        </div>
-
-    </div>
-
-    <div class="product-actions">
-
-        <label class="switch"
-            onclick="event.stopPropagation()">
-
-            <input
-                type="checkbox"
-                ${product.available ? "checked" : ""}
-                onchange="toggleProduct(${product.id},this.checked)"
-            >
-
-            <span class="slider"></span>
-
-        </label>
-
-        <button
-            class="delete-btn"
-            onclick="event.stopPropagation();deleteProduct(${product.id})"
-        >
-            🗑️
-        </button>
-
-    </div>
-
+list.innerHTML += `
+<div class="product-card">
+    <div>${product.title}</div>
 </div>
-`;
-        
+`;        
         });
 
     }
