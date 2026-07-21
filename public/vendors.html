@@ -664,6 +664,10 @@ const closeProductModal = document.getElementById("closeProductModal");
 
 addProductBtn.addEventListener("click", () => {
 
+    editingProductId = null;
+
+    createProductBtn.textContent = "Create Product";
+
     productModal.style.display = "flex";
 
 });
@@ -1739,6 +1743,7 @@ feeInput.addEventListener("blur", async function(){
 //================ PRODUCT IMAGE ================//
 
 let productImageFile = null;
+let editingProductId = null;
 
 const productImageInput = document.getElementById("productImageInput");
 const productImagePreview = document.getElementById("productImagePreview");
@@ -1808,32 +1813,62 @@ if (createProductBtn) {
         createProductBtn.disabled = true;
         createProductBtn.textContent = "Uploading...";
 
-        const image = await uploadToCloudinary(
-            productImageFile,
-            "product_images"
-        );
+        const image = productImageFile
+    ? await uploadToCloudinary(productImageFile, "product_images")
+    : null;
 
-        const response = await fetch("/products", {
+let response;
 
-            method: "POST",
+if (editingProductId) {
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    response = await fetch(`/products/${editingProductId}`, {
 
-            body: JSON.stringify({
-                business_id: vendor.id,
-                title,
-                category,
-                description,
-                quantity,
-                unit,
-                price,
-                image
-            })
+        method: "PATCH",
 
-        });
+        headers: {
+            "Content-Type": "application/json"
+        },
 
+        body: JSON.stringify({
+
+            title,
+            category,
+            description,
+            quantity,
+            unit,
+            price,
+            image
+
+        })
+
+    });
+
+} else {
+
+    response = await fetch("/products", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            business_id: vendor.id,
+            title,
+            category,
+            description,
+            quantity,
+            unit,
+            price,
+            image
+
+        })
+
+    });
+
+}
         const data = await response.json();
 
         if (!response.ok) {
@@ -1847,6 +1882,8 @@ if (createProductBtn) {
         }
 
         showProductMessage("Product created successfully!", "success");
+        editingProductId = null;
+        createProductBtn.textContent = "Create Product";
 
         // Let the user see the success message
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -1927,6 +1964,142 @@ function previewImage(input, imageId) {
 }
 
 
+async function toggleProduct(id, available) {
+
+    try {
+
+        const response = await fetch(`/products/${id}/availability`, {
+
+            method: "PATCH",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                available
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showProductMessage(data.message || "Unable to update product.", "error");
+            loadProducts();
+            return;
+        }
+
+        showProductMessage(
+            available ? "Product activated." : "Product deactivated.",
+            "success"
+        );
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        showProductMessage("Unable to update product.", "error");
+
+        loadProducts();
+
+    }
+
+}
+
+    async function deleteProduct(id) {
+
+    if (!confirm("Delete this product?")) return;
+
+    try {
+
+        const response = await fetch(`/products/${id}`, {
+
+            method: "DELETE"
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            showProductMessage(data.message || "Unable to delete product.", "error");
+
+            return;
+
+        }
+
+        showProductMessage("Product deleted.", "success");
+
+        loadProducts();
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        showProductMessage("Unable to delete product.", "error");
+
+    }
+
+}
+
+    let editingProductId = null;
+
+async function editProduct(id) {
+
+    try {
+
+        const response = await fetch(`/product/${id}`);
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            showProductMessage(data.message, "error");
+
+            return;
+
+        }
+
+        const product = data.product;
+
+        editingProductId = product.id;
+
+        document.getElementById("productTitle").value = product.title;
+        document.getElementById("productCategory").value = product.category;
+        document.getElementById("productDescription").value = product.description || "";
+        document.getElementById("productQuantity").value = product.quantity;
+        document.getElementById("productUnit").value = product.unit;
+        document.getElementById("productPrice").value = product.price;
+
+        productImageFile = null;
+
+        productImagePreview.innerHTML =
+            `<img src="${product.image}" alt="Product">`;
+
+        document.getElementById("productPlus").style.display = "none";
+
+        createProductBtn.textContent = "Save Changes";
+
+        productModal.style.display = "flex";
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        showProductMessage("Unable to load product.", "error");
+
+    }
+
+}
+
+    
 
     
 //============== ENTER KEY SUPPORT ==============//    
