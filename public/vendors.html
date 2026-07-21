@@ -1630,7 +1630,9 @@ feeInput.addEventListener("blur", async function(){
 
     }
 
-});
+});    
+
+
 
 
 
@@ -1640,196 +1642,272 @@ feeInput.addEventListener("blur", async function(){
 let productImageFile = null;
 
 const productImageInput = document.getElementById("productImageInput");
-
 const productImagePreview = document.getElementById("productImagePreview");
+const createProductBtn = document.getElementById("createProductBtn");
 
-productImagePreview.addEventListener("click",()=>{
+if (productImageInput && productImagePreview) {
 
-    productImageInput.click();
+    productImagePreview.addEventListener("click", () => {
+        productImageInput.click();
+    });
 
-});
+    productImageInput.addEventListener("change", (e) => {
 
-productImageInput.addEventListener("change",(e)=>{
+        const file = e.target.files[0];
+        if (!file) return;
 
-    const file = e.target.files[0];
+        productImageFile = file;
 
-    if(!file) return;
+        productImagePreview.innerHTML =
+            `<img src="${URL.createObjectURL(file)}" alt="Product">`;
 
-    productImageFile = file;
+        const plus = document.getElementById("productPlus");
+        if (plus) plus.style.display = "none";
+    });
 
-    productImagePreview.innerHTML =
-        `<img src="${URL.createObjectURL(file)}">`;
-
-});
-
+}
 
 
-    //================ CREATE PRODUCT ================//
+//================ CREATE PRODUCT ================//
 
-document.getElementById("createProductBtn").addEventListener(
+if (createProductBtn) {
 
-"click",
+    createProductBtn.addEventListener("click", async () => {
 
-async()=>{
+        try {
 
-    try{
+            if (!productImageFile) {
+                alert("Select a product image.");
+                return;
+            }
 
-        if(!productImageFile){
+            const title =
+                document.getElementById("productTitle").value.trim();
 
-            alert("Select a product image.");
+            const category =
+                document.getElementById("productCategory").value;
 
-            return;
+            const description =
+                document.getElementById("productDescription").value.trim();
+
+            const quantity =
+                document.getElementById("productQuantity").value;
+
+            const unit =
+                document.getElementById("productUnit").value;
+
+            const price =
+                document.getElementById("productPrice").value;
+
+            if (title === "") {
+                alert("Enter product title.");
+                return;
+            }
+
+            if (category === "") {
+                alert("Select category.");
+                return;
+            }
+
+            if (price === "") {
+                alert("Enter price.");
+                return;
+            }
+
+            const image = await uploadToCloudinary(
+                productImageFile,
+                "product_images"
+            );
+
+            const response = await fetch("/products", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    business_id: vendor.id,
+                    title,
+                    category,
+                    description,
+                    quantity,
+                    unit,
+                    price,
+                    image
+
+                })
+
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message);
+                return;
+            }
+
+            alert("Product created.");
+
+            productImageFile = null;
+
+            productImageInput.value = "";
+
+            productImagePreview.innerHTML = "+";
+
+            document.getElementById("productTitle").value = "";
+            document.getElementById("productCategory").selectedIndex = 0;
+            document.getElementById("productDescription").value = "";
+            document.getElementById("productQuantity").value = "";
+            document.getElementById("productUnit").selectedIndex = 0;
+            document.getElementById("productPrice").value = "";
+
+            if (typeof productModal !== "undefined") {
+                productModal.style.display = "none";
+            }
+
+            loadProducts();
 
         }
 
-        const title =
-            document.getElementById("productTitle").value.trim();
+        catch (err) {
 
-        const category =
-            document.getElementById("productCategory").value;
-
-        const description =
-            document.getElementById("productDescription").value.trim();
-
-        const quantity =
-            document.getElementById("productQuantity").value;
-
-        const unit =
-            document.getElementById("productUnit").value;
-
-        const price =
-            document.getElementById("productPrice").value;
-
-        if(title===""){
-
-            alert("Enter product title.");
-
-            return;
+            console.error(err);
+            alert("Unable to create product.");
 
         }
 
-        if(category===""){
+    });
 
-            alert("Select category.");
+}
 
-            return;
 
-        }
+//================ LOAD PRODUCTS ================//
 
-        if(price===""){
+async function loadProducts() {
 
-            alert("Enter price.");
+    try {
 
-            return;
-
-        }
-
-        const image = await uploadToCloudinary(
-
-    productImageFile,
-
-    "product_images"
-
-    );
-
-        const response = await fetch("/products",{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                business_id:vendor.id,
-
-                title,
-
-                category,
-
-                description,
-
-                quantity,
-
-                unit,
-
-                price,
-
-                image
-
-            })
-
-        });
+        const response = await fetch(`/products/${vendor.id}`);
 
         const data = await response.json();
 
-        if(!response.ok){
+        if (!response.ok) {
+            throw new Error(data.message);
+        }
 
-            alert(data.message);
+        const list = document.getElementById("productsList");
+
+        list.innerHTML = "";
+
+        if (data.products.length === 0) {
+
+            list.innerHTML = `
+                <div class="no-products">
+                    No products added yet.
+                </div>
+            `;
 
             return;
+        }
+
+        data.products.forEach(product => {
+
+            list.innerHTML += `
+
+                <div class="product-card">
+
+                    <img
+                        class="product-card-image"
+                        src="${product.image}"
+                        alt="${product.title}"
+                    >
+
+                    <div class="product-info">
+
+                        <div class="product-title">
+                            ${product.title}
+                        </div>
+
+                        <div class="product-category">
+                            ${product.category}
+                        </div>
+
+                        <div class="product-quantity">
+                            ${Number(product.quantity).toFixed(2)} ${product.unit}
+                        </div>
+
+                        <div class="product-price">
+                            ${businessCurrency} ${Number(product.price).toFixed(2)}
+                        </div>
+
+                    </div>
+
+                    <div class="product-actions">
+
+                        <button onclick="editProduct(${product.id})">
+                            ✏️
+                        </button>
+
+                        <button onclick="deleteProduct(${product.id})">
+                            🗑️
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+
+
+//================ IMAGE PREVIEW ================//
+
+function previewImage(input, imageId) {
+
+    if (!input.files.length) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+
+        const img = document.getElementById(imageId);
+
+        if (!img) return;
+
+        img.src = e.target.result;
+
+        if (imageId === "productImagePreview") {
+
+            const plus = document.getElementById("productPlus");
+
+            if (plus) {
+                plus.style.display = "none";
+            }
 
         }
 
-        alert("Product created.");
+    };
 
-        productImageFile = null;
+    reader.readAsDataURL(input.files[0]);
 
-        productImageInput.value = "";
-
-        productImagePreview.innerHTML = "+";
-
-        document.getElementById("productTitle").value = "";
-
-        document.getElementById("productCategory").selectedIndex = 0;
-
-        document.getElementById("productDescription").value = "";
-
-        document.getElementById("productQuantity").value = "";
-
-        document.getElementById("productUnit").selectedIndex = 0;
-
-        document.getElementById("productPrice").value = "";
-
-        productModal.style.display = "none";
-
-        loadProducts();
-
-    }
-
-    catch(err){
-
-        console.log(err);
-
-        alert("Unable to create product.");
-
-    }
-
-});
+}
 
 
 
-
-    let productImageFile = null;
-
-document.getElementById("productImageInput").addEventListener(
-
-    "change",
-
-    function(){
-
-        if(!this.files.length) return;
-
-        productImageFile = this.files[0];
-
-        previewImage(this,"productImagePreview");
-
-        document.getElementById("productPlus").style.display="none";
-
-    }
-
-);
     
 //============== ENTER KEY SUPPORT ==============//    
 
