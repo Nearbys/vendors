@@ -623,7 +623,7 @@ body{
 <!-- ================ Footer End ================  -->
     
 </div>
-
+<script src="/products.js"></script>
 <script>
 
 //================ PRODUCT MODAL ================//    
@@ -670,10 +670,7 @@ productModal.addEventListener("click", (e) => {
 
 
 //================================//
-
-
     
-
 const CLOUD_NAME="gb2xbn6d";
 const UPLOAD_PRESET="business_images";
 const FOLDER="Businesses";
@@ -727,11 +724,11 @@ function showProducts(){
 
     document.getElementById("productsSection").style.display="block";
 
-    loadProductForm();
-
     clearFooter();
 
     document.getElementById("productsTab").classList.add("active");
+
+    loadProducts();
 
 }
     
@@ -970,8 +967,6 @@ function previewImage(input,imageId){
     reader.readAsDataURL(input.files[0]);
 
 }
-
-
 
 //================ COVER IMAGE ================//
 
@@ -1628,185 +1623,6 @@ feeInput.addEventListener("blur", async function(){
 
 });
 
-
-
-
-//================ PRODUCT IMAGE ================//
-
-let productImageFile = null;
-
-const productImageInput = document.getElementById("productImageInput");
-
-const productImagePreview = document.getElementById("productImagePreview");
-
-productImagePreview.addEventListener("click",()=>{
-
-    productImageInput.click();
-
-});
-
-productImageInput.addEventListener("change",(e)=>{
-
-    const file = e.target.files[0];
-
-    if(!file) return;
-
-    productImageFile = file;
-
-    productImagePreview.innerHTML =
-        `<img src="${URL.createObjectURL(file)}">`;
-
-});
-
-
-
-    //================ CREATE PRODUCT ================//
-
-document.getElementById("createProductBtn").addEventListener(
-
-"click",
-
-async()=>{
-
-    try{
-
-        if(!productImageFile){
-
-            alert("Select a product image.");
-
-            return;
-
-        }
-
-        const title =
-            document.getElementById("productTitle").value.trim();
-
-        const category =
-            document.getElementById("productCategory").value;
-
-        const description =
-            document.getElementById("productDescription").value.trim();
-
-        const quantity =
-            document.getElementById("productQuantity").value;
-
-        const unit =
-            document.getElementById("productUnit").value;
-
-        const price =
-            document.getElementById("productPrice").value;
-
-        if(title===""){
-
-            alert("Enter product title.");
-
-            return;
-
-        }
-
-        if(category===""){
-
-            alert("Select category.");
-
-            return;
-
-        }
-
-        if(price===""){
-
-            alert("Enter price.");
-
-            return;
-
-        }
-
-        const image = await uploadToCloudinary(
-
-    productImageFile,
-
-    "product_images"
-
-    );
-
-        const response = await fetch("/products",{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                business_id:vendor.id,
-
-                title,
-
-                category,
-
-                description,
-
-                quantity,
-
-                unit,
-
-                price,
-
-                image
-
-            })
-
-        });
-
-        const data = await response.json();
-
-        if(!response.ok){
-
-            alert(data.message);
-
-            return;
-
-        }
-
-        alert("Product created.");
-
-        productImageFile = null;
-
-        productImageInput.value = "";
-
-        productImagePreview.innerHTML = "+";
-
-        document.getElementById("productTitle").value = "";
-
-        document.getElementById("productCategory").selectedIndex = 0;
-
-        document.getElementById("productDescription").value = "";
-
-        document.getElementById("productQuantity").value = "";
-
-        document.getElementById("productUnit").selectedIndex = 0;
-
-        document.getElementById("productPrice").value = "";
-
-        productModal.style.display = "none";
-
-        loadProducts();
-
-    }
-
-    catch(err){
-
-        console.log(err);
-
-        alert("Unable to create product.");
-
-    }
-
-});
-
-
-    
-    
     
 //============== ENTER KEY SUPPORT ==============//    
 
