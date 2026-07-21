@@ -1818,67 +1818,59 @@ async function loadProducts() {
 
         const list = document.getElementById("productsList");
 
-        list.innerHTML = "";
+        list.innerHTML += `
+<div class="product-card"
+     onclick="editProduct(${product.id})">
 
-        if (data.products.length === 0) {
+    <img
+        class="product-card-image"
+        src="${product.image}"
+        alt="${product.title}"
+    >
 
-            list.innerHTML = `
-                <div class="no-products">
-                    No products added yet.
-                </div>
-            `;
+    <div class="product-details">
 
-            return;
-        }
+        <div class="product-title">
+            ${product.title}
+        </div>
 
-        data.products.forEach(product => {
+        <div class="product-size">
+            ${Number(product.quantity).toFixed(2)} ${product.unit}
+        </div>
 
-            list.innerHTML += `
+        <div class="product-price">
+            ${businessCurrency} ${Number(product.price).toFixed(2)}
+        </div>
 
-                <div class="product-card">
+    </div>
 
-                    <img
-                        class="product-card-image"
-                        src="${product.image}"
-                        alt="${product.title}"
-                    >
+    <div class="product-actions">
 
-                    <div class="product-info">
+        <label class="switch"
+            onclick="event.stopPropagation()">
 
-                        <div class="product-title">
-                            ${product.title}
-                        </div>
+            <input
+                type="checkbox"
+                ${product.active ? "checked" : ""}
+                onchange="toggleProduct(${product.id},this.checked)"
+            >
 
-                        <div class="product-category">
-                            ${product.category}
-                        </div>
+            <span class="slider"></span>
 
-                        <div class="product-quantity">
-                            ${Number(product.quantity).toFixed(2)} ${product.unit}
-                        </div>
+        </label>
 
-                        <div class="product-price">
-                            ${businessCurrency} ${Number(product.price).toFixed(2)}
-                        </div>
+        <button
+            class="delete-btn"
+            onclick="event.stopPropagation();deleteProduct(${product.id})"
+        >
+            🗑️
+        </button>
 
-                    </div>
+    </div>
 
-                    <div class="product-actions">
-
-                        <button onclick="editProduct(${product.id})">
-                            ✏️
-                        </button>
-
-                        <button onclick="deleteProduct(${product.id})">
-                            🗑️
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-
+</div>
+`;
+        
         });
 
     }
