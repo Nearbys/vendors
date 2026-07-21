@@ -465,7 +465,11 @@ body{
 
     </div>
 
-        <div id="productsList" class="products-list"></div>
+    <div id="productsList">
+
+        <!-- Products will be loaded here -->
+
+    </div>
 
 </div>
 
@@ -623,6 +627,7 @@ body{
 <!-- ================ Footer End ================  -->
     
 </div>
+
 <script>
 
 //================ PRODUCT MODAL ================//    
@@ -669,7 +674,10 @@ productModal.addEventListener("click", (e) => {
 
 
 //================================//
+
+
     
+
 const CLOUD_NAME="gb2xbn6d";
 const UPLOAD_PRESET="business_images";
 const FOLDER="Businesses";
@@ -723,11 +731,11 @@ function showProducts(){
 
     document.getElementById("productsSection").style.display="block";
 
+    loadProductForm();
+
     clearFooter();
 
     document.getElementById("productsTab").classList.add("active");
-
-    loadProducts();
 
 }
     
@@ -966,6 +974,8 @@ function previewImage(input,imageId){
     reader.readAsDataURL(input.files[0]);
 
 }
+
+
 
 //================ COVER IMAGE ================//
 
@@ -1798,116 +1808,9 @@ async()=>{
 
 });
 
-    //================ LOAD PRODUCTS ================//
-
-async function loadProducts(){
-
-    try{
-
-        const response = await fetch(
-
-            `/products/${vendor.id}`
-
-        );
-
-        const data = await response.json();
-
-        if(!response.ok){
-
-            throw new Error(data.message);
-
-        }
-
-        const list = document.getElementById("productsList");
-
-        list.innerHTML = "";
-
-        if(data.products.length===0){
-
-            list.innerHTML=`
-
-                <div style="text-align:center;padding:20px;color:#888;">
-
-                    No products added yet.
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-        data.products.forEach(product=>{
-
-            list.innerHTML+=`
-
-                <div class="product-card">
-
-                    <img src="${product.image}">
-
-                    <div class="product-info">
-
-                        <div class="product-title">
-
-                            ${product.title}
-
-                        </div>
-
-                        <div class="product-category">
-
-                            ${product.category}
-
-                        </div>
-
-                        <div>
-
-                            ${product.quantity} ${product.unit}
-
-                        </div>
-
-                        <div class="product-price">
-
-                            ${businessCurrency} ${Number(product.price).toFixed(2)}
-
-                        </div>
-
-                    </div>
-
-                    <div class="product-actions">
-
-                        <button onclick="editProduct(${product.id})">
-
-                            ✏️
-
-                        </button>
-
-                        <button onclick="deleteProduct(${product.id})">
-
-                            🗑️
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        });
-
-    }
-
-    catch(err){
-
-        console.log(err);
-
-    }
-
-}
 
     
-
+    
     
 //============== ENTER KEY SUPPORT ==============//    
 
