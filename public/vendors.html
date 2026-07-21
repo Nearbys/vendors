@@ -493,21 +493,18 @@ body{
 
         <div class="product-form">
 
-            <label for="productImageInput" class="product-image-box">
+           <label
+    for="productImageInput"
+    id="productImagePreview"
+    class="product-image-box">
+    <span id="productPlus">+</span>
+        </label>
 
-                <img id="productImagePreview" alt="">
-
-                <span id="productPlus">+</span>
-
-            </label>
-
-            <input
-                type="file"
-                id="productImageInput"
-                accept="image/*"
-                capture="environment"
-                hidden>
-
+        <input
+    type="file"
+    id="productImageInput"
+    accept="image/*"
+    hidden>
             <div class="product-fields">
 
                 <input
