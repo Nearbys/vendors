@@ -902,23 +902,26 @@ async function loadProducts() {
     try {
 
         const response = await fetch(`/products/${vendor.id}`);
-
         const data = await response.json();
 
-console.log("Products:", data.products);
-console.log("Vendor:", vendor);
+        console.log("Products:", data.products);
+        console.log("Vendor:", vendor);
 
-if (!response.ok) {
-    throw new Error(data.message);
-}
+        if (!response.ok) {
+            throw new Error(data.message);
+        }
 
         const list = document.getElementById("productsList");
+        list.innerHTML = "";
 
-list.innerHTML += `
-<div class="product-card">
-    <div>${product.title}</div>
-</div>
-`;        
+        data.products.forEach(product => {
+
+            list.innerHTML += `
+                <div class="product-card">
+                    <div>${product.title}</div>
+                </div>
+            `;
+
         });
 
     }
@@ -930,7 +933,6 @@ list.innerHTML += `
     }
 
 }
-
 
 //================ LOGOUT ================//
 
