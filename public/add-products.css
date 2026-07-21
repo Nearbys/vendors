@@ -450,6 +450,22 @@
 
 }
 
+.product-message{
+    margin:12px 0;
+    text-align:center;
+    font-size:14px;
+    font-weight:600;
+    min-height:20px;
+}
+
+.product-message.error{
+    color:#dc3545;
+}
+
+.product-message.success{
+    color:#28a745;
+}
+
 /*================ MOBILE ================*/
 
 @media(max-width:700px){
