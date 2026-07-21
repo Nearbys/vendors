@@ -1682,7 +1682,9 @@ if (productImageInput && productImagePreview) {
 
 //================ CREATE PRODUCT ================//
 
-createProductBtn.addEventListener("click", async () => {
+if (createProductBtn) {
+
+    createProductBtn.addEventListener("click", async () => {
 
     if (createProductBtn.disabled) return;
 
@@ -1765,7 +1767,9 @@ createProductBtn.addEventListener("click", async () => {
         // Reset form
         productImageFile = null;
         productImageInput.value = "";
-        productImagePreview.innerHTML = "+";
+        productImagePreview.innerHTML = `
+    <span id="productPlus">+</span>
+`;
 
         const plus = document.getElementById("productPlus");
         if (plus) plus.style.display = "";
@@ -1799,7 +1803,9 @@ createProductBtn.addEventListener("click", async () => {
 
     }
 
-});
+  });
+
+}
 
 //================ LOAD PRODUCTS ================//
 
@@ -1817,7 +1823,11 @@ async function loadProducts() {
 
         const list = document.getElementById("productsList");
 
-        list.innerHTML += `
+list.innerHTML = "";
+
+data.products.forEach(product => {
+
+    list.innerHTML += `
 <div class="product-card"
      onclick="editProduct(${product.id})">
 
@@ -1850,7 +1860,7 @@ async function loadProducts() {
 
             <input
                 type="checkbox"
-                ${product.active ? "checked" : ""}
+                ${product.available ? "checked" : ""}
                 onchange="toggleProduct(${product.id},this.checked)"
             >
 
