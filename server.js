@@ -1158,7 +1158,303 @@ app.get("/products/:business_id", async (req, res) => {
 });
 
 
+//================ GET PRODUCT ================//
 
+app.get("/product/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+
+            `
+            SELECT *
+            FROM products
+            WHERE id = $1
+            `,
+
+            [id]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Product not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+            product: result.rows[0]
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success: false,
+            message: "Unable to load product."
+
+        });
+
+    }
+
+});
+
+
+//================ UPDATE PRODUCT ================//
+
+app.patch("/products/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        let {
+
+            title,
+            category,
+            description,
+            quantity,
+            unit,
+            price,
+            image
+
+        } = req.body;
+
+        title = (title || "").trim();
+        category = (category || "").trim();
+        description = (description || "").trim();
+        unit = (unit || "").trim();
+
+        quantity = Number(quantity);
+        price = Number(price);
+
+        const current = await pool.query(
+
+            `
+            SELECT image
+            FROM products
+            WHERE id=$1
+            `,
+
+            [id]
+
+        );
+
+        if (current.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Product not found."
+
+            });
+
+        }
+
+        if (!image) {
+
+            image = current.rows[0].image;
+
+        }
+
+        const result = await pool.query(
+
+            `
+            UPDATE products
+            SET
+
+                title=$1,
+                category=$2,
+                description=$3,
+                quantity=$4,
+                unit=$5,
+                price=$6,
+                image=$7,
+                updated_at=CURRENT_TIMESTAMP
+
+            WHERE id=$8
+
+            RETURNING *
+            `,
+
+            [
+
+                title,
+                category,
+                description,
+                quantity,
+                unit,
+                price,
+                image,
+                id
+
+            ]
+
+        );
+
+        res.json({
+
+            success: true,
+            product: result.rows[0]
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success: false,
+            message: "Unable to update product."
+
+        });
+
+    }
+
+});
+
+
+//================ TOGGLE PRODUCT ================//
+
+app.patch("/products/:id/availability", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const { available } = req.body;
+
+        const result = await pool.query(
+
+            `
+            UPDATE products
+            SET
+
+                available=$1,
+                updated_at=CURRENT_TIMESTAMP
+
+            WHERE id=$2
+
+            RETURNING *
+            `,
+
+            [
+
+                available,
+                id
+
+            ]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Product not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+            product: result.rows[0]
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success: false,
+            message: "Unable to update product."
+
+        });
+
+    }
+
+});
+
+
+
+//================ DELETE PRODUCT ================//
+
+app.delete("/products/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+
+            `
+            DELETE FROM products
+            WHERE id=$1
+            RETURNING *
+            `,
+
+            [id]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Product not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+            message: "Product deleted."
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success: false,
+            message: "Unable to delete product."
+
+        });
+
+    }
+
+});
 
 
 
