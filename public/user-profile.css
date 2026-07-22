@@ -136,6 +136,37 @@ PROFILE TOP
 }
 
 /*==============================
+EDITABLE INPUTS
+==============================*/
+
+.editableInput{
+    width:100%;
+    padding:12px;
+    border:1px solid transparent;
+    border-radius:10px;
+    font-size:15px;
+    background:transparent;
+    transition:.25s;
+    cursor:pointer;
+}
+
+.editableInput[readonly]{
+    background:transparent;
+    border-color:transparent;
+    padding-left:0;
+}
+
+.editableInput:not([readonly]){
+    background:#fff;
+    border:1px solid #009500;
+    cursor:text;
+}
+
+.editableInput:focus{
+    outline:none;
+}
+
+/*==============================
 PROFILE IMAGE
 ==============================*/
 
