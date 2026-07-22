@@ -183,7 +183,72 @@ CREATE TABLE IF NOT EXISTS products(
         `);
 
 
+        //================ USERS TABLE ================//
 
+await pool.query(`
+
+CREATE TABLE IF NOT EXISTS users(
+
+    user_id SERIAL PRIMARY KEY,
+
+    name VARCHAR(100) NOT NULL,
+
+    contact VARCHAR(20) UNIQUE NOT NULL,
+
+    password TEXT NOT NULL,
+
+    email VARCHAR(150),
+
+    profile_image TEXT,
+
+    coordinates JSONB,
+
+    addresses JSONB,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+`);
+
+// Add new columns if the table already existed
+
+await pool.query(`
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS email VARCHAR(150);
+`);
+
+await pool.query(`
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS profile_image TEXT;
+`);
+
+await pool.query(`
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS coordinates JSONB;
+`);
+
+await pool.query(`
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS addresses JSONB;
+`);
+
+await pool.query(`
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+`);
+
+
+//================ USERS INDEXES ================//
+
+await pool.query(`
+CREATE INDEX IF NOT EXISTS idx_users_contact
+ON users(contact);
+`);
+
+
+
+        
         console.log("Database Ready");
 
     }
