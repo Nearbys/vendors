@@ -835,6 +835,104 @@ function refreshCustomerLocation(){
 }
 
  checkCustomerLocation();   
+
+
+
+async function loadBusinesses(){
+
+    try{
+
+        const response = await fetch(
+
+            "http://localhost:3000/businesses"
+
+        );
+
+        businesses = await response.json();
+
+        filterBusinesses(selectedCategory);
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("Unable to load businesses.");
+
+    }
+
+}
+
+
+function filterBusinesses(category, element){
+
+    selectedCategory = category;
+
+    if(element){
+
+        document.querySelectorAll(".category").forEach(item=>{
+
+            item.classList.remove("active");
+
+        });
+
+        element.classList.add("active");
+
+    }
+
+    if(category=="All"){
+
+        filteredBusinesses = businesses;
+
+    }
+
+    else{
+
+        filteredBusinesses = businesses.filter(business =>
+
+            business.category == category
+
+        );
+
+    }
+
+    displayBusinesses();
+
+}
+
+
+
+
+
+function displayBusinesses(){
+
+    const grid = document.getElementById("businessGrid");
+
+    grid.innerHTML = "";
+
+    filteredBusinesses.forEach(business =>{
+
+        grid.innerHTML += `
+
+            <div class="businessCard"
+                onclick="openBusiness(${business.business_id})">
+
+                <img src="${business.profile_image}">
+
+                <h3>${business.business_name}</h3>
+
+                <p>${business.category}</p>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+    
     
     
 
