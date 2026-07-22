@@ -14,9 +14,6 @@ const loginSection = document.getElementById("loginSection");
 const registerSection = document.getElementById("registerSection");
 const customerProfile = document.getElementById("customerProfile");
 
-const customerContact =
-document.getElementById("customerContact");
-
 const loginContact = document.getElementById("loginContact");
 const loginPassword = document.getElementById("loginPassword");
 const loginBtn = document.getElementById("loginBtn");
@@ -450,10 +447,13 @@ function showProfile(){
 
 
 
-   document.getElementById(
-    "customerName"
-).value =
-user.name || "";
+    document.getElementById(
+
+        "customerName"
+
+    ).innerHTML=
+
+    user.name || "Tap to edit";
 
 
 
@@ -465,15 +465,17 @@ user.name || "";
 
     user.contact || "";
 
-    currentCoordinates = user.coordinates || currentCoordinates;
-showCoordinates();
 
 
+    document.getElementById(
 
-   document.getElementById(
-    "customerEmail"
-).value =
-user.email || "";
+        "customerEmail"
+
+    ).innerHTML=
+
+    user.email ||
+
+    "Tap to add email";
 
 
 
