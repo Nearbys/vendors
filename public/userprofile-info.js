@@ -588,3 +588,263 @@ if(savedCoordinates){
     JSON.parse(savedCoordinates);
 
 }
+
+//=====================================
+// USER PROFILE INFO
+// PART 2A
+// PROFILE IMAGE
+//=====================================
+
+
+//========== ELEMENTS ==========//
+
+const profileImage =
+document.getElementById("profileImage");
+
+const profilePlus =
+document.getElementById("profilePlus");
+
+const profileImageInput =
+document.getElementById("profileImageInput");
+
+
+
+
+//========== OPEN FILE PICKER ==========//
+
+profilePlus.onclick=function(){
+
+    profileImageInput.click();
+
+};
+
+profileImage.onclick=function(){
+
+    profileImageInput.click();
+
+};
+
+
+
+
+//========== IMAGE PREVIEW ==========//
+
+profileImageInput.addEventListener(
+
+    "change",
+
+    function(){
+
+        if(!this.files.length) return;
+
+        const reader=new FileReader();
+
+        reader.onload=function(e){
+
+            profileImage.src=e.target.result;
+
+            profileImage.style.display="block";
+
+            profilePlus.style.display="none";
+
+        };
+
+        reader.readAsDataURL(
+
+            this.files[0]
+
+        );
+
+        uploadProfileImage(
+
+            this.files[0]
+
+        );
+
+    }
+
+);
+
+
+
+
+//========== CLOUDINARY UPLOAD ==========//
+
+async function uploadToCloudinary(
+
+    file,
+
+    preset=UPLOAD_PRESET
+
+){
+
+    const formData=new FormData();
+
+    formData.append(
+
+        "file",
+
+        file
+
+    );
+
+    formData.append(
+
+        "upload_preset",
+
+        preset
+
+    );
+
+    const response=await fetch(
+
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+
+        {
+
+            method:"POST",
+
+            body:formData
+
+        }
+
+    );
+
+    const data=
+
+    await response.json();
+
+    if(!response.ok){
+
+        throw new Error(
+
+            data.error?.message ||
+
+            "Cloudinary upload failed."
+
+        );
+
+    }
+
+    return data.secure_url;
+
+}
+
+//=====================================
+// USER PROFILE INFO
+// PART 2B
+// SAVE PROFILE IMAGE
+//=====================================
+
+
+//========== UPLOAD PROFILE IMAGE ==========//
+
+async function uploadProfileImage(file){
+
+    if(!user) return;
+
+    const previousImage = user.profile_image || "";
+
+    profilePlus.style.pointerEvents = "none";
+    profileImage.style.pointerEvents = "none";
+
+    try{
+
+        const imageUrl = await uploadToCloudinary(file);
+
+        const response = await fetch(
+
+            "/users/profile-image",
+
+            {
+
+                method:"POST",
+
+                headers:{
+
+                    "Content-Type":"application/json"
+
+                },
+
+                body:JSON.stringify({
+
+                    user_id:user.user_id,
+
+                    profile_image:imageUrl
+
+                })
+
+            }
+
+        );
+
+        const data = await response.json();
+
+        if(!response.ok || !data.success){
+
+            throw new Error(
+
+                data.message ||
+
+                "Unable to save profile image."
+
+            );
+
+        }
+
+        user.profile_image = imageUrl;
+
+        localStorage.setItem(
+
+            "user",
+
+            JSON.stringify(user)
+
+        );
+
+        profileImage.src = imageUrl;
+
+        profileImage.style.display = "block";
+
+        profilePlus.style.display = "none";
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        alert(err.message);
+
+        if(previousImage){
+
+            profileImage.src = previousImage;
+
+            profileImage.style.display = "block";
+
+            profilePlus.style.display = "none";
+
+        }
+
+        else{
+
+            profileImage.src = "";
+
+            profileImage.style.display = "none";
+
+            profilePlus.style.display = "flex";
+
+        }
+
+    }
+
+    finally{
+
+        profilePlus.style.pointerEvents = "auto";
+        profileImage.style.pointerEvents = "auto";
+
+        profileImageInput.value = "";
+
+    }
+
+}
