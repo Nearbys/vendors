@@ -2270,8 +2270,6 @@ app.put("/users/addresses", async(req,res)=>{
 });
 
 
-
-
 //================ LOGOUT =================//
 
 app.post("/users/logout",(req,res)=>{
@@ -2285,9 +2283,27 @@ app.post("/users/logout",(req,res)=>{
 });
 
 
+//================ VIEW TABLE =================//
 
+app.get("/users", async(req,res)=>{
 
+    const result = await pool.query(`
 
+        SELECT
+            column_name,
+            data_type
+
+        FROM information_schema.columns
+
+        WHERE table_name='users'
+
+        ORDER BY ordinal_position
+
+    `);
+
+    res.json(result.rows);
+
+});
 
 // Health Check
 app.get("/health",(req,res)=>{
