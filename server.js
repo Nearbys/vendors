@@ -2283,27 +2283,42 @@ app.post("/users/logout",(req,res)=>{
 });
 
 
-//================ VIEW TABLE =================//
+//================ VIEW USERS =================//
 
 app.get("/users", async(req,res)=>{
 
-    const result = await pool.query(`
+    try{
 
-        SELECT
-            column_name,
-            data_type
+        const result = await pool.query(`
 
-        FROM information_schema.columns
+            SELECT *
 
-        WHERE table_name='users'
+            FROM users
 
-        ORDER BY ordinal_position
+            ORDER BY user_id
 
-    `);
+        `);
 
-    res.json(result.rows);
+        res.json(result.rows);
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:err.message
+
+        });
+
+    }
 
 });
+
 
 // Health Check
 app.get("/health",(req,res)=>{
