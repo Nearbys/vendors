@@ -1522,6 +1522,174 @@ app.delete("/products/:id", async (req, res) => {
 });
 
 
+//================ USER REGISTER ================//
+
+app.post("/users/register", async(req, res)=>{
+
+    try{
+
+        let{
+
+            name,
+            contact,
+            password
+
+        } = req.body;
+
+        name = (name || "").trim();
+        contact = (contact || "").trim();
+        password = (password || "").trim();
+
+        if(!name || !contact || !password){
+
+            return res.status(400).json({
+
+                success:false,
+                message:"All fields are required."
+
+            });
+
+        }
+
+        const exists = await pool.query(
+
+            `SELECT user_id
+             FROM users
+             WHERE contact=$1`,
+
+            [contact]
+
+        );
+
+        if(exists.rows.length){
+
+            return res.status(400).json({
+
+                success:false,
+                message:"Contact number already registered."
+
+            });
+
+        }
+
+        const result = await pool.query(
+
+            `INSERT INTO users
+            (name,contact,password)
+
+            VALUES($1,$2,$3)
+
+            RETURNING *`,
+
+            [
+
+                name,
+                contact,
+                password
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+            message:"Registration successful.",
+
+            user:result.rows[0]
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+            message:"Server Error"
+
+        });
+
+    }
+
+});
+
+//================ USER LOGIN ================//
+
+app.post("/users/login", async(req,res)=>{
+
+    try{
+
+        let{
+
+            contact,
+            password
+
+        } = req.body;
+
+        contact=(contact || "").trim();
+        password=(password || "").trim();
+
+        const result=await pool.query(
+
+            `SELECT *
+             FROM users
+
+             WHERE contact=$1
+             AND password=$2`,
+
+            [
+
+                contact,
+                password
+
+            ]
+
+        );
+
+        if(result.rows.length===0){
+
+            return res.status(401).json({
+
+                success:false,
+
+                message:"Invalid contact number or password."
+
+            });
+
+        }
+
+        res.json({
+
+            success:true,
+
+            user:result.rows[0]
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Server Error"
+
+        });
+
+    }
+
+});
+
+
+
 
 // Health Check
 app.get("/health",(req,res)=>{
