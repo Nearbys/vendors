@@ -88,13 +88,13 @@ async function checkOldPassword(){
 
                 body:JSON.stringify({
 
-                    user_id:user.user_id,
+    user_id:user.user_id,
 
-                    password:
+    oldPassword:oldPassword.value,
 
-                    oldPassword.value
+    newPassword:newPassword.value
 
-                })
+})
 
             }
 
