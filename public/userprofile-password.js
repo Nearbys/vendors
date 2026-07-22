@@ -121,10 +121,15 @@ async function checkOldPassword(){
             "#009500";
 
             newPassword.disabled=false;
+confirmNewPassword.disabled=false;
 
-            confirmNewPassword.disabled=false;
+passwordValidation.innerHTML=
+"✓ Password Correct";
 
-            validateNewPasswords();
+passwordValidation.style.color=
+"#009500";
+
+changePasswordBtn.disabled=true;
 
         }
 
