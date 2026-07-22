@@ -711,15 +711,117 @@ function filterBusinesses(category, element){
 
     selectedCategory = category;
 
-    document.querySelectorAll(".category").forEach(item=>{
+    if(element){
 
-        item.classList.remove("active");
+        document.querySelectorAll(".category").forEach(item=>{
+
+            item.classList.remove("active");
+
+        });
+
+        element.classList.add("active");
+
+    }
+
+    filteredBusinesses = [];
+
+    const countByCategory = {};
+
+    businesses.forEach(business=>{
+
+        const distance = calculateDistance(
+
+            customerLocation.latitude,
+
+            customerLocation.longitude,
+
+            Number(business.latitude),
+
+            Number(business.longitude)
+
+        );
+
+        business.distance = distance;
+
+        let allowed = false;
+
+        if(distance <= 100){
+
+            allowed = true;
+
+        }
+
+        else if(
+
+            distance <= 200 &&
+
+            business.delivery_200
+
+        ){
+
+            allowed = true;
+
+        }
+
+        else if(
+
+            distance <= 500 &&
+
+            business.delivery_500
+
+        ){
+
+            allowed = true;
+
+        }
+
+        if(!allowed){
+
+            return;
+
+        }
+
+        if(
+
+            category != "All" &&
+
+            business.category != category
+
+        ){
+
+            return;
+
+        }
+
+        if(!countByCategory[business.category]){
+
+            countByCategory[business.category] = 0;
+
+        }
+
+        if(countByCategory[business.category] >= 15){
+
+            return;
+
+        }
+
+        countByCategory[business.category]++;
+
+        filteredBusinesses.push(business);
 
     });
 
-    element.classList.add("active");
+    filteredBusinesses.sort(
 
-}
+        (a,b)=>a.distance-b.distance
+
+    );
+
+    filteredBusinesses = filteredBusinesses.slice(0,100);
+
+    displayBusinesses();
+
+    }
 
 
 function closeBusinessPage(){
@@ -838,6 +940,42 @@ function refreshCustomerLocation(){
 
 
 
+function calculateDistance(lat1, lon1, lat2, lon2){
+
+    const R = 6371000;
+
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a =
+
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+
+        Math.cos(lat1 * Math.PI / 180) *
+
+        Math.cos(lat2 * Math.PI / 180) *
+
+        Math.sin(dLon/2) *
+
+        Math.sin(dLon/2);
+
+    const c = 2 * Math.atan2(
+
+        Math.sqrt(a),
+
+        Math.sqrt(1-a)
+
+    );
+
+    return R * c;
+
+}
+
+    
+
+
+
 async function loadBusinesses(){
 
     try{
@@ -856,50 +994,17 @@ async function loadBusinesses(){
 
     catch(error){
 
-        console.error(error);
+        console.log(error);
 
-        alert("Unable to load businesses.");
+        alert("Unable to load nearby businesses.");
 
     }
 
 }
 
 
-function filterBusinesses(category, element){
 
-    selectedCategory = category;
 
-    if(element){
-
-        document.querySelectorAll(".category").forEach(item=>{
-
-            item.classList.remove("active");
-
-        });
-
-        element.classList.add("active");
-
-    }
-
-    if(category=="All"){
-
-        filteredBusinesses = businesses;
-
-    }
-
-    else{
-
-        filteredBusinesses = businesses.filter(business =>
-
-            business.category == category
-
-        );
-
-    }
-
-    displayBusinesses();
-
-}
 
 
 
@@ -911,11 +1016,12 @@ function displayBusinesses(){
 
     grid.innerHTML = "";
 
-    filteredBusinesses.forEach(business =>{
+    filteredBusinesses.forEach(business=>{
 
         grid.innerHTML += `
 
             <div class="businessCard"
+
                 onclick="openBusiness(${business.business_id})">
 
                 <img src="${business.profile_image}">
@@ -924,13 +1030,16 @@ function displayBusinesses(){
 
                 <p>${business.category}</p>
 
+                <p>${Math.round(business.distance)} m away</p>
+
             </div>
 
         `;
 
     });
 
-}
+    }
+
 
     
     
