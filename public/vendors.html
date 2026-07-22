@@ -963,11 +963,9 @@ data.products.forEach(product => {
         </label>
 
         <button
-            class="delete-btn"
-            onclick="event.stopPropagation();deleteProduct(${product.id})"
-        >
-            🗑️
-        </button>
+    class="delete-btn"
+    onclick="event.stopPropagation();deleteProduct(${product.id}, this)"
+    data-confirm="false">🗑️</button>
 
     </div>
 
@@ -2009,44 +2007,97 @@ async function toggleProduct(id, available) {
 
 }
 
-    async function deleteProduct(id) {
 
-    if (!confirm("Delete this product?")) return;
 
-    try {
+document.addEventListener("click", () => {
 
-        const response = await fetch(`/products/${id}`, {
+    if (!deleteButton) return;
 
-            method: "DELETE"
+    deleteButton.innerHTML = "🗑️";
+    deleteButton.dataset.confirm = "false";
 
-        });
+    clearTimeout(deleteTimer);
 
-        const data = await response.json();
+    deleteButton = null;
 
-        if (!response.ok) {
+});
 
-            showProductMessage(data.message || "Unable to delete product.", "error");
+    
+let deleteTimer = null;
+let deleteButton = null;
 
-            return;
+async function deleteProduct(id, button) {
+
+    // Second click = Delete
+    if (button.dataset.confirm === "true") {
+
+        clearTimeout(deleteTimer);
+
+        try {
+
+            const response = await fetch(`/products/${id}`, {
+
+                method: "DELETE"
+
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+
+                showProductMessage(
+                    data.message || "Unable to delete product.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+            showProductMessage("Product deleted.", "success");
+
+            loadProducts();
 
         }
 
-        showProductMessage("Product deleted.", "success");
+        catch (err) {
 
-        loadProducts();
+            console.error(err);
 
-    }
+            showProductMessage("Unable to delete product.", "error");
 
-    catch (err) {
+        }
 
-        console.error(err);
-
-        showProductMessage("Unable to delete product.", "error");
+        return;
 
     }
 
-}
+    // Reset any previously selected delete button
+    if (deleteButton && deleteButton !== button) {
 
+        deleteButton.innerHTML = "🗑️";
+        deleteButton.dataset.confirm = "false";
+
+    }
+
+    deleteButton = button;
+
+    button.dataset.confirm = "true";
+    button.textContent = "Delete?";
+
+    // Reset after 10 seconds
+    deleteTimer = setTimeout(() => {
+
+        button.innerHTML = "🗑️";
+        button.dataset.confirm = "false";
+
+    }, 10000);
+
+            }
+
+
+
+    
 async function editProduct(id) {
 
     const product = products.find(p => p.id === id);
