@@ -18,6 +18,9 @@ document.getElementById("confirmNewPassword");
 const passwordValidation =
 document.getElementById("passwordValidation");
 
+const newPasswordValidation =
+document.getElementById("newPasswordValidation");
+
 const changePasswordBtn =
 document.getElementById("changePasswordBtn");
 
@@ -218,11 +221,11 @@ function validateNewPasswords(){
 
     ){
 
-        passwordValidation.innerHTML=
+        newPasswordValidation.innerHTML=
 
         "Password must be at least 4 characters.";
 
-        passwordValidation.style.color="#d80000";
+        newPasswordValidation.style.color="#d80000";
 
         changePasswordBtn.disabled=true;
 
@@ -236,11 +239,11 @@ function validateNewPasswords(){
 
     ){
 
-        passwordValidation.innerHTML=
+        newPasswordValidation.innerHTML=
 
         "Passwords do not match.";
 
-        passwordValidation.style.color="#d80000";
+        newPasswordValidation.style.color="#d80000";
 
         changePasswordBtn.disabled=true;
 
@@ -248,16 +251,15 @@ function validateNewPasswords(){
 
     }
 
-    passwordValidation.innerHTML=
+    newPasswordValidation.innerHTML=
 
     "✓ Ready to update";
 
-    passwordValidation.style.color="#009500";
+    newPasswordValidation.style.color="#009500";
 
     changePasswordBtn.disabled=false;
 
 }
-
 
 
 
@@ -393,5 +395,7 @@ function resetPasswordFields(){
     changePasswordBtn.disabled=true;
 
     passwordValidation.innerHTML="";
+
+    newPasswordValidation.innerHTML="";
 
 }
