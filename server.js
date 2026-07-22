@@ -2087,7 +2087,72 @@ app.post("/users/profile-image", async(req,res)=>{
 
 });
 
+//================ CHECK PASSWORD =================//
 
+app.post("/users/check-password", async(req,res)=>{
+
+    try{
+
+        const{
+
+            user_id,
+            password
+
+        }=req.body;
+
+        const result=await pool.query(
+
+            `SELECT password
+             FROM users
+             WHERE user_id=$1`,
+
+            [user_id]
+
+        );
+
+        if(result.rows.length===0){
+
+            return res.status(404).json({
+
+                success:false,
+                message:"User not found."
+
+            });
+
+        }
+
+        if(result.rows[0].password!==password){
+
+            return res.json({
+
+                success:false
+
+            });
+
+        }
+
+        res.json({
+
+            success:true
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+            message:"Database Error"
+
+        });
+
+    }
+
+});
 
 
 //================ UPDATE PASSWORD =================//
