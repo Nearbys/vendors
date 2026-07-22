@@ -549,6 +549,52 @@ user.email || "";
 
 }
 
+//========== LOGOUT ==========//
+
+function logout(){
+
+    localStorage.removeItem(
+
+        "user"
+
+    );
+
+    user=null;
+
+    customerProfile.style.display="none";
+
+    registerSection.style.display="none";
+
+    loginSection.style.display="block";
+
+}
+
+
+
+logoutBtn.onclick=async()=>{
+
+    try{
+
+        await fetch(
+
+            "/users/logout",
+
+            {
+
+                method:"POST"
+
+            }
+
+        );
+
+    }
+
+    catch(err){}
+
+    logout();
+
+};
+
 
 //========== REFRESH USER ==========//
 
