@@ -261,74 +261,72 @@ Shop your nearest stores in one tap.
 
         <!-- TOP CARD -->
 
-        <div class="profileCard">
+        <!-- TOP CARD -->
 
-            <div class="profileTop">
+<div class="profileCard">
 
-                <div class="profileImageContainer">
+    <div class="profileTop">
 
-                    <img
-                        id="profileImage"
-                        src=""
-                        alt="">
+        <div class="profileImageContainer">
 
-                    <div id="profilePlus">
-                        +
-                    </div>
+            <img
+                id="profileImage"
+                src=""
+                alt="">
 
-                    <input
-                        type="file"
-                        id="profileImageInput"
-                        accept="image/*"
-                        hidden>
+            <div id="profilePlus">
+                +
+            </div>
 
+            <input
+                type="file"
+                id="profileImageInput"
+                accept="image/*"
+                hidden>
+
+        </div>
+
+        <div class="profileInfo">
+
+            <div class="inputGroup">
+
+                <label>Name</label>
+
+                <input
+                    type="text"
+                    id="customerName"
+                    class="editableInput"
+                    readonly>
+
+            </div>
+
+            <div class="readonlyField">
+
+                <label>Contact Number</label>
+
+                <div id="customerContact">
+                    +971
                 </div>
 
-                <div class="profileInfo">
+            </div>
 
-                    <div class="editableField">
+            <div class="readonlyField">
 
-                        <label>Name</label>
+                <label>Coordinates</label>
 
-                        <div
-                            class="editable"
-                            id="customerName">
-                            Tap to edit
-                        </div>
+                <div class="coordinateRow">
 
-                    </div>
+                    <span id="customerCoordinates">
+                        Not Available
+                    </span>
 
-                    <div class="readonlyField">
+                    <button
+                        id="refreshCoordinates"
+                        class="iconButton">
 
-                        <label>Contact Number</label>
+                        <i class="fa-solid fa-rotate-right"></i>
 
-                        <div id="customerContact">
-                            +971
-                        </div>
-
-                    </div>
-
-                    <div class="readonlyField">
-
-                        <label>Coordinates</label>
-
-                        <div class="coordinateRow">
-
-                            <span id="customerCoordinates">
-                                Not Available
-                            </span>
-
-                            <button
-                                id="refreshCoordinates"
-                                class="iconButton">
-
-                                <i class="fa-solid fa-rotate-right"></i>
-
-                            </button>
-
-                        </div>
-
-                    </div>
+                    </button>
 
                 </div>
 
@@ -336,6 +334,9 @@ Shop your nearest stores in one tap.
 
         </div>
 
+    </div>
+
+</div>
 
 
         <!-- PERSONAL DETAILS -->
