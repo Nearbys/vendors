@@ -1688,6 +1688,604 @@ app.post("/users/login", async(req,res)=>{
 
 });
 
+//================ GET USER =================//
+
+app.get("/users/:user_id", async(req,res)=>{
+
+    try{
+
+        const { user_id } = req.params;
+
+        const result = await pool.query(
+
+            `SELECT *
+             FROM users
+             WHERE user_id=$1`,
+
+            [user_id]
+
+        );
+
+        if(result.rows.length===0){
+
+            return res.status(404).json({
+
+                success:false,
+                message:"User not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success:true,
+            user:result.rows[0]
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+            message:"Server Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+//================ UPDATE PROFILE =================//
+
+app.put("/users/profile", async(req,res)=>{
+
+    try{
+
+        let{
+
+            user_id,
+            name,
+            email
+
+        } = req.body;
+
+        name=(name || "").trim();
+        email=(email || "").trim();
+
+        if(!user_id){
+
+            return res.status(400).json({
+
+                success:false,
+                message:"User ID missing."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE users
+
+             SET
+
+             name=$1,
+             email=$2
+
+             WHERE user_id=$3`,
+
+            [
+
+                name || null,
+                email || null,
+                user_id
+
+            ]
+
+        );
+
+        const updated=await pool.query(
+
+            `SELECT *
+             FROM users
+             WHERE user_id=$1`,
+
+            [user_id]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Profile updated.",
+
+            user:updated.rows[0]
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+//================ UPDATE LOCATION =================//
+
+app.put("/users/location", async(req,res)=>{
+
+    try{
+
+        let{
+
+            user_id,
+            latitude,
+            longitude
+
+        }=req.body;
+
+        if(
+
+            !user_id ||
+
+            latitude===undefined ||
+
+            longitude===undefined
+
+        ){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Missing data."
+
+            });
+
+        }
+
+        const coordinates={
+
+            latitude:String(latitude),
+
+            longitude:String(longitude)
+
+        };
+
+        await pool.query(
+
+            `UPDATE users
+
+             SET coordinates=$1
+
+             WHERE user_id=$2`,
+
+            [
+
+                JSON.stringify(coordinates),
+
+                user_id
+
+            ]
+
+        );
+
+        const updated=await pool.query(
+
+            `SELECT coordinates
+
+             FROM users
+
+             WHERE user_id=$1`,
+
+            [
+
+                user_id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Location updated.",
+
+            coordinates:updated.rows[0].coordinates
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+//================ UPDATE EMAIL & NAME INDIVIDUALLY =================//
+
+app.put("/users/update-field", async(req,res)=>{
+
+    try{
+
+        let{
+
+            user_id,
+            field,
+            value
+
+        }=req.body;
+
+        const allowed=[
+
+            "name",
+            "email"
+
+        ];
+
+        if(
+
+            !allowed.includes(field)
+
+        ){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:"Invalid field."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE users
+
+             SET ${field}=$1
+
+             WHERE user_id=$2`,
+
+            [
+
+                value || null,
+
+                user_id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            message:"Updated."
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+//================ UPDATE PROFILE IMAGE =================//
+
+app.post("/users/profile-image", async(req,res)=>{
+
+    try{
+
+        const{
+
+            user_id,
+            profile_image
+
+        }=req.body;
+
+        if(!user_id || !profile_image){
+
+            return res.status(400).json({
+
+                success:false,
+                message:"Missing data."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE users
+
+             SET profile_image=$1
+
+             WHERE user_id=$2`,
+
+            [
+
+                profile_image,
+                user_id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+            message:"Profile image updated."
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+//================ UPDATE PASSWORD =================//
+
+app.put("/users/password", async(req,res)=>{
+
+    try{
+
+        const{
+
+            user_id,
+            oldPassword,
+            newPassword
+
+        }=req.body;
+
+        const check=await pool.query(
+
+            `SELECT password
+
+             FROM users
+
+             WHERE user_id=$1`,
+
+            [
+
+                user_id
+
+            ]
+
+        );
+
+        if(check.rows.length===0){
+
+            return res.status(404).json({
+
+                success:false,
+                message:"User not found."
+
+            });
+
+        }
+
+        if(check.rows[0].password!==oldPassword){
+
+            return res.status(400).json({
+
+                success:false,
+                message:"Wrong password."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE users
+
+             SET password=$1
+
+             WHERE user_id=$2`,
+
+            [
+
+                newPassword,
+                user_id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+            message:"Password updated."
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+//================ SAVE ALL ADDRESSES =================//
+
+app.put("/users/addresses", async(req,res)=>{
+
+    try{
+
+        const{
+
+            user_id,
+            addresses
+
+        }=req.body;
+
+        if(!user_id){
+
+            return res.status(400).json({
+
+                success:false,
+                message:"Missing user."
+
+            });
+
+        }
+
+        await pool.query(
+
+            `UPDATE users
+
+             SET addresses=$1
+
+             WHERE user_id=$2`,
+
+            [
+
+                JSON.stringify(addresses),
+
+                user_id
+
+            ]
+
+        );
+
+        const updated=await pool.query(
+
+            `SELECT addresses
+
+             FROM users
+
+             WHERE user_id=$1`,
+
+            [
+
+                user_id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            addresses:updated.rows[0].addresses
+
+        });
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+        res.status(500).json({
+
+            success:false,
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+//================ LOGOUT =================//
+
+app.post("/users/logout",(req,res)=>{
+
+    res.json({
+
+        success:true
+
+    });
+
+});
+
+
+
 
 
 
