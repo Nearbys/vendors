@@ -18,7 +18,7 @@ PROFILE
 .profileCard h2,
 .profileCard h3{
     margin-bottom:18px;
-    color:#222;
+    color:#009500;
 }
 
 /*==============================
@@ -48,7 +48,7 @@ INPUTS
 }
 
 .inputGroup input:focus{
-    border-color:#000;
+    border-color:#009500;
 }
 
 .inputGroup input:disabled{
@@ -65,7 +65,7 @@ BUTTONS
     padding:13px;
     border:none;
     border-radius:10px;
-    background:#000;
+    background:#009500;
     color:#fff;
     font-size:15px;
     cursor:pointer;
@@ -92,7 +92,7 @@ LOGIN / REGISTER
 }
 
 .switchText a{
-    color:#000;
+    color:#009500;
     text-decoration:none;
     font-weight:bold;
 }
@@ -134,7 +134,7 @@ PROFILE IMAGE
     height:90px;
     border-radius:50%;
     object-fit:cover;
-    border:2px solid #ddd;
+    border:2px solid #009500;
     display:none;
 }
 
@@ -142,13 +142,13 @@ PROFILE IMAGE
     width:90px;
     height:90px;
     border-radius:50%;
-    background:#efefef;
-    border:2px dashed #bbb;
+    background:#f5fff5;
+    border:2px dashed #009500;
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:42px;
-    color:#777;
+    color:#009500;
     cursor:pointer;
 }
 
@@ -181,7 +181,8 @@ PROFILE INFO
 }
 
 .editable:hover{
-    border-color:#000;
+    border-color:#009500;
+    color:#009500;
 }
 
 .coordinateRow{
@@ -206,7 +207,7 @@ ICON BUTTON
     display:flex;
     justify-content:center;
     align-items:center;
-    background:#000;
+    background:#009500;
     color:#fff;
     cursor:pointer;
     padding:0 !important;
@@ -242,6 +243,7 @@ ADDRESSES
     font-weight:bold;
     margin-bottom:8px;
     cursor:pointer;
+    color:#009500;
 }
 
 .addressText{
