@@ -2385,6 +2385,63 @@ app.get("/users", async(req,res)=>{
 });
 
 
+app.get("/businesses", async (req, res) => {
+
+    try{
+
+        const result = await pool.query(
+
+            `SELECT
+
+                business_id,
+                business_name,
+                category,
+                business_details,
+                address,
+                email,
+                contact,
+
+                profile_image,
+                cover_image,
+
+                latitude,
+                longitude,
+
+                delivery_200,
+                delivery_500,
+
+                status
+
+            FROM businesses
+
+            WHERE status='Active'`
+
+        );
+
+        res.json(result.rows);
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+
 // Health Check
 app.get("/health",(req,res)=>{
 
