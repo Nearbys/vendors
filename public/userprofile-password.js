@@ -343,13 +343,19 @@ async function(){
 
         );
 
-        alert(
+        changePasswordBtn.innerHTML=
 
-            "Password updated successfully."
-
-        );
+        "✓ Updated";
 
         resetPasswordFields();
+
+        setTimeout(()=>{
+
+            changePasswordBtn.innerHTML=
+
+            "Update Password";
+
+        },2000);
 
     }
 
@@ -359,10 +365,6 @@ async function(){
 
         alert(err.message);
 
-    }
-
-    finally{
-
         changePasswordBtn.innerHTML=
 
         "Update Password";
@@ -370,7 +372,6 @@ async function(){
     }
 
 };
-
 
 
 //========== RESET ==========//
