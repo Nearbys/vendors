@@ -309,6 +309,42 @@ ADDRESSES
     font-size:18px;
 }
 
+.addressText{
+
+    width:100%;
+    min-height:90px;
+    resize:vertical;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    outline:none;
+
+    font-family:inherit;
+
+}
+
+.addressTitle{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
 /*==============================
 PASSWORD
 ==============================*/
