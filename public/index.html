@@ -7,7 +7,7 @@
 <title>Customer</title>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-
+<link rel="stylesheet" href="/user-profile.css">
 <style>
 
 *{
@@ -163,7 +163,310 @@ Shop your nearest stores in one tap.
 </section>
 
 <section id="profile">
-<h2>Profile</h2>
+
+<section id="profile">
+
+    <!-- LOGIN -->
+    <div id="loginSection" class="profileCard">
+
+        <h2>Login</h2>
+
+        <div class="inputGroup">
+            <label>Contact Number</label>
+            <input
+                type="tel"
+                id="loginContact"
+                placeholder="+971501234567">
+        </div>
+
+        <div class="inputGroup">
+            <label>Password</label>
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password">
+        </div>
+
+        <button id="loginBtn">
+            Login
+        </button>
+
+        <p class="errorText" id="loginError"></p>
+
+        <div class="switchText">
+            Don't have an account?
+            <a href="javascript:void(0)" id="showRegister">
+                Register
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <!-- REGISTER -->
+    <div id="registerSection" class="profileCard" style="display:none;">
+
+        <h2>Create Account</h2>
+
+        <div class="inputGroup">
+            <label>Name</label>
+            <input
+                type="text"
+                id="registerName"
+                placeholder="Your Name">
+        </div>
+
+        <div class="inputGroup">
+            <label>Contact Number</label>
+            <input
+                type="tel"
+                id="registerContact"
+                placeholder="+971501234567">
+        </div>
+
+        <div class="inputGroup">
+            <label>Password</label>
+            <input
+                type="password"
+                id="registerPassword"
+                placeholder="Password">
+        </div>
+
+        <div class="inputGroup">
+            <label>Confirm Password</label>
+            <input
+                type="password"
+                id="registerConfirmPassword"
+                placeholder="Confirm Password">
+        </div>
+
+        <p class="errorText" id="registerError"></p>
+
+        <button id="registerBtn">
+            Register
+        </button>
+
+        <div class="switchText">
+            Already have an account?
+            <a href="javascript:void(0)" id="showLogin">
+                Login
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <!-- CUSTOMER PROFILE -->
+    <div id="customerProfile" style="display:none;">
+
+        <!-- TOP CARD -->
+
+        <div class="profileCard">
+
+            <div class="profileTop">
+
+                <div class="profileImageContainer">
+
+                    <img
+                        id="profileImage"
+                        src=""
+                        alt="">
+
+                    <div id="profilePlus">
+                        +
+                    </div>
+
+                    <input
+                        type="file"
+                        id="profileImageInput"
+                        accept="image/*"
+                        hidden>
+
+                </div>
+
+                <div class="profileInfo">
+
+                    <div class="editableField">
+
+                        <label>Name</label>
+
+                        <div
+                            class="editable"
+                            id="customerName">
+                            Tap to edit
+                        </div>
+
+                    </div>
+
+                    <div class="readonlyField">
+
+                        <label>Contact Number</label>
+
+                        <div id="customerContact">
+                            +971
+                        </div>
+
+                    </div>
+
+                    <div class="readonlyField">
+
+                        <label>Coordinates</label>
+
+                        <div class="coordinateRow">
+
+                            <span id="customerCoordinates">
+                                Not Available
+                            </span>
+
+                            <button
+                                id="refreshCoordinates"
+                                class="iconButton">
+
+                                <i class="fa-solid fa-rotate-right"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PERSONAL DETAILS -->
+
+        <div class="profileCard">
+
+            <h3>Personal Information</h3>
+
+            <div class="editableField">
+
+                <label>Email (Optional)</label>
+
+                <div
+                    class="editable"
+                    id="customerEmail">
+
+                    Tap to add email
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ADDRESSES -->
+
+        <div class="profileCard">
+
+            <div class="addressHeader">
+
+                <h3>Addresses</h3>
+
+                <button
+                    id="addAddress"
+                    class="iconButton">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </button>
+
+            </div>
+
+            <div id="addressContainer">
+
+                <!-- Dynamic Address Cards -->
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PASSWORD -->
+
+        <div class="profileCard">
+
+            <h3>Change Password</h3>
+
+            <br>
+
+            <div class="inputGroup">
+
+                <label>Old Password</label>
+
+                <input
+                    type="password"
+                    id="oldPassword">
+
+                <small
+                    id="passwordValidation">
+
+                </small>
+
+            </div>
+
+            <div class="inputGroup">
+
+                <label>New Password</label>
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    disabled>
+
+            </div>
+
+            <div class="inputGroup">
+
+                <label>Confirm Password</label>
+
+                <input
+                    type="password"
+                    id="confirmNewPassword"
+                    disabled>
+
+            </div>
+
+            <button
+                id="changePasswordBtn"
+                disabled>
+
+                Update Password
+
+            </button>
+
+        </div>
+
+
+
+        <!-- LOGOUT -->
+
+        <div class="profileCard">
+
+            <button
+                id="logoutBtn"
+                class="logoutButton">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+  
 </section>
 
 <footer>
