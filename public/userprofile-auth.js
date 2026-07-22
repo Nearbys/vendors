@@ -467,6 +467,7 @@ user.name || "";
 
     currentCoordinates = user.coordinates || currentCoordinates;
 showCoordinates();
+loadAddresses();
 
 
 
