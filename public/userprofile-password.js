@@ -263,7 +263,7 @@ function validateNewPasswords(){
 
 //========== UPDATE PASSWORD ==========//
 
-changePasswordBtn.onclick=
+changePasswordBtn.onclick =
 
 async function(){
 
@@ -297,9 +297,11 @@ async function(){
 
                 body:JSON.stringify({
 
-                    user_id:user.user_id,
+                    user_id: user.user_id,
 
-                    password:newPassword.value
+                    oldPassword: oldPassword.value.trim(),
+
+                    newPassword: newPassword.value
 
                 })
 
@@ -368,7 +370,6 @@ async function(){
     }
 
 };
-
 
 
 
