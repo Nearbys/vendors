@@ -321,7 +321,55 @@ top:90px;
 
     background:#27ae60;
 
-}    
+}  
+
+.locationLoading{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(255,255,255,.95);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+
+    z-index:9999;
+
+}
+
+.loader{
+
+    width:50px;
+
+    height:50px;
+
+    border:5px solid #ddd;
+
+    border-top:5px solid #2e7d32;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    margin-bottom:15px;
+
+}
+
+@keyframes spin{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
     
 </style>
 </head>
@@ -771,6 +819,13 @@ Shop your nearest stores in one tap.
 
 </div>   
 
+<div id="locationLoading" class="locationLoading">
+
+    <div class="loader"></div>
+
+    <p>Finding your location...</p>
+
+</div>
     
 <script>  
 let currentCoordinates = null;
@@ -908,6 +963,11 @@ function filterBusinesses(category, element){
     }
 
 
+
+    
+    
+    
+    
 function closeBusinessPage(){
 
     document.getElementById("businessPage").style.display="none";
@@ -916,8 +976,13 @@ function closeBusinessPage(){
 
     }
 
-const LOCATION_VALID_TIME = 60 * 60 * 1000; //15 minutes
 
+    
+
+    
+const LOCATION_VALID_TIME = 60 * 60 * 1000; // 1 hour
+
+let customerLocation = null;
 
 function checkCustomerLocation(){
 
@@ -926,7 +991,12 @@ function checkCustomerLocation(){
 
     if(!savedLocation){
 
+        document.getElementById(
+            "locationLoading"
+        ).style.display = "flex";
+
         refreshCustomerLocation();
+
         return;
 
     }
@@ -939,7 +1009,12 @@ function checkCustomerLocation(){
 
     if(age > LOCATION_VALID_TIME){
 
+        document.getElementById(
+            "locationLoading"
+        ).style.display = "flex";
+
         refreshCustomerLocation();
+
         return;
 
     }
@@ -950,41 +1025,51 @@ function checkCustomerLocation(){
 
 }
 
-
-
-
-    
-    function showLocationPopup(){
+function showLocationPopup(){
 
     document.getElementById(
         "locationPopup"
-    ).style.display="flex";
+    ).style.display = "flex";
 
-    }
+}
 
-    function hideLocationPopup(){
+function hideLocationPopup(){
 
     document.getElementById(
         "locationPopup"
-    ).style.display="none";
+    ).style.display = "none";
 
-    }
-
-let customerLocation = null;
+}
 
 function refreshCustomerLocation(){
+
+    const waiting = setTimeout(function(){
+
+        document.getElementById(
+            "locationLoading"
+        ).style.display = "none";
+
+        showLocationPopup();
+
+    },8000);
 
     navigator.geolocation.getCurrentPosition(
 
         function(position){
 
-            customerLocation={
+            clearTimeout(waiting);
 
-                latitude:position.coords.latitude,
+            document.getElementById(
+                "locationLoading"
+            ).style.display = "none";
 
-                longitude:position.coords.longitude,
+            customerLocation = {
 
-                time:Date.now()
+                latitude: position.coords.latitude,
+
+                longitude: position.coords.longitude,
+
+                time: Date.now()
 
             };
 
@@ -1002,19 +1087,25 @@ function refreshCustomerLocation(){
 
         },
 
-        function(){
+        function(error){
 
-            alert("Unable to retrieve your location.");
+            clearTimeout(waiting);
+
+            document.getElementById(
+                "locationLoading"
+            ).style.display = "none";
+
+            showLocationPopup();
 
         },
 
         {
 
-            enableHighAccuracy:true,
+            enableHighAccuracy: true,
 
-            timeout:10000,
+            timeout: 10000,
 
-            maximumAge:0
+            maximumAge: 0
 
         }
 
@@ -1022,8 +1113,14 @@ function refreshCustomerLocation(){
 
 }
 
- checkCustomerLocation();   
+document.addEventListener("DOMContentLoaded", function(){
 
+    checkCustomerLocation();
+
+});
+
+
+    
 
 
 function calculateDistance(lat1, lon1, lat2, lon2){
