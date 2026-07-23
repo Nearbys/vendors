@@ -1501,8 +1501,7 @@ function displayBusinesses(){
 
             <div class="businessCard"
 
-                onclick="openBusiness(${business.business_id})">
-
+               onclick="openBusiness(${business.id})">
                 <img src="${business.profile_image}">
 
                 <h3>${business.business_name}</h3>
@@ -1525,11 +1524,10 @@ function displayBusinesses(){
 
 function openBusiness(businessId){
 
-    selectedBusiness = businesses.find(
-
-        business => business.business_id == businessId
-
+     selectedBusiness = businesses.find(
+        business => business.id == businessId
     );
+
 
     if(!selectedBusiness){
 
