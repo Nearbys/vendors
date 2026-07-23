@@ -916,7 +916,7 @@ function closeBusinessPage(){
 
     }
 
- const LOCATION_VALID_TIME = 15 * 60 * 1000; //15 minutes
+const LOCATION_VALID_TIME = 60 * 60 * 1000; //15 minutes
 
 
 function checkCustomerLocation(){
@@ -926,8 +926,7 @@ function checkCustomerLocation(){
 
     if(!savedLocation){
 
-        showLocationPopup();
-
+        refreshCustomerLocation();
         return;
 
     }
@@ -940,8 +939,7 @@ function checkCustomerLocation(){
 
     if(age > LOCATION_VALID_TIME){
 
-        showLocationPopup();
-
+        refreshCustomerLocation();
         return;
 
     }
@@ -950,8 +948,12 @@ function checkCustomerLocation(){
 
     loadBusinesses();
 
-    }
+}
 
+
+
+
+    
     function showLocationPopup(){
 
     document.getElementById(
