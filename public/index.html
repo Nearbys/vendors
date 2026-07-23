@@ -770,20 +770,7 @@ Shop your nearest stores in one tap.
     </div>
 
 </div>   
-<!-- Loading Location Overlay -->
-<div id="loadingLocationPopup" class="popupOverlay" style="display:none;">
 
-    <div class="popupBox">
-
-        <h3>Getting Your Location</h3>
-
-        <p>
-            Please wait while we detect your current location...
-        </p>
-
-    </div>
-
-</div>
     
 <script>  
 let currentCoordinates = null;
@@ -929,7 +916,7 @@ function closeBusinessPage(){
 
     }
 
- const LOCATION_VALID_TIME = 60 * 60 * 1000; //60 minutes
+ const LOCATION_VALID_TIME = 15 * 60 * 1000; //15 minutes
 
 
 function checkCustomerLocation(){
@@ -937,49 +924,7 @@ function checkCustomerLocation(){
     const savedLocation =
     localStorage.getItem("customerLocation");
 
-    if(savedLocation){
-
-        const location =
-        JSON.parse(savedLocation);
-
-        const age =
-        Date.now() - location.time;
-
-        if(age <= LOCATION_VALID_TIME){
-
-            customerLocation = location;
-
-            loadBusinesses();
-
-            return;
-
-        }
-
-    }
-
-    autoFetchLocation();
-
-}
-
-function showLoadingLocationPopup(){
-
-    document.getElementById(
-        "loadingLocationPopup"
-    ).style.display="flex";
-
-}
-
-function hideLoadingLocationPopup(){
-
-    document.getElementById(
-        "loadingLocationPopup"
-    ).style.display="none";
-
-}
-
-function autoFetchLocation(){
-
-    if(!navigator.geolocation){
+    if(!savedLocation){
 
         showLocationPopup();
 
@@ -987,65 +932,45 @@ function autoFetchLocation(){
 
     }
 
-    showLoadingLocationPopup();
+    const location =
+    JSON.parse(savedLocation);
 
-    navigator.geolocation.getCurrentPosition(
+    const age =
+    Date.now() - location.time;
 
-        function(position){
+    if(age > LOCATION_VALID_TIME){
 
-            customerLocation = {
+        showLocationPopup();
 
-                latitude: position.coords.latitude,
+        return;
 
-                longitude: position.coords.longitude,
+    }
 
-                time: Date.now()
+    customerLocation = location;
 
-            };
+    loadBusinesses();
 
-            localStorage.setItem(
+    }
 
-                "customerLocation",
+    function showLocationPopup(){
 
-                JSON.stringify(customerLocation)
+    document.getElementById(
+        "locationPopup"
+    ).style.display="flex";
 
-            );
+    }
 
-            hideLoadingLocationPopup();
+    function hideLocationPopup(){
 
-            loadBusinesses();
+    document.getElementById(
+        "locationPopup"
+    ).style.display="none";
 
-        },
+    }
 
-        function(){
-
-            // permission denied / timeout / unavailable
-            hideLoadingLocationPopup();
-
-            showLocationPopup();
-
-        },
-
-        {
-
-            enableHighAccuracy:true,
-
-            timeout:10000,
-
-            maximumAge:0
-
-        }
-
-    );
-
-}
-
+let customerLocation = null;
 
 function refreshCustomerLocation(){
-
-    hideLocationPopup();
-
-    showLoadingLocationPopup();
 
     navigator.geolocation.getCurrentPosition(
 
@@ -1069,69 +994,6 @@ function refreshCustomerLocation(){
 
             );
 
-            hideLoadingLocationPopup();
-
-            loadBusinesses();
-
-        },
-
-        function(){
-
-            hideLoadingLocationPopup();
-
-            alert("Unable to retrieve your location.");
-
-            showLocationPopup();
-
-        },
-
-        {
-
-            enableHighAccuracy:true,
-
-            timeout:10000,
-
-            maximumAge:0
-
-        }
-
-    );
-
-}    
-
-    
-function autoFetchLocation(){
-
-    if(!navigator.geolocation){
-
-        showLocationPopup();
-
-        return;
-
-    }
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(position){
-
-            customerLocation = {
-
-                latitude: position.coords.latitude,
-
-                longitude: position.coords.longitude,
-
-                time: Date.now()
-
-            };
-
-            localStorage.setItem(
-
-                "customerLocation",
-
-                JSON.stringify(customerLocation)
-
-            );
-
             hideLocationPopup();
 
             loadBusinesses();
@@ -1140,8 +1002,7 @@ function autoFetchLocation(){
 
         function(){
 
-            // permission denied / timeout / unavailable
-            showLocationPopup();
+            alert("Unable to retrieve your location.");
 
         },
 
@@ -1158,6 +1019,9 @@ function autoFetchLocation(){
     );
 
 }
+
+ checkCustomerLocation();   
+
 
 
 function calculateDistance(lat1, lon1, lat2, lon2){
