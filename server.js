@@ -2398,9 +2398,8 @@ app.get("/businesses/:id/products", async(req,res)=>{
 
              FROM products
 
-             WHERE business_id=$1
-
-             AND active=true
+             WHERE business_id = $1
+             AND available = true
 
              ORDER BY title`,
 
@@ -2425,7 +2424,6 @@ app.get("/businesses/:id/products", async(req,res)=>{
     }
 
 });
-
 
 
 
