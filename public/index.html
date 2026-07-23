@@ -1748,6 +1748,46 @@ function filterProducts(category, element){
 
 
 
+async function loadBusinessProducts(){
+
+    try{
+
+        const response = await fetch(
+
+            `/businesses/${selectedBusiness.id}/products`
+
+        );
+
+        const data = await response.json();
+
+        if(!data.success){
+
+            popup(data.message || "Unable to load products");
+
+            return;
+
+        }
+
+        businessProducts = data.products;
+
+        filterProducts("All");
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        popup("Unable to load products");
+
+    }
+
+}
+
+
+
+    
+
 
 function displayProducts(){
 
