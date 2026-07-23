@@ -2386,6 +2386,48 @@ app.get("/users", async(req,res)=>{
 
 
 
+app.get("/businesses/:id/products", async(req,res)=>{
+
+    try{
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+
+            `SELECT *
+
+             FROM products
+
+             WHERE business_id=$1
+
+             AND active=true
+
+             ORDER BY title`,
+
+            [id]
+
+        );
+
+        res.json(result.rows);
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            error:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
 
 // Health Check
 app.get("/health",(req,res)=>{
