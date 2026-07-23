@@ -980,9 +980,7 @@ async function loadBusinesses(){
 
     try{
 
-        const response = await fetch(
-            "http://localhost:3000/businesses"
-        );
+        const response = await fetch("/businesses")
 
         console.log("Status:", response.status);
 
