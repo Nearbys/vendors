@@ -770,7 +770,20 @@ Shop your nearest stores in one tap.
     </div>
 
 </div>   
+<!-- Loading Location Overlay -->
+<div id="loadingLocationPopup" class="popupOverlay" style="display:none;">
 
+    <div class="popupBox">
+
+        <h3>Getting Your Location</h3>
+
+        <p>
+            Please wait while we detect your current location...
+        </p>
+
+    </div>
+
+</div>
     
 <script>  
 let currentCoordinates = null;
@@ -916,7 +929,7 @@ function closeBusinessPage(){
 
     }
 
- const LOCATION_VALID_TIME = 15 * 60 * 1000; //15 minutes
+ const LOCATION_VALID_TIME = 60 * 60 * 1000; //60 minutes
 
 
 function checkCustomerLocation(){
@@ -948,6 +961,145 @@ function checkCustomerLocation(){
 
 }
 
+function showLoadingLocationPopup(){
+
+    document.getElementById(
+        "loadingLocationPopup"
+    ).style.display="flex";
+
+}
+
+function hideLoadingLocationPopup(){
+
+    document.getElementById(
+        "loadingLocationPopup"
+    ).style.display="none";
+
+}
+
+function autoFetchLocation(){
+
+    if(!navigator.geolocation){
+
+        showLocationPopup();
+
+        return;
+
+    }
+
+    showLoadingLocationPopup();
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            customerLocation = {
+
+                latitude: position.coords.latitude,
+
+                longitude: position.coords.longitude,
+
+                time: Date.now()
+
+            };
+
+            localStorage.setItem(
+
+                "customerLocation",
+
+                JSON.stringify(customerLocation)
+
+            );
+
+            hideLoadingLocationPopup();
+
+            loadBusinesses();
+
+        },
+
+        function(){
+
+            // permission denied / timeout / unavailable
+            hideLoadingLocationPopup();
+
+            showLocationPopup();
+
+        },
+
+        {
+
+            enableHighAccuracy:true,
+
+            timeout:10000,
+
+            maximumAge:0
+
+        }
+
+    );
+
+}
+
+
+function refreshCustomerLocation(){
+
+    hideLocationPopup();
+
+    showLoadingLocationPopup();
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            customerLocation={
+
+                latitude:position.coords.latitude,
+
+                longitude:position.coords.longitude,
+
+                time:Date.now()
+
+            };
+
+            localStorage.setItem(
+
+                "customerLocation",
+
+                JSON.stringify(customerLocation)
+
+            );
+
+            hideLoadingLocationPopup();
+
+            loadBusinesses();
+
+        },
+
+        function(){
+
+            hideLoadingLocationPopup();
+
+            alert("Unable to retrieve your location.");
+
+            showLocationPopup();
+
+        },
+
+        {
+
+            enableHighAccuracy:true,
+
+            timeout:10000,
+
+            maximumAge:0
+
+        }
+
+    );
+
+}    
+
+    
 function autoFetchLocation(){
 
     if(!navigator.geolocation){
