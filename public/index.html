@@ -1541,6 +1541,171 @@ function displayBusinesses(){
 
     
     
+
+function openBusiness(businessId){
+
+    selectedBusiness = businesses.find(
+
+        business => business.business_id == businessId
+
+    );
+
+    if(!selectedBusiness){
+
+        popup("Business not found");
+
+        return;
+
+    }
+
+    document.getElementById("homeSection").style.display = "none";
+
+    document.getElementById("businessPage").style.display = "block";
+
+    // Cover
+
+    document.getElementById("businessCoverImage").src =
+        selectedBusiness.cover_image || "";
+
+    // Profile
+
+    document.getElementById("businessProfileImage").src =
+        selectedBusiness.profile_image || "";
+
+    // Name
+
+    document.getElementById("businessName").textContent =
+        selectedBusiness.business_name;
+
+    // Category
+
+    document.getElementById("businessCategoryBadge").textContent =
+        selectedBusiness.category;
+
+    // Details
+
+    document.getElementById("businessDetails").textContent =
+        selectedBusiness.business_details || "";
+
+    // Address
+
+    document.getElementById("businessAddress").textContent =
+        selectedBusiness.address || "";
+
+    // Contact
+
+    document.getElementById("businessContact").textContent =
+        selectedBusiness.contact || "";
+
+    // Email
+
+    document.getElementById("businessEmail").textContent =
+        selectedBusiness.email || "";
+
+    // Load product categories
+
+    loadProductCategories();
+
+    // Next Part
+
+    loadBusinessProducts();
+
+}
+
+
+
+
+
+
+function loadProductCategories(){
+
+    const bar = document.getElementById(
+
+        "productCategoryBar"
+
+    );
+
+    bar.innerHTML = "";
+
+    // All
+
+    bar.innerHTML += `
+
+        <div class="category active"
+
+            onclick="filterProducts('All',this)">
+
+            <img src="images/product-categories/all.png">
+
+            <p>All</p>
+
+        </div>
+
+    `;
+
+    const categories =
+
+        productCategories[selectedBusiness.category] || [];
+
+    categories.forEach(category=>{
+
+        bar.innerHTML += `
+
+            <div class="category"
+
+                onclick="filterProducts('${category.name}',this)">
+
+                <img src="${category.icon}">
+
+                <p>${category.name}</p>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+
+
+
+
+
+
+let businessProducts = [];
+
+let filteredProducts = [];
+
+let selectedProductCategory = "All";
+
+
+function filterProducts(category, element){
+
+    selectedProductCategory = category;
+
+    document.querySelectorAll(
+
+        "#productCategoryBar .category"
+
+    ).forEach(item=>{
+
+        item.classList.remove("active");
+
+    });
+
+    element.classList.add("active");
+
+}
+
+
+async function loadBusinessProducts(){
+
+    // Part 3C
+
+}
+    
+
     
 
 
@@ -1639,13 +1804,39 @@ document.getElementById("currentLocation").onclick = function(){
 
 let selectedBusiness = null;
 
+
+
+
+
+
 function closeBusinessPage(){
 
-    document.getElementById("businessPage").style.display="none";
+    document.getElementById(
 
-    document.getElementById("homeSection").style.display="block";
+        "businessPage"
+
+    ).style.display = "none";
+
+    document.getElementById(
+
+        "homeSection"
+
+    ).style.display = "block";
+
+    document.getElementById(
+
+        "businessProductsGrid"
+
+    ).innerHTML = "";
 
 }
+
+
+
+
+
+
+    
 
 
 
