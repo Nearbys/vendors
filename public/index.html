@@ -924,65 +924,51 @@ function checkCustomerLocation(){
     const savedLocation =
     localStorage.getItem("customerLocation");
 
-    if(!savedLocation){
+    if(savedLocation){
+
+        const location =
+        JSON.parse(savedLocation);
+
+        const age =
+        Date.now() - location.time;
+
+        if(age <= LOCATION_VALID_TIME){
+
+            customerLocation = location;
+
+            loadBusinesses();
+
+            return;
+
+        }
+
+    }
+
+    autoFetchLocation();
+
+}
+
+function autoFetchLocation(){
+
+    if(!navigator.geolocation){
 
         showLocationPopup();
 
         return;
 
     }
-
-    const location =
-    JSON.parse(savedLocation);
-
-    const age =
-    Date.now() - location.time;
-
-    if(age > LOCATION_VALID_TIME){
-
-        showLocationPopup();
-
-        return;
-
-    }
-
-    customerLocation = location;
-
-    loadBusinesses();
-
-    }
-
-    function showLocationPopup(){
-
-    document.getElementById(
-        "locationPopup"
-    ).style.display="flex";
-
-    }
-
-    function hideLocationPopup(){
-
-    document.getElementById(
-        "locationPopup"
-    ).style.display="none";
-
-    }
-
-let customerLocation = null;
-
-function refreshCustomerLocation(){
 
     navigator.geolocation.getCurrentPosition(
 
         function(position){
 
-            customerLocation={
+            customerLocation = {
 
-                latitude:position.coords.latitude,
+                latitude: position.coords.latitude,
 
-                longitude:position.coords.longitude,
+                longitude: position.coords.longitude,
 
-                time:Date.now()
+                time: Date.now()
 
             };
 
@@ -1002,7 +988,8 @@ function refreshCustomerLocation(){
 
         function(){
 
-            alert("Unable to retrieve your location.");
+            // permission denied / timeout / unavailable
+            showLocationPopup();
 
         },
 
@@ -1019,9 +1006,6 @@ function refreshCustomerLocation(){
     );
 
 }
-
- checkCustomerLocation();   
-
 
 
 function calculateDistance(lat1, lon1, lat2, lon2){
