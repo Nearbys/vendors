@@ -784,14 +784,6 @@ const UPLOAD_PRESET = "business_images";
 <script src="/userprofile-address.js"></script>
 <script src="/userprofile-password.js"></script>    
 <script>
-
-window.onload=function(){
-
-    loadCustomer();
-
-    checkCustomerLocation();
-
-};
     
 let businesses = [];
 
@@ -929,9 +921,22 @@ function closeBusinessPage(){
 
     
 
- const LOCATION_VALID_TIME = 15 * 60 * 1000; //15 minutes
+const LOCATION_VALID_TIME = 15 * 60 * 1000; //15 minutes
 
 const LOCATION_VALID_TIME = 15 * 60 * 1000;
+
+
+
+window.onload=function(){
+
+    loadCustomer();
+
+    checkCustomerLocation();
+
+};
+
+
+    
 
 function checkCustomerLocation(){
 
