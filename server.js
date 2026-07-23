@@ -2407,7 +2407,13 @@ app.get("/businesses/:id/products", async(req,res)=>{
 
         );
 
-        res.json(result.rows);
+        res.json({
+
+            success:true,
+
+            products:result.rows
+
+        });
 
     }
 
@@ -2417,13 +2423,18 @@ app.get("/businesses/:id/products", async(req,res)=>{
 
         res.status(500).json({
 
-            error:"Database Error"
+            success:false,
+
+            message:"Database Error"
 
         });
 
     }
 
 });
+
+
+
 
 
 
