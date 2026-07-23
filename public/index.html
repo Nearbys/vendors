@@ -981,12 +981,16 @@ async function loadBusinesses(){
     try{
 
         const response = await fetch(
-
             "http://localhost:3000/businesses"
-
         );
 
-        businesses = await response.json();
+        console.log("Status:", response.status);
+
+        const data = await response.json();
+
+        console.log("Businesses:", data);
+
+        businesses = data;
 
         filterBusinesses(selectedCategory);
 
@@ -994,14 +998,13 @@ async function loadBusinesses(){
 
     catch(error){
 
-        console.log(error);
+        console.error("Load Businesses Error:", error);
 
-        alert("Unable to load nearby businesses.");
+        alert(error.message);
 
     }
 
 }
-
 
 
 
