@@ -18,9 +18,10 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#f5f5f5;
-padding-top:70px;
-padding-bottom:70px;
+    background:#f5f5f5;
+    padding-top:70px;
+    padding-bottom:70px;
+    overflow-x:hidden; /* safety net: nothing can force horizontal page scroll */
 }
 
 header{
@@ -177,51 +178,44 @@ top:90px;
 /* Business Grid */
 
 #businessGrid{
-
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:15px;
-
+    gap:10px; /* slightly tighter on mobile helps too */
 }
 
-
-/* Business Card */
-
 .businessCard{
-
     background:white;
     border-radius:10px;
-    padding:10px;
+    padding:8px;
     text-align:center;
     box-shadow:0 2px 5px rgba(0,0,0,.1);
     cursor:pointer;
-
+    min-width:0; /* lets grid item shrink below its content's natural size */
+    overflow:hidden; /* clips anything that still tries to overflow the card */
 }
 
 .businessCard img{
-
-    width:80px;
-    height:80px;
+    width:100%;      /* scale with the column instead of a fixed px */
+    max-width:80px;  /* cap it so it doesn't get huge on wide screens */
+    aspect-ratio:1/1;
+    height:auto;
     border-radius:50%;
     object-fit:cover;
-
 }
 
 .businessCard h3{
-
     margin:8px 0 3px;
-    font-size:15px;
-
+    font-size:14px;
+    overflow-wrap:break-word; /* allow long names to wrap instead of stretching the card */
+    word-break:break-word;
 }
 
 .businessCard p{
-
     margin:3px 0;
-    font-size:13px;
+    font-size:12px;
     color:#666;
-
+    overflow-wrap:break-word;
 }
-
 
 /* Business Details */
 
