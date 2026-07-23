@@ -916,9 +916,6 @@ function closeBusinessPage(){
 
     }
 
-
-
-
     
 
 const LOCATION_VALID_TIME = 15 * 60 * 1000; //15 minutes
@@ -927,11 +924,13 @@ const LOCATION_VALID_TIME = 15 * 60 * 1000;
 
 
 
-window.onload=function(){
+window.onload = function(){
 
     loadCustomer();
 
     checkCustomerLocation();
+
+    document.getElementById("currentLocation").onclick = refreshCustomerLocation;
 
 };
 
@@ -988,11 +987,13 @@ let customerLocation = null;
 
 function refreshCustomerLocation(){
 
-    document.getElementById("locationPopup").style.display="none";
+    hideLocationPopup();
 
     if(!navigator.geolocation){
 
-        document.getElementById("locationPopup").style.display="flex";
+        popup("Location not supported");
+
+        showLocationPopup();
 
         return;
 
@@ -1002,13 +1003,13 @@ function refreshCustomerLocation(){
 
         function(position){
 
-            customerLocation={
+            customerLocation = {
 
-                latitude:position.coords.latitude,
+                latitude: position.coords.latitude,
 
-                longitude:position.coords.longitude,
+                longitude: position.coords.longitude,
 
-                time:Date.now()
+                time: Date.now()
 
             };
 
@@ -1020,6 +1021,8 @@ function refreshCustomerLocation(){
 
             );
 
+            popup("Current location updated");
+
             loadBusinesses();
 
         },
@@ -1028,24 +1031,47 @@ function refreshCustomerLocation(){
 
             console.log(error);
 
-            document.getElementById("locationPopup").style.display="flex";
+            switch(error.code){
+
+                case error.PERMISSION_DENIED:
+
+                    popup("Location permission denied");
+                    break;
+
+                case error.POSITION_UNAVAILABLE:
+
+                    popup("Location unavailable");
+                    break;
+
+                case error.TIMEOUT:
+
+                    popup("Location request timed out");
+                    break;
+
+                default:
+
+                    popup("Unable to retrieve location");
+
+            }
+
+            showLocationPopup();
 
         },
 
         {
 
-            enableHighAccuracy:true,
+            enableHighAccuracy: true,
 
-            timeout:10000,
+            timeout: 10000,
 
-            maximumAge:0
+            maximumAge: 0
 
         }
 
     );
 
 }
-
+    
 
 function calculateDistance(lat1, lon1, lat2, lon2){
 
@@ -1179,72 +1205,6 @@ p.classList.remove("show");
 },2500);
 
 }
-
-document.getElementById("currentLocation").onclick = function(){
-
-    popup("Retrieving location...");
-
-    if(!navigator.geolocation){
-
-        popup("Location not supported");
-
-        return;
-
-    }
-
-    navigator.geolocation.getCurrentPosition(
-
-        (position)=>{
-
-            const lat = position.coords.latitude;
-
-            const lng = position.coords.longitude;
-
-            customerLocation = {
-
-                latitude: lat,
-
-                longitude: lng,
-
-                time: Date.now()
-
-            };
-
-            localStorage.setItem(
-
-                "customerLocation",
-
-                JSON.stringify(customerLocation)
-
-            );
-
-            popup("Current location updated");
-
-            // Reload nearby businesses
-            loadBusinesses();
-
-        },
-
-        (error)=>{
-
-            popup(error.message);
-
-        },
-
-        {
-
-            enableHighAccuracy: true,
-
-            timeout: 10000,
-
-            maximumAge: 0
-
-        }
-
-    );
-
-};
-
     
 </script>
 
