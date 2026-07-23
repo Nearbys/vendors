@@ -1073,52 +1073,72 @@ p.classList.remove("show");
 
 }
 
-document.getElementById("currentLocation").onclick=function(){
+document.getElementById("currentLocation").onclick = function(){
 
-popup("Retrieving location...");
+    popup("Retrieving location...");
 
-if(!navigator.geolocation){
+    if(!navigator.geolocation){
 
-popup("Location not supported");
+        popup("Location not supported");
 
-return;
+        return;
 
-}
+    }
 
-navigator.geolocation.getCurrentPosition(
+    navigator.geolocation.getCurrentPosition(
 
-(position)=>{
+        (position)=>{
 
-const lat=position.coords.latitude;
-const lng=position.coords.longitude;
+            const lat = position.coords.latitude;
 
-localStorage.setItem("customerLocation",JSON.stringify({
+            const lng = position.coords.longitude;
 
-latitude:lat,
-longitude:lng
+            customerLocation = {
 
-}));
+                latitude: lat,
 
-popup("Current location updated");
+                longitude: lng,
 
-},
+                time: Date.now()
 
-(error)=>{
+            };
 
-popup(error.message);
+            localStorage.setItem(
 
-},
+                "customerLocation",
 
-{
+                JSON.stringify(customerLocation)
 
-enableHighAccuracy:true
+            );
 
-}
+            popup("Current location updated");
 
-);
+            // Reload nearby businesses
+            loadBusinesses();
+
+        },
+
+        (error)=>{
+
+            popup(error.message);
+
+        },
+
+        {
+
+            enableHighAccuracy: true,
+
+            timeout: 10000,
+
+            maximumAge: 0
+
+        }
+
+    );
 
 };
 
+    
 </script>
 
 </body>
