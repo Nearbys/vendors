@@ -578,6 +578,52 @@ top:90px;
     padding:15px;
 
 }
+
+.productCard{
+
+    background:white;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+
+}
+
+.productCard img{
+
+    width:100%;
+
+    height:140px;
+
+    object-fit:cover;
+
+}
+
+.productCard h3{
+
+    margin:10px;
+
+    font-size:16px;
+
+}
+
+.productCard p{
+
+    margin:0 10px;
+
+    color:#777;
+
+}
+
+.productCard h4{
+
+    margin:10px;
+
+    color:#27ae60;
+
+}
     
 </style>
 </head>
@@ -1663,31 +1709,104 @@ function filterProducts(category, element){
 
     selectedProductCategory = category;
 
-    document.querySelectorAll(
+    if(element){
 
-        "#productCategoryBar .category"
+        document.querySelectorAll(
 
-    ).forEach(item=>{
+            "#productCategoryBar .category"
 
-        item.classList.remove("active");
+        ).forEach(item=>{
+
+            item.classList.remove("active");
+
+        });
+
+        element.classList.add("active");
+
+    }
+
+    if(category=="All"){
+
+        filteredProducts = businessProducts;
+
+    }
+
+    else{
+
+        filteredProducts = businessProducts.filter(product=>{
+
+            return product.category==category;
+
+        });
+
+    }
+
+    displayProducts();
+
+}
+    
+
+
+
+
+function displayProducts(){
+
+    const grid = document.getElementById(
+
+        "businessProductsGrid"
+
+    );
+
+    grid.innerHTML = "";
+
+    if(filteredProducts.length==0){
+
+        grid.innerHTML =
+
+        "<p>No products available.</p>";
+
+        return;
+
+    }
+
+    filteredProducts.forEach(product=>{
+
+        grid.innerHTML += `
+
+            <div class="productCard">
+
+                <img
+                src="${product.image}">
+
+                <h3>
+
+                    ${product.title}
+
+                </h3>
+
+                <p>
+
+                    ${product.category}
+
+                </p>
+
+                <h4>
+
+                    AED ${Number(product.price).toFixed(2)}
+
+                </h4>
+
+            </div>
+
+        `;
 
     });
 
-    element.classList.add("active");
-
 }
 
 
-async function loadBusinessProducts(){
-
-    // Part 3C
-
-}
-    
 
     
-
-
     
     
 function showSection(id){
