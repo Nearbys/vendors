@@ -811,7 +811,7 @@ Shop your nearest stores in one tap.
             15 minutes old.
         </p>
 
-        <button onclick="refreshCustomerLocation()">
+        <button onclick="retryLocation()">
             Refresh Location
         </button>
 
@@ -1118,6 +1118,21 @@ document.addEventListener("DOMContentLoaded", function(){
     checkCustomerLocation();
 
 });
+
+
+
+
+function retryLocation(){
+
+    hideLocationPopup();
+
+    document.getElementById(
+        "locationLoading"
+    ).style.display = "flex";
+
+    refreshCustomerLocation();
+
+}
 
 
     
