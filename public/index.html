@@ -2156,7 +2156,7 @@ async function addToCart(productId){
 
     if(!customer){
 
-        showRegisterPopup();
+        popup("Please login or register to add items to your cart.");
 
         return;
 
@@ -2166,35 +2166,45 @@ async function addToCart(productId){
 
     try{
 
-        const response = await fetch(
-    "https://vendors-og6i.onrender.com/cart",
-    {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
+        console.log({
 
-            customer_id:customer.id,
+            customer_id: customer.id,
 
-            business_id:selectedBusiness.id,
+            business_id: selectedBusiness.id,
 
-            product_id:productId,
+            product_id: productId,
 
             quantity
 
-        })
+        });
 
-    }
-);
-        
-        if(!response.ok){
+        const response = await fetch("/cart",{
 
-            throw new Error("Server Error");
+            method:"POST",
 
-        }
+            headers:{
+
+                "Content-Type":"application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                customer_id: customer.id,
+
+                business_id: selectedBusiness.id,
+
+                product_id: productId,
+
+                quantity
+
+            })
+
+        });
 
         const data = await response.json();
+
+        console.log(data);
 
         if(data.success){
 
@@ -2205,9 +2215,6 @@ async function addToCart(productId){
         else if(data.differentBusiness){
 
             popup(data.message);
-
-            // Later we will show a confirmation popup:
-            // "Clear current cart and add this item?"
 
         }
 
@@ -2227,7 +2234,7 @@ async function addToCart(productId){
 
     }
 
-}    
+       }
 
     
     
