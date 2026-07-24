@@ -737,6 +737,48 @@ top:90px;
     font-size:14px;
 
 }
+
+    .qtySelector{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.qtySelector button{
+
+    width:28px;
+
+    height:28px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#2ecc71;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+.qtySelector span{
+
+    min-width:22px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+}
     
 </style>
 </head>
@@ -1299,6 +1341,8 @@ let businesses = [];
 let filteredBusinesses = [];
 
 let selectedCategory = "All";
+
+let cart = {};
 
 function filterBusinesses(category, element){
 
@@ -1945,19 +1989,35 @@ function displayProducts(){
 
     filteredProducts.forEach(product=>{
 
-        let actionButton = "";
+        let actionSection = "";
 
         if(canAddToCart()){
 
-            actionButton = `
+            actionSection = `
 
-                <button
-                    class="addCartBtn"
-                    onclick="event.stopPropagation();addToCart(${product.id})">
+                <div class="qtySelector">
 
-                    <i class="fa-solid fa-plus"></i>
+                    <button
+                        onclick="event.stopPropagation();changeProductQty(${product.id},-1)">
 
-                </button>
+                        −
+
+                    </button>
+
+                    <span id="qty-${product.id}">
+
+                        0
+
+                    </span>
+
+                    <button
+                        onclick="event.stopPropagation();changeProductQty(${product.id},1)">
+
+                        +
+
+                    </button>
+
+                </div>
 
             `;
 
@@ -1965,7 +2025,7 @@ function displayProducts(){
 
         else if(shouldShowViewMore()){
 
-            actionButton = `
+            actionSection = `
 
                 <button
                     class="viewMoreBtn"
@@ -2004,7 +2064,7 @@ function displayProducts(){
 
                         </span>
 
-                        ${actionButton}
+                        ${actionSection}
 
                     </div>
 
@@ -2018,6 +2078,33 @@ function displayProducts(){
 
 }
 
+
+
+
+
+function changeProductQty(productId, change){
+
+    if(!cart[productId]){
+
+        cart[productId] = 0;
+
+    }
+
+    cart[productId] += change;
+
+    if(cart[productId] < 0){
+
+        cart[productId] = 0;
+
+    }
+
+    document.getElementById(
+
+        `qty-${productId}`
+
+    ).innerText = cart[productId];
+
+}
 
     
     
