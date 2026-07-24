@@ -3116,6 +3116,41 @@ Place Order
 
 
 
+    
+
+function initializeUser(){
+
+    const savedUser = localStorage.getItem("user");
+
+    if(!savedUser){
+
+        return;
+
+    }
+
+    user = JSON.parse(savedUser);
+
+    showProfile();
+
+    loadCart();
+
+}
+
+
+
+
+
+    
+    const savedUser = localStorage.getItem("user");
+
+if(savedUser){
+
+    user = JSON.parse(savedUser);
+
+    loadCart();
+
+}
+
 
     
 
