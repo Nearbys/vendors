@@ -906,8 +906,254 @@ font-size:15px;
 cursor:pointer;
 
 }
+
+#cartIcon{
+
+position:relative;
+
+cursor:pointer;
+
+}
+
+#cartSection{
+
+display:none;
+
+padding:15px;
+
+}
+
+.cartItem{
+
+display:flex;
+
+gap:12px;
+
+padding:12px;
+
+margin-bottom:12px;
+
+background:#fff;
+
+border-radius:12px;
+
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+
+}
+
+.cartItem img{
+
+width:80px;
+
+height:80px;
+
+border-radius:10px;
+
+object-fit:cover;
+
+}
+
+.cartInfo{
+
+flex:1;
+
+}
+
+.cartInfo h3{
+
+margin:0;
+
+font-size:16px;
+
+}
+
+.cartInfo p{
+
+margin:4px 0;
+
+color:#666;
+
+font-size:13px;
+
+}
+
+.cartBottom{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-top:8px;
+
+}
+
+.cartQty{
+
+display:flex;
+
+gap:10px;
+
+align-items:center;
+
+}
+
+.cartQty button{
+
+width:28px;
+
+height:28px;
+
+border:none;
+
+border-radius:50%;
+
+background:#f2f2f2;
+
+}
+
+.cartDelete{
+
+color:#ff3b30;
+
+font-size:18px;
+
+cursor:pointer;
+
+}
+
+.cartSummary{
+
+margin-top:20px;
+
+padding:15px;
+
+background:#fff;
+
+border-radius:12px;
+
+}
+
+.cartSummaryRow{
+
+display:flex;
+
+justify-content:space-between;
+
+margin-bottom:10px;
+
+}
+
+.paymentNotice{
+
+margin:15px 0;
+
+padding:12px;
+
+background:#f8f8f8;
+
+border-radius:10px;
+
+font-size:14px;
+
+text-align:center;
+
+}
+
+.placeOrderBtn{
+
+width:100%;
+
+height:48px;
+
+border:none;
+
+border-radius:12px;
+
+background:#16a34a;
+
+color:#fff;
+
+font-size:16px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+.emptyCart{
+
+padding:40px 20px;
+
+text-align:center;
+
+}
+
+.emptyCart img{
+
+width:180px;
+
+margin-bottom:20px;
+
+}
+
+.emptyCart button{
+
+margin-top:20px;
+
+padding:12px 24px;
+
+border:none;
+
+border-radius:12px;
+
+background:#16a34a;
+
+color:#fff;
+
+}    
     
-    
+.cartButtonIcon{
+
+position:relative;
+
+display:inline-block;
+
+}
+
+#cartBadge{
+
+position:absolute;
+
+top:-8px;
+
+right:-10px;
+
+min-width:18px;
+
+height:18px;
+
+padding:0 4px;
+
+border-radius:50%;
+
+background:#ff3b30;
+
+color:#fff;
+
+font-size:11px;
+
+font-weight:bold;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+}    
 </style>
 </head>
 
@@ -1079,7 +1325,23 @@ id="currentLocation"></i>
     
 
 <section id="cart">
-<h2>Cart</h2>
+
+<div class="pageHeader">
+
+<i class="fa-solid fa-arrow-left"
+
+onclick="showSection('businessPage')"></i>
+
+<h2>My Cart</h2>
+
+</div>
+
+<div id="cartContent"></div>
+
+</section>
+
+
+    
 </section>
 
 <section id="orders">
@@ -1401,8 +1663,11 @@ id="currentLocation"></i>
 <span>Orders</span>
 </button>
 
-<button onclick="showSection('cart')">
+<button onclick="openCart()">
+<div class="cartButtonIcon">
 <i class="fa-solid fa-cart-shopping"></i>
+<span id="cartBadge">0</span>
+</div>
 <span>Cart</span>
 </button>
 
@@ -2561,6 +2826,290 @@ function goToLogin(){
 
     
 
+
+
+
+async function openCart(){
+
+    const user=JSON.parse(
+
+        localStorage.getItem("user")
+
+    );
+
+    if(!user){
+
+        showLoginPopup();
+
+        return;
+
+    }
+
+    showSection("cartSection");
+
+    loadCart();
+
+}
+
+
+
+    
+
+async function loadCart(){
+
+    const user=JSON.parse(
+
+        localStorage.getItem("user")
+
+    );
+
+    const response=await fetch(
+
+        `/cart/${user.user_id}`
+
+    );
+
+    const items=await response.json();
+
+    displayCart(items);
+
+    updateCartBadge(items);
+
+}
+
+
+
+    
+function updateCartBadge(items){
+
+    let total = 0;
+
+    items.forEach(item=>{
+
+        total += Number(item.quantity);
+
+    });
+
+    document.getElementById(
+
+        "cartBadge"
+
+    ).innerText = total;
+
+    }
+
+
+
+
+    
+ function displayCart(items){
+
+    const container=document.getElementById(
+
+        "cartContent"
+
+    );
+
+    if(items.length==0){
+
+        container.innerHTML=`
+
+<div class="emptyCart">
+
+<img src="images/empty-cart.png">
+
+<h3>Your Cart is Empty</h3>
+
+<p>
+
+Continue shopping to add products.
+
+</p>
+
+<button
+
+onclick="showSection('homeSection')">
+
+Continue Shopping
+
+</button>
+
+</div>
+
+`;
+
+        return;
+
+    }
+
+    let subtotal=0;
+
+    let html="";
+
+    items.forEach(item=>{
+
+        subtotal+=
+
+        Number(item.price)*item.quantity;
+
+        html+=`
+
+<div class="cartItem">
+
+<img src="${item.image}">
+
+<div class="cartInfo">
+
+<h3>${item.title}</h3>
+
+<p>${item.category}</p>
+
+<p>
+
+${item.currency}
+
+${Number(item.price).toFixed(2)}
+
+</p>
+
+<div class="cartBottom">
+
+<div class="cartQty">
+
+<button
+
+onclick="changeCartQty(${item.id},-1)">
+
+−
+
+</button>
+
+<span>
+
+${item.quantity}
+
+</span>
+
+<button
+
+onclick="changeCartQty(${item.id},1)">
+
++
+
+</button>
+
+</div>
+
+<i
+
+class="fa-solid fa-trash cartDelete"
+
+onclick="removeCartItem(${item.id})">
+
+</i>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+    });
+
+    const delivery=
+
+    Number(items[0].fee||0);
+
+    const total=
+
+    subtotal+delivery;
+
+    html+=`
+
+<div class="cartSummary">
+
+<div class="cartSummaryRow">
+
+<span>Subtotal</span>
+
+<span>
+
+${items[0].currency}
+
+${subtotal.toFixed(2)}
+
+</span>
+
+</div>
+
+<div class="cartSummaryRow">
+
+<span>Delivery</span>
+
+<span>
+
+${items[0].currency}
+
+${delivery.toFixed(2)}
+
+</span>
+
+</div>
+
+<div class="cartSummaryRow">
+
+<b>Total</b>
+
+<b>
+
+${items[0].currency}
+
+${total.toFixed(2)}
+
+</b>
+
+</div>
+
+<div class="paymentNotice">
+
+Payment will be collected after delivery.
+
+You may pay using Cash or Card.
+
+</div>
+
+<button
+
+class="placeOrderBtn"
+
+onclick="placeOrder()">
+
+Place Order
+
+</button>
+
+</div>
+
+`;
+
+    container.innerHTML=html;
+
+ }
+
+
+
+
+
+
+
+    
+
+    
+
+
+    
     
 </script>
 
