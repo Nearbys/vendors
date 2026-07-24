@@ -2304,7 +2304,7 @@ async function addToCart(productId){
 
         !user ||
 
-        !user.id
+        !user.user_id
 
     ){
 
@@ -2330,7 +2330,7 @@ async function addToCart(productId){
 
             body:JSON.stringify({
 
-                customer_id:user.id,
+                customer_id:user.user_id,
 
                 business_id:selectedBusiness.id,
 
@@ -2372,8 +2372,7 @@ async function addToCart(productId){
 
     }
 
-}
-    
+}    
 
     
     
