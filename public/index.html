@@ -219,12 +219,6 @@ top:90px;
 
 /* Business Details */
 
-#businessPage{
-
-    display:none;
-
-}
-
 #businessDetails{
 
     background:white;
@@ -364,15 +358,6 @@ top:90px;
     }
 
 }
-
-#businessPage{
-
-    display:none;
-
-    padding-bottom:100px;
-
-}
-
 
 #businessHeader{
 
@@ -1785,9 +1770,7 @@ function openBusiness(businessId){
 
     }
 
-    document.getElementById("homeSection").style.display = "none";
-
-    document.getElementById("businessPage").style.display = "block";
+   showSection("businessPage");
 
     // Cover
 
@@ -2379,27 +2362,9 @@ let selectedBusiness = null;
 
 
 function closeBusinessPage(){
-
-    document.getElementById(
-
-        "businessPage"
-
-    ).style.display = "none";
-
-    document.getElementById(
-
-        "homeSection"
-
-    ).style.display = "block";
-
-    document.getElementById(
-
-        "businessProductsGrid"
-
-    ).innerHTML = "";
-
-}    
-
+    showSection("home");
+    document.getElementById("businessProductsGrid").innerHTML = "";
+}
 
 
     
