@@ -2870,6 +2870,50 @@ app.get("/tables", async(req,res)=>{
 
 
 
+//================ VIEW CART TABLE ================//
+
+app.get("/cart-table", async(req,res)=>{
+
+    try{
+
+        const result = await pool.query(
+
+            `SELECT *
+             FROM cart
+             ORDER BY id`
+
+        );
+
+        res.json({
+
+            success:true,
+
+            count:result.rows.length,
+
+            cart:result.rows
+
+        });
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            success:false,
+
+            error:error.message
+
+        });
+
+    }
+
+});
+
+
+
 
 
 
