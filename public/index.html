@@ -575,132 +575,91 @@ top:90px;
 
 .productCard{
 
-    background:#fff;
+    background:white;
 
-    border-radius:14px;
+    border-radius:12px;
 
     overflow:hidden;
 
     box-shadow:0 2px 10px rgba(0,0,0,.08);
 
-    cursor:pointer;
-
 }
 
-.productImage{
+.productCard img{
 
     width:100%;
 
-    height:150px;
+    height:140px;
 
     object-fit:cover;
 
-    display:block;
-
 }
 
-.productInfo{
+.productCard h3{
 
-    padding:12px;
-
-}
-
-.productInfo h3{
-
-    margin:0;
+    margin:10px;
 
     font-size:16px;
 
-    font-weight:600;
-
 }
 
-.productInfo p{
+.productCard p{
 
-    margin:6px 0 12px;
+    margin:0 10px;
 
     color:#777;
 
-    font-size:13px;
-
 }
 
-.productBottom{
+.productCard h4{
 
-    display:flex;
+    margin:10px;
 
-    justify-content:space-between;
-
-    align-items:center;
-
-}
-
-.productPrice{
-
-    font-size:17px;
-
-    font-weight:bold;
-
-    color:#222;
+    color:#27ae60;
 
 }
 
 .addCartBtn{
 
-    width:38px;
+    width:40px;
 
-    height:38px;
+    height:40px;
 
     border:none;
 
     border-radius:50%;
 
-    background:#28a745;
+    background:#2ecc71;
 
     color:#fff;
 
-    font-size:18px;
+    font-size:24px;
 
     cursor:pointer;
 
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
 }
+
 
 .viewMoreBtn{
 
+    width:100%;
+
     border:none;
 
-    background:#28a745;
+    background:#2ecc71;
 
     color:#fff;
 
-    padding:8px 14px;
+    padding:10px;
 
-    border-radius:20px;
+    border-radius:8px;
 
     cursor:pointer;
 
-    font-size:13px;
+    margin-top:10px;
 
 }
 
-.noProducts{
-
-    grid-column:1/-1;
-
-    text-align:center;
-
-    color:#888;
-
-    padding:40px 0;
-
-}
-    
     .noBusinesses{
 
     grid-column:1/-1;
@@ -1925,21 +1884,20 @@ async function loadBusinessProducts(){
 
 
 function displayProducts(){
-function displayProducts(){
 
     const grid = document.getElementById(
+
         "businessProductsGrid"
+
     );
 
     grid.innerHTML = "";
 
-    if(filteredProducts.length == 0){
+    if(filteredProducts.length==0){
 
-        grid.innerHTML = `
-            <p class="noProducts">
-                No products available.
-            </p>
-        `;
+        grid.innerHTML =
+
+        "<p>No products available.</p>";
 
         return;
 
@@ -1954,8 +1912,10 @@ function displayProducts(){
             actionButton = `
 
                 <button
+
                     class="addCartBtn"
-                    onclick="event.stopPropagation();addToCart(${product.id})">
+
+                    onclick="event.stopPropagation(); addToCart(${product.id})">
 
                     <i class="fa-solid fa-plus"></i>
 
@@ -1970,8 +1930,10 @@ function displayProducts(){
             actionButton = `
 
                 <button
+
                     class="viewMoreBtn"
-                    onclick="event.stopPropagation();viewProduct(${product.id})">
+
+                    onclick="event.stopPropagation(); viewProduct(${product.id})">
 
                     View More
 
@@ -1984,33 +1946,24 @@ function displayProducts(){
         grid.innerHTML += `
 
             <div class="productCard"
+
                 onclick="viewProduct(${product.id})">
 
-                <img
-                    class="productImage"
-                    src="${product.image}">
+                <img src="${product.image}">
 
-                <div class="productInfo">
+                <h3>${product.title}</h3>
 
-                    <h3>${product.title}</h3>
+                <p>${product.category}</p>
 
-                    <p>${product.category}</p>
+                <h4>
 
-                    <div class="productBottom">
+                    ${selectedBusiness.currency || "AED"}
 
-                        <span class="productPrice">
+                    ${Number(product.price).toFixed(2)}
 
-                            ${selectedBusiness.currency || "AED"}
+                </h4>
 
-                            ${Number(product.price).toFixed(2)}
-
-                        </span>
-
-                        ${actionButton}
-
-                    </div>
-
-                </div>
+                ${actionButton}
 
             </div>
 
@@ -2018,7 +1971,7 @@ function displayProducts(){
 
     });
 
-}
+        }
 
 
 
