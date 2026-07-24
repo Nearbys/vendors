@@ -618,6 +618,47 @@ top:90px;
     color:#27ae60;
 
 }
+
+.addCartBtn{
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#2ecc71;
+
+    color:#fff;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+}
+
+
+.viewMoreBtn{
+
+    width:100%;
+
+    border:none;
+
+    background:#2ecc71;
+
+    color:#fff;
+
+    padding:10px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    margin-top:10px;
+
+}
     
 </style>
 </head>
@@ -1805,30 +1846,65 @@ function displayProducts(){
 
     filteredProducts.forEach(product=>{
 
+        let actionButton = "";
+
+        if(canAddToCart()){
+
+            actionButton = `
+
+                <button
+
+                    class="addCartBtn"
+
+                    onclick="event.stopPropagation(); addToCart(${product.id})">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </button>
+
+            `;
+
+        }
+
+        else if(shouldShowViewMore()){
+
+            actionButton = `
+
+                <button
+
+                    class="viewMoreBtn"
+
+                    onclick="event.stopPropagation(); viewProduct(${product.id})">
+
+                    View More
+
+                </button>
+
+            `;
+
+        }
+
         grid.innerHTML += `
 
-            <div class="productCard">
+            <div class="productCard"
 
-                <img
-                src="${product.image}">
+                onclick="viewProduct(${product.id})">
 
-                <h3>
+                <img src="${product.image}">
 
-                    ${product.title}
+                <h3>${product.title}</h3>
 
-                </h3>
-
-                <p>
-
-                    ${product.category}
-
-                </p>
+                <p>${product.category}</p>
 
                 <h4>
 
-                    AED ${Number(product.price).toFixed(2)}
+                    ${selectedBusiness.currency || "AED"}
+
+                    ${Number(product.price).toFixed(2)}
 
                 </h4>
+
+                ${actionButton}
 
             </div>
 
@@ -1836,7 +1912,7 @@ function displayProducts(){
 
     });
 
-}
+        }
 
 
 
@@ -1967,7 +2043,45 @@ function closeBusinessPage(){
 
 
 
+function canAddToCart(){
 
+    if(!selectedBusiness){
+
+        return false;
+
+    }
+
+    const allowedCategories = [
+
+        "Grocery",
+
+        "Restaurant",
+
+        "Cafeteria"
+
+    ];
+
+    if(!allowedCategories.includes(selectedBusiness.category)){
+
+        return false;
+
+    }
+
+    const delivery = (selectedBusiness.delivery || "").trim();
+
+    const blockedDeliveries = [
+
+        "",
+
+        "N/A",
+
+        "Not Delivering"
+
+    ];
+
+    return !blockedDeliveries.includes(delivery);
+
+}
     
 
 
