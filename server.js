@@ -2617,6 +2617,244 @@ app.post("/cart", async(req,res)=>{
 
 
 
+app.get("/cart/:customerId", async(req,res)=>{
+
+    try{
+
+        const { customerId } = req.params;
+
+        const result = await pool.query(
+
+            `SELECT
+
+                cart.id,
+
+                cart.quantity,
+
+                products.id AS product_id,
+
+                products.title,
+
+                products.category,
+
+                products.price,
+
+                products.unit,
+
+                products.image,
+
+                businesses.business_name,
+
+                businesses.currency,
+
+                businesses.delivery,
+
+                businesses.fee
+
+            FROM cart
+
+            JOIN products
+
+            ON cart.product_id=products.id
+
+            JOIN businesses
+
+            ON cart.business_id=businesses.id
+
+            WHERE cart.customer_id=$1
+
+            ORDER BY products.title`,
+
+            [
+
+                customerId
+
+            ]
+
+        );
+
+        res.json(result.rows);
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            error:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+
+app.put("/cart/:id", async(req,res)=>{
+
+    try{
+
+        const { id } = req.params;
+
+        const{
+
+            quantity
+
+        }=req.body;
+
+        await pool.query(
+
+            `UPDATE cart
+
+             SET quantity=$1,
+
+             updated_at=CURRENT_TIMESTAMP
+
+             WHERE id=$2`,
+
+            [
+
+                quantity,
+
+                id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true
+
+        });
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            success:false
+
+        });
+
+    }
+
+});
+
+
+
+
+
+
+app.delete("/cart/:id", async(req,res)=>{
+
+    try{
+
+        const { id } = req.params;
+
+        await pool.query(
+
+            `DELETE FROM cart
+
+             WHERE id=$1`,
+
+            [
+
+                id
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true
+
+        });
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            success:false
+
+        });
+
+    }
+
+});
+
+
+
+
+
+
+app.delete("/cart/customer/:customerId", async(req,res)=>{
+
+    try{
+
+        const{
+
+            customerId
+
+        }=req.params;
+
+        await pool.query(
+
+            `DELETE FROM cart
+
+             WHERE customer_id=$1`,
+
+            [
+
+                customerId
+
+            ]
+
+        );
+
+        res.json({
+
+            success:true
+
+        });
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            success:false
+
+        });
+
+    }
+
+});
+
+
+
+
+
+
+
+
+
 // Health Check
 app.get("/health",(req,res)=>{
 
