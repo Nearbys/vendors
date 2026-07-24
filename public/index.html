@@ -1362,6 +1362,12 @@ let selectedCategory = "All";
 
 let cart = {};
 
+let customer = JSON.parse(
+
+    localStorage.getItem("customer")
+
+);
+
 function filterBusinesses(category, element){
 
     selectedCategory = category;
@@ -2136,7 +2142,146 @@ function changeProductQty(productId, change){
     ).innerText = cart[productId];
 
 }
+
+
+
+
+
+async function addToCart(productId){
+
+    try{
+
+        const quantity =
+
+            cart[productId] || 1;
+
+        const response = await fetch(
+
+            "/cart",
+
+            {
+
+                method:"POST",
+
+                headers:{
+
+                    "Content-Type":
+
+                    "application/json"
+
+                },
+
+                body:JSON.stringify({
+
+                    customer_id:
+
+                    customer.id,
+
+                    business_id:
+
+                    selectedBusiness.id,
+
+                    product_id:
+
+                    productId,
+
+                    quantity
+
+                })
+
+            }
+
+        );
+
+        const data =
+
+        await response.json();
+
+        if(data.success){
+
+            popup(
+
+                "Added to Cart"
+
+            );
+
+        }
+
+        else{
+
+            popup(
+
+                data.message
+
+            );
+
+        }
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        popup(
+
+            "Unable to add cart"
+
+        );
+
+    }
+
+}
     
+
+    
+    
+
+function canAddToCart(){
+
+    if(!selectedBusiness){
+
+        return false;
+
+    }
+
+    const allowedCategories = [
+
+        "Grocery",
+
+        "Restaurant",
+
+        "Cafeteria"
+
+    ];
+
+    if(!allowedCategories.includes(selectedBusiness.category)){
+
+        return false;
+
+    }
+
+    const delivery = (selectedBusiness.delivery || "").trim();
+
+    const blockedDeliveries = [
+
+        "",
+
+        "N/A",
+
+        "Not Delivering"
+
+    ];
+
+    return !blockedDeliveries.includes(delivery);
+
+}
+
+
+
+
+
+
     
     
 function showSection(id){
@@ -2257,52 +2402,7 @@ function closeBusinessPage(){
 
     ).innerHTML = "";
 
-}
-
-
-
-
-
-function canAddToCart(){
-
-    if(!selectedBusiness){
-
-        return false;
-
-    }
-
-    const allowedCategories = [
-
-        "Grocery",
-
-        "Restaurant",
-
-        "Cafeteria"
-
-    ];
-
-    if(!allowedCategories.includes(selectedBusiness.category)){
-
-        return false;
-
-    }
-
-    const delivery = (selectedBusiness.delivery || "").trim();
-
-    const blockedDeliveries = [
-
-        "",
-
-        "N/A",
-
-        "Not Delivering"
-
-    ];
-
-    return !blockedDeliveries.includes(delivery);
-
-}
-    
+}    
 
 
 
