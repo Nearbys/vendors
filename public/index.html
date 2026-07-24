@@ -184,14 +184,17 @@ top:90px;
 }
 
 .businessCard{
+
+    margin:15px;
+
     background:white;
-    border-radius:10px;
-    padding:8px;
-    text-align:center;
-    box-shadow:0 2px 5px rgba(0,0,0,.1);
-    cursor:pointer;
-    min-width:0; /* lets grid item shrink below its content's natural size */
-    overflow:hidden; /* clips anything that still tries to overflow the card */
+
+    border-radius:12px;
+
+    padding:18px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+
 }
 
 .businessCard img{
@@ -204,10 +207,9 @@ top:90px;
 }
 
 .businessCard h3{
-    margin:8px 0 3px;
-    font-size:14px;
-    overflow-wrap:break-word; /* allow long names to wrap instead of stretching the card */
-    word-break:break-word;
+
+    margin-bottom:12px;
+
 }
 
 .businessCard p{
@@ -874,7 +876,7 @@ id="currentLocation"></i>
     </div>
 
 
-    <div class="">
+    <div class="businessCard">
 
         <h3>
 
@@ -887,7 +889,7 @@ id="currentLocation"></i>
     </div>
 
 
-    <div class="">
+    <div class="businessCard">
 
         <div class="infoRow">
 
@@ -1708,7 +1710,7 @@ function displayBusinesses(){
 
         grid.innerHTML += `
 
-            <div class=""
+            <div class="businessCard"
 
                 onclick="openBusiness(${business.id})">
 
