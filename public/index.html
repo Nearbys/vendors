@@ -2149,71 +2149,72 @@ function changeProductQty(productId, change){
 
 async function addToCart(productId){
 
+    const customer = JSON.parse(
+
+        localStorage.getItem("customer")
+
+    );
+
+    if(!customer){
+
+        showRegisterPopup();
+
+        return;
+
+    }
+
+    const quantity = cart[productId] || 1;
+
     try{
 
-        const quantity =
+        const response = await fetch("/cart",{
 
-            cart[productId] || 1;
+            method:"POST",
 
-        const response = await fetch(
+            headers:{
+                "Content-Type":"application/json"
+            },
 
-            "/cart",
+            body:JSON.stringify({
 
-            {
+                customer_id:customer.id,
 
-                method:"POST",
+                business_id:selectedBusiness.id,
 
-                headers:{
+                product_id:productId,
 
-                    "Content-Type":
+                quantity
 
-                    "application/json"
+            })
 
-                },
+        });
 
-                body:JSON.stringify({
+        if(!response.ok){
 
-                    customer_id:
+            throw new Error("Server Error");
 
-                    customer.id,
+        }
 
-                    business_id:
-
-                    selectedBusiness.id,
-
-                    product_id:
-
-                    productId,
-
-                    quantity
-
-                })
-
-            }
-
-        );
-
-        const data =
-
-        await response.json();
+        const data = await response.json();
 
         if(data.success){
 
-            popup(
+            popup("Added to cart");
 
-                "Added to Cart"
+        }
 
-            );
+        else if(data.differentBusiness){
+
+            popup(data.message);
+
+            // Later we will show a confirmation popup:
+            // "Clear current cart and add this item?"
 
         }
 
         else{
 
-            popup(
-
-                data.message
-
-            );
+            popup(data.message || "Unable to add to cart");
 
         }
 
@@ -2221,18 +2222,13 @@ async function addToCart(productId){
 
     catch(error){
 
-        console.log(error);
+        console.error(error);
 
-        popup(
-
-            "Unable to add cart"
-
-        );
+        popup("Unable to add to cart");
 
     }
 
-}
-    
+}    
 
     
     
