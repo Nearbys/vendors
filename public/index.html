@@ -2032,10 +2032,15 @@ function refreshCustomerLocation(){
 
 }
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener('DOMContentLoaded', () => {
+  checkCustomerLocation();
 
-    checkCustomerLocation();
-
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user && user.userid) {
+    loadCart();
+  } else {
+    updateCartBadge([]);
+  }
 });
 
 
@@ -2893,23 +2898,11 @@ async function loadCart(){
 
 
     
-function updateCartBadge(items){
-
-    let total = 0;
-
-    items.forEach(item=>{
-
-        total += Number(item.quantity);
-
-    });
-
-    document.getElementById(
-
-        "cartBadge"
-
-    ).innerText = total;
-
-    }
+function updateCartBadge(items = []) {
+  let total = 0;
+  items.forEach(item => total += Number(item.quantity || 0));
+  document.getElementById('cartBadge').innerText = total;
+}
 
 
 
