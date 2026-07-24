@@ -2479,14 +2479,42 @@ app.post("/cart", async(req,res)=>{
 
         } = req.body;
 
-        const existing = await pool.query(
+        const existingBusiness = await pool.query(
 
-            `SELECT *
-
+            `SELECT business_id
              FROM cart
-
              WHERE customer_id=$1
+             LIMIT 1`,
 
+            [customer_id]
+
+        );
+
+        if(
+
+            existingBusiness.rows.length>0 &&
+
+            Number(existingBusiness.rows[0].business_id)!==Number(business_id)
+
+        ){
+
+            return res.json({
+
+                success:false,
+
+                differentBusiness:true,
+
+                message:"Cart contains items from another business."
+
+            });
+
+        }
+
+        const existingProduct = await pool.query(
+
+            `SELECT id
+             FROM cart
+             WHERE customer_id=$1
              AND product_id=$2`,
 
             [
@@ -2499,7 +2527,7 @@ app.post("/cart", async(req,res)=>{
 
         );
 
-        if(existing.rows.length){
+        if(existingProduct.rows.length){
 
             await pool.query(
 
@@ -2507,7 +2535,7 @@ app.post("/cart", async(req,res)=>{
 
                  SET quantity=$1,
 
-                 updated_at=NOW()
+                 updated_at=CURRENT_TIMESTAMP
 
                  WHERE customer_id=$2
 
@@ -2563,9 +2591,7 @@ app.post("/cart", async(req,res)=>{
 
         res.json({
 
-            success:true,
-
-            message:"Added to cart"
+            success:true
 
         });
 
@@ -2586,7 +2612,6 @@ app.post("/cart", async(req,res)=>{
     }
 
 });
-
 
 
 
