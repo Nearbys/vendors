@@ -799,7 +799,7 @@ top:90px;
 
 }
 
-    #registerPopup{
+#loginPopup{
 
 display:none;
 
@@ -821,7 +821,7 @@ z-index:99999;
 
 }
 
-.popupBox{
+.loginPopupBox{
 
 width:300px;
 
@@ -839,31 +839,33 @@ box-shadow:0 10px 30px rgba(0,0,0,.25);
 
 }
 
-.popupIcon{
+.loginPopupIcon{
 
-font-size:48px;
+font-size:50px;
 
-color:#1fa85b;
+color:#27ae60;
 
 margin-bottom:15px;
 
 }
 
-.popupBox h3{
+.loginPopupBox h3{
 
 margin-bottom:10px;
 
 }
 
-.popupBox p{
+.loginPopupBox p{
 
 margin-bottom:20px;
 
 color:#666;
 
+line-height:1.5;
+
 }
 
-.popupPrimaryBtn{
+.loginPopupPrimaryBtn{
 
 width:100%;
 
@@ -873,7 +875,7 @@ border:none;
 
 border-radius:12px;
 
-background:#1fa85b;
+background:#27ae60;
 
 color:#fff;
 
@@ -881,13 +883,13 @@ font-size:16px;
 
 font-weight:600;
 
-cursor:pointer;
-
 margin-bottom:10px;
+
+cursor:pointer;
 
 }
 
-.popupSecondaryBtn{
+.loginPopupSecondaryBtn{
 
 width:100%;
 
@@ -897,7 +899,7 @@ border:none;
 
 border-radius:12px;
 
-background:#eee;
+background:#ececec;
 
 font-size:15px;
 
@@ -1442,32 +1444,32 @@ id="currentLocation"></i>
 </div>   
     
 
- <div id="registerPopup" class="popupOverlay">
+<div id="loginPopup" class="popupOverlay">
 
-    <div class="popupBox">
+    <div class="loginPopupBox">
 
-        <i class="fa-solid fa-user-plus popupIcon"></i>
+        <i class="fa-solid fa-cart-shopping loginPopupIcon"></i>
 
         <h3>Login Required</h3>
 
         <p>
 
-            Please login or register to
-            add items to your cart.
+            Please login to add products
+            to your cart.
 
         </p>
 
         <button
-            class="popupPrimaryBtn"
-            onclick="goToCustomerLogin()">
+            class="loginPopupPrimaryBtn"
+            onclick="goToLogin()">
 
-            Login / Register
+            Login
 
         </button>
 
         <button
-            class="popupSecondaryBtn"
-            onclick="hideRegisterPopup()">
+            class="loginPopupSecondaryBtn"
+            onclick="hideLoginPopup()">
 
             Cancel
 
@@ -1475,7 +1477,7 @@ id="currentLocation"></i>
 
     </div>
 
- </div>
+</div>
     
 
 <div id="locationLoading" class="locationLoading">
@@ -2292,15 +2294,21 @@ function changeProductQty(productId, change){
 
 async function addToCart(productId){
 
-    const customer = JSON.parse(
+    const user = JSON.parse(
 
-        localStorage.getItem("customer")
+        localStorage.getItem("user")
 
     );
 
-    if(!customer){
+    if(
 
-        showRegisterPopup();
+        !user ||
+
+        !user.id
+
+    ){
+
+        showLoginPopup();
 
         return;
 
@@ -2309,18 +2317,6 @@ async function addToCart(productId){
     const quantity = cart[productId] || 1;
 
     try{
-
-        console.log({
-
-            customer_id: customer.id,
-
-            business_id: selectedBusiness.id,
-
-            product_id: productId,
-
-            quantity
-
-        });
 
         const response = await fetch("/cart",{
 
@@ -2334,11 +2330,11 @@ async function addToCart(productId){
 
             body:JSON.stringify({
 
-                customer_id: customer.id,
+                customer_id:user.id,
 
-                business_id: selectedBusiness.id,
+                business_id:selectedBusiness.id,
 
-                product_id: productId,
+                product_id:productId,
 
                 quantity
 
@@ -2347,8 +2343,6 @@ async function addToCart(productId){
         });
 
         const data = await response.json();
-
-        console.log(data);
 
         if(data.success){
 
@@ -2378,7 +2372,8 @@ async function addToCart(productId){
 
     }
 
-       }
+}
+    
 
     
     
@@ -2535,35 +2530,35 @@ function closeBusinessPage(){
 
 
 
-function showRegisterPopup(){
+    
+
+function showLoginPopup(){
 
     document.getElementById(
 
-        "registerPopup"
+        "loginPopup"
 
     ).style.display = "flex";
 
 }
 
-function hideRegisterPopup(){
+function hideLoginPopup(){
 
     document.getElementById(
 
-        "registerPopup"
+        "loginPopup"
 
     ).style.display = "none";
 
 }
 
-function goToCustomerLogin(){
+function goToLogin(){
 
-    hideRegisterPopup();
+    hideLoginPopup();
 
-    showSection("customerSection");
+    showSection("loginSection");
 
-    // If your login section has a different id,
-    // replace "customerSection" with its id.
-    }
+}
 
     
 
