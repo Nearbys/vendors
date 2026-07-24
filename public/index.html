@@ -2896,16 +2896,60 @@ async function loadCart(){
     
 
 
+async function initCartState() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user || !user.userid) {
+    updateCartBadge([]);
+    return;
+  }
+
+  await loadCart();
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  checkCustomerLocation();
+  await initCartState();
+});
+
+
+
+    
+
 
     
 function updateCartBadge(items = []) {
-  let total = 0;
-  items.forEach(item => total += Number(item.quantity || 0));
-  document.getElementById('cartBadge').innerText = total;
+  const total = items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+  const badge = document.getElementById('cartBadge');
+  if (badge) badge.innerText = total;
 }
 
 
 
+
+
+
+
+function loadCartBadgeFromCache() {
+  const cached = JSON.parse(localStorage.getItem('cartCache') || '[]');
+  updateCartBadge(cached);
+}
+
+async function loadCart() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user || !user.userid) return;
+
+  const response = await fetch(`cart/${user.userid}`);
+  const items = await response.json();
+
+  localStorage.setItem('cartCache', JSON.stringify(items));
+  displayCart(items);
+  updateCartBadge(items);
+}
+
+
+
+
+    
 
     
  function displayCart(items){
