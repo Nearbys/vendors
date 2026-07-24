@@ -798,6 +798,113 @@ top:90px;
     align-items:center;
 
 }
+
+    #registerPopup{
+
+display:none;
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,.45);
+
+justify-content:center;
+
+align-items:center;
+
+z-index:99999;
+
+}
+
+.popupBox{
+
+width:300px;
+
+max-width:90%;
+
+background:#fff;
+
+border-radius:18px;
+
+padding:25px;
+
+text-align:center;
+
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+}
+
+.popupIcon{
+
+font-size:48px;
+
+color:#1fa85b;
+
+margin-bottom:15px;
+
+}
+
+.popupBox h3{
+
+margin-bottom:10px;
+
+}
+
+.popupBox p{
+
+margin-bottom:20px;
+
+color:#666;
+
+}
+
+.popupPrimaryBtn{
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+border-radius:12px;
+
+background:#1fa85b;
+
+color:#fff;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+margin-bottom:10px;
+
+}
+
+.popupSecondaryBtn{
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+border-radius:12px;
+
+background:#eee;
+
+font-size:15px;
+
+cursor:pointer;
+
+}
+    
     
 </style>
 </head>
@@ -1333,6 +1440,43 @@ id="currentLocation"></i>
     </div>
 
 </div>   
+    
+
+ <div id="registerPopup" class="popupOverlay">
+
+    <div class="popupBox">
+
+        <i class="fa-solid fa-user-plus popupIcon"></i>
+
+        <h3>Login Required</h3>
+
+        <p>
+
+            Please login or register to
+            add items to your cart.
+
+        </p>
+
+        <button
+            class="popupPrimaryBtn"
+            onclick="goToCustomerLogin()">
+
+            Login / Register
+
+        </button>
+
+        <button
+            class="popupSecondaryBtn"
+            onclick="hideRegisterPopup()">
+
+            Cancel
+
+        </button>
+
+    </div>
+
+ </div>
+    
 
 <div id="locationLoading" class="locationLoading">
 
@@ -2156,7 +2300,7 @@ async function addToCart(productId){
 
     if(!customer){
 
-        popup("Please login or register to add items to your cart.");
+        showRegisterPopup();
 
         return;
 
@@ -2389,6 +2533,39 @@ function closeBusinessPage(){
     document.getElementById("businessProductsGrid").innerHTML = "";
 }
 
+
+
+function showRegisterPopup(){
+
+    document.getElementById(
+
+        "registerPopup"
+
+    ).style.display = "flex";
+
+}
+
+function hideRegisterPopup(){
+
+    document.getElementById(
+
+        "registerPopup"
+
+    ).style.display = "none";
+
+}
+
+function goToCustomerLogin(){
+
+    hideRegisterPopup();
+
+    showSection("customerSection");
+
+    // If your login section has a different id,
+    // replace "customerSection" with its id.
+    }
+
+    
 
     
 </script>
