@@ -645,26 +645,6 @@ top:90px;
 
 }
 
-.addCartBtn{
-
-    border:none;
-
-    background:#2ecc71;
-
-    color:#fff;
-
-    padding:8px 18px;
-
-    border-radius:20px;
-
-    cursor:pointer;
-
-    font-size:14px;
-
-    font-weight:600;
-
-}    
-
 .viewMoreBtn{
 
     border:none;
@@ -732,60 +712,92 @@ top:90px;
 
 }
 
-    .productActions{
+.productActions{
 
     display:flex;
+
+    align-items:center;
 
     justify-content:space-between;
 
-    align-items:center;
-
     margin-top:12px;
-
-    gap:10px;
 
 }
 
-.qtySelector{
+.qtyNumber{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    width:28px;
+
+    text-align:center;
+
+}
+
+.qtyButtons{
 
     display:flex;
 
-    align-items:center;
+    flex-direction:column;
 
-    gap:8px;
+    gap:4px;
 
 }
 
-.qtySelector button{
+.qtyButtons button{
 
-    width:30px;
+    width:28px;
 
-    height:30px;
+    height:22px;
 
     border:none;
 
-    border-radius:50%;
+    border-radius:6px;
 
     background:#2ecc71;
 
     color:#fff;
 
-    font-size:18px;
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:12px;
+
+}
+
+.addCartBtn{
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2ecc71;
+
+    color:#fff;
+
+    font-size:20px;
 
     cursor:pointer;
 
-}
+    display:flex;
 
-.qtySelector span{
+    justify-content:center;
 
-    min-width:22px;
-
-    text-align:center;
-
-    font-weight:bold;
+    align-items:center;
 
 }
-
+    
 </style>
 </head>
 
@@ -2001,44 +2013,45 @@ function displayProducts(){
 
             actionSection = `
 
-                <div class="productActions">
+<div class="productActions">
 
-                    <div class="qtySelector">
+    <span
+        class="qtyNumber"
+        id="qty-${product.id}">
 
-                        <button
-                            onclick="event.stopPropagation();changeProductQty(${product.id},-1)">
+        1
 
-                            −
+    </span>
 
-                        </button>
+    <div class="qtyButtons">
 
-                        <span id="qty-${product.id}">
+        <button
+        onclick="event.stopPropagation();changeProductQty(${product.id},1)">
 
-                            1
+            <i class="fa-solid fa-plus"></i>
 
-                        </span>
+        </button>
 
-                        <button
-                            onclick="event.stopPropagation();changeProductQty(${product.id},1)">
+        <button
+        onclick="event.stopPropagation();changeProductQty(${product.id},-1)">
 
-                            +
+            <i class="fa-solid fa-minus"></i>
 
-                        </button>
+        </button>
 
-                    </div>
+    </div>
 
-                    <button
-                        class="addCartBtn"
-                        onclick="event.stopPropagation();addToCart(${product.id})">
+    <button
+        class="addCartBtn"
+        onclick="event.stopPropagation();addToCart(${product.id})">
 
-                        Add
+        <i class="fa-solid fa-cart-plus"></i>
 
-                    </button>
+    </button>
 
-                </div>
+</div>
 
-            `;
-
+`;
         }
 
         else if(shouldShowViewMore()){
