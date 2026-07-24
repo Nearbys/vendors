@@ -2613,6 +2613,8 @@ async function addToCart(productId){
 
             popup("Added to cart");
 
+            await loadCart();
+
         }
 
         else if(data.differentBusiness){
@@ -2857,25 +2859,34 @@ async function openCart(){
 
 async function loadCart(){
 
-    const user=JSON.parse(
+    const user = JSON.parse(
 
         localStorage.getItem("user")
 
     );
 
-    const response=await fetch(
+    if(!user){
+
+        return;
+
+    }
+
+    const response = await fetch(
 
         `/cart/${user.user_id}`
 
     );
 
-    const items=await response.json();
+    const items = await response.json();
 
     displayCart(items);
 
     updateCartBadge(items);
 
-}
+    }
+
+
+    
 
 
 
