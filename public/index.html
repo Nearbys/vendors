@@ -659,6 +659,44 @@ top:90px;
     margin-top:10px;
 
 }
+
+    .noBusinesses{
+
+    grid-column:1/-1;
+
+    text-align:center;
+
+    padding:50px 20px;
+
+    color:#777;
+
+}
+
+.noBusinesses i{
+
+    font-size:60px;
+
+    color:#ccc;
+
+    margin-bottom:15px;
+
+}
+
+.noBusinesses h3{
+
+    margin:10px 0;
+
+    color:#444;
+
+}
+
+.noBusinesses p{
+
+    margin:0;
+
+    font-size:14px;
+
+}
     
 </style>
 </head>
@@ -1576,13 +1614,34 @@ function displayBusinesses(){
 
     grid.innerHTML = "";
 
+    if(filteredBusinesses.length === 0){
+
+        grid.innerHTML = `
+
+            <div class="noBusinesses">
+
+                <i class="fa-solid fa-store-slash"></i>
+
+                <h3>Businesses not available nearby</h3>
+
+                <p>Try refreshing your location or explore again later.</p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
     filteredBusinesses.forEach(business=>{
 
         grid.innerHTML += `
 
             <div class="businessCard"
 
-               onclick="openBusiness(${business.id})">
+                onclick="openBusiness(${business.id})">
+
                 <img src="${business.profile_image}">
 
                 <h3>${business.business_name}</h3>
@@ -1597,7 +1656,7 @@ function displayBusinesses(){
 
     });
 
-    }
+        }
 
 
     
