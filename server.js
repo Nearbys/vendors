@@ -246,6 +246,32 @@ CREATE INDEX IF NOT EXISTS idx_users_contact
 ON users(contact);
 `);
 
+//================ CART TABLE ================//
+
+await pool.query(`
+
+CREATE TABLE IF NOT EXISTS cart(
+
+    id SERIAL PRIMARY KEY,
+
+    customer_id INTEGER NOT NULL,
+
+    business_id INTEGER NOT NULL,
+
+    product_id INTEGER NOT NULL,
+
+    quantity INTEGER NOT NULL DEFAULT 1,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE(customer_id, product_id)
+
+);
+
+`);
+
 
 
         
@@ -2412,6 +2438,134 @@ app.get("/businesses/:id/products", async(req,res)=>{
             success:true,
 
             products:result.rows
+
+        });
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:"Database Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+
+app.post("/cart", async(req,res)=>{
+
+    try{
+
+        const{
+
+            customer_id,
+
+            business_id,
+
+            product_id,
+
+            quantity
+
+        } = req.body;
+
+        const existing = await pool.query(
+
+            `SELECT *
+
+             FROM cart
+
+             WHERE customer_id=$1
+
+             AND product_id=$2`,
+
+            [
+
+                customer_id,
+
+                product_id
+
+            ]
+
+        );
+
+        if(existing.rows.length){
+
+            await pool.query(
+
+                `UPDATE cart
+
+                 SET quantity=$1,
+
+                 updated_at=NOW()
+
+                 WHERE customer_id=$2
+
+                 AND product_id=$3`,
+
+                [
+
+                    quantity,
+
+                    customer_id,
+
+                    product_id
+
+                ]
+
+            );
+
+        }
+
+        else{
+
+            await pool.query(
+
+                `INSERT INTO cart(
+
+                    customer_id,
+
+                    business_id,
+
+                    product_id,
+
+                    quantity
+
+                )
+
+                VALUES($1,$2,$3,$4)`,
+
+                [
+
+                    customer_id,
+
+                    business_id,
+
+                    product_id,
+
+                    quantity
+
+                ]
+
+            );
+
+        }
+
+        res.json({
+
+            success:true,
+
+            message:"Added to cart"
 
         });
 
